@@ -1,11 +1,10 @@
 export default function Home() {
   return (
     <main className="prose dark:prose-invert prose-zinc flex flex-col max-w-full">
-      <h1>lorem ipsum</h1>
+      <h4>elluzion</h4>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque minima
-        minus dignissimos aut modi illo voluptatibus in debitis necessitatibus
-        tenetur, itaque quaerat, a iure ea dolor? Excepturi vel maiores error!
+        I am Fynn, a music producer, software developer and overall creative
+        that loves to work on projects on the internet.
       </p>
     </main>
   );
