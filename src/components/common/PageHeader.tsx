@@ -1,72 +1,86 @@
 "use client";
 
-import { ReactNode } from "react";
-import Image from "next/image";
-import headerLogo from "/public/images/header_logo.svg";
+import { usePathname } from "next/navigation";
 
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { ModeToggle } from "./DarkModeToggle";
 import Link from "next/link";
 
-const NavMenuItem: React.FC<{ title: string; children: ReactNode }> = ({
-  title,
-  children,
-}) => {
-  return (
-    <NavigationMenuItem>
-      <NavigationMenuTrigger>{title}</NavigationMenuTrigger>
-      <NavigationMenuContent className="p-4 w-">
-        <div className="w-80">{children}</div>
-      </NavigationMenuContent>
-    </NavigationMenuItem>
-  );
-};
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortInfo,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+
+import { Button } from "../ui/button";
+import { ChevronLeftIcon } from "lucide-react";
 
 export default function PageHeader() {
   return (
-    <div className="w-full h-16 fixed border-b-2 border-border flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 bg-opacity-10 dark:bg-opacity-50 backdrop-blur-2xl ">
-      <div className="px-4 lg:px-16 w-full flex items-center justify-between md:justify-normal gap-8 xl:w-[1128px] xl:px-0">
-        <Image
-          src={headerLogo}
-          alt="elluzion"
-          className="h-4 md:h-6 w-min invert dark:invert-0"
-        />
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList className="text-muted-foreground">
-            <NavigationMenuItem>
-              <Link href="/" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Home
-                </NavigationMenuLink>
+    <div className="w-full h-16 fixed flex items-center justify-center bg-zinc-950 bg-opacity-50 backdrop-blur-2xl ">
+      <div className="px-4 md:px-0 w-full flex items-center justify-normal gap-4 max-w-[700px] ">
+        {usePathname() != "/" ? (
+          <Link href="/" legacyBehavior passHref>
+            <Button size="icon" variant="ghost">
+              <ChevronLeftIcon />
+            </Button>
+          </Link>
+        ) : (
+          ""
+        )}
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>Projects</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>
+                Project Fluid <MenubarShortInfo>Deprecated</MenubarShortInfo>
+              </MenubarItem>
+              <MenubarSeparator />
+              <Link href="https://github.com/elluzion" target="_blank">
+                <MenubarItem>Check my GitHub</MenubarItem>
               </Link>
-            </NavigationMenuItem>
-            <NavMenuItem title="Projects">
-              <NavigationMenuLink>Link</NavigationMenuLink>
-            </NavMenuItem>
-            <NavMenuItem title="Music">
-              <NavigationMenuLink>Music</NavigationMenuLink>
-            </NavMenuItem>
-            <NavMenuItem title="Connect">
-              <div className="w-80 grid grid-cols-2 gap-2">
-                <div className="rounded h-12 bg-red-900"></div>
-                <div className="rounded h-12 bg-green-900"></div>
-                <div className="rounded h-12 bg-blue-900"></div>
-                <div className="rounded h-12 bg-yellow-900"></div>
-              </div>
-            </NavMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <div className="w-full flex justify-end">
-          <ModeToggle />
-        </div>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Music</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem>Tracks</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+          <MenubarMenu>
+            <MenubarTrigger>Connect</MenubarTrigger>
+            <MenubarContent>
+              <Link href="https://instagram.com/elluzion.music" target="_blank">
+                <MenubarItem>Instagram</MenubarItem>
+              </Link>
+              <Link href="https://youtube.com/@elluzionmusic" target="_blank">
+                <MenubarItem>YouTube</MenubarItem>
+              </Link>
+              <Link href="https://soundcloud.com/elluzionmusic" target="_blank">
+                <MenubarItem>SoundCloud</MenubarItem>
+              </Link>
+              <Link
+                href="https://open.spotify.com/artist/4OgioomMSaD1ier3lIfgzr"
+                target="_blank"
+              >
+                <MenubarItem>Spotify</MenubarItem>
+              </Link>
+              <MenubarSeparator />
+              <Link href="https://t.me/elluzion" target="_blank">
+                <MenubarItem>Telegram</MenubarItem>
+              </Link>
+              <MenubarSeparator />
+              <Link href="https://github.com/elluzion" target="_blank">
+                <MenubarItem>GitHub</MenubarItem>
+              </Link>
+              <MenubarItem>
+                Discord <MenubarShortInfo>@elluzion</MenubarShortInfo>
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
       </div>
     </div>
   );
