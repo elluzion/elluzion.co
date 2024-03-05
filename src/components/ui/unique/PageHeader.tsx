@@ -14,7 +14,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 
-import { Button } from "../ui/button";
+import { Button } from "../button";
 import { ChevronLeftIcon } from "lucide-react";
 
 export default function PageHeader() {

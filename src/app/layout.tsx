@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
 import { ThemeProvider } from "@/components/ui/providers/theme-provider";
-import PageHeader from "@/components/common/PageHeader";
+import PageHeader from "@/components/ui/unique/PageHeader";
 
 import "./globals.css";
 import CursorBacklight from "@/components/ui/unique/cursor-backlight";
