@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`${mainFont.variable} ${monoFont.variable}`}>
         <CursorBacklight />
         <PageHeader />
-        <div className="w-full mt-16 pt-16 px-4 max-w-[700px] md:px-0 self-center transition-all">
+        <div className="mt-16 px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">
           {children}
         </div>
         {/* Vercel analytics */}

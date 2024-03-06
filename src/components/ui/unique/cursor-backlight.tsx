@@ -36,7 +36,7 @@ export default function CursorBacklight() {
 
   return (
     <span
-      className="p-16 rounded-full bg-blue-600 fixed z-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-[opacity,filter] duration-300"
+      className="z-0 fixed bg-blue-600 p-16 rounded-full transition-[opacity,filter] -translate-x-1/2 -translate-y-1/2 duration-300 pointer-events-none"
       style={{
         left: xPos + "px",
         top: yPos + "px",

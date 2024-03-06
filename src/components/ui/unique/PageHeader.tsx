@@ -19,8 +19,8 @@ import { ChevronLeftIcon } from "lucide-react";
 
 export default function PageHeader() {
   return (
-    <div className="w-full h-16 fixed flex items-center justify-center bg-zinc-950 bg-opacity-50 backdrop-blur-2xl ">
-      <div className="px-4 md:px-0 w-full flex items-center justify-normal gap-4 max-w-[700px] ">
+    <div className="fixed flex justify-center items-center bg-zinc-950 bg-opacity-50 backdrop-blur-2xl w-full h-16">
+      <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[700px]">
         {usePathname() != "/" ? (
           <Link href="/" legacyBehavior passHref>
             <Button size="icon" variant="ghost">
