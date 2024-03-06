@@ -35,9 +35,9 @@
 }
 
 body {
-  @apply h-full w-full bg-background text-foreground;
+  @apply min-h-screen w-full bg-background text-foreground flex flex-col;
 }
 
 * {
-  @apply border-border ;
+  @apply border-border;
 }
