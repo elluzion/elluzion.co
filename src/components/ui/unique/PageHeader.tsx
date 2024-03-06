@@ -43,8 +43,11 @@ export default function PageHeader() {
             const subPath = pathArray.slice(0, key + 1).join("/");
             return (
               <div key={key} className="flex items-center gap-2">
+                {/* subfolder item */}
                 <Link href={subPath}>
-                  <Button variant={"outline"}>{item}</Button>
+                  <Button variant={"outline"}>
+                    {item[0].toUpperCase() + item.slice(1)}
+                  </Button>
                 </Link>
                 {/* path separator */}
                 {key != pathArray.length - 1 ? <span>/</span> : ""}
