@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 
 import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
 import PageHeader from "@/components/ui/unique/PageHeader";
-import CursorBacklight from "@/components/ui/unique/cursor-backlight";
+import CursorBacklight from "@/components/ui/unique/CursorBacklight";
 
 import "./globals.css";
 
