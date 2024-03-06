@@ -36,13 +36,13 @@ export default function CursorBacklight() {
 
   return (
     <span
-      className="z-0 fixed bg-blue-600 p-16 rounded-full transition-[opacity,filter] -translate-x-1/2 -translate-y-1/2 duration-300 pointer-events-none"
+      className="-z-10 fixed bg-blue-600 p-16 rounded-full transition-[opacity,filter] -translate-x-1/2 -translate-y-1/2 duration-300 pointer-events-none"
       style={{
         left: xPos + "px",
         top: yPos + "px",
         visibility: isMobile ? "hidden" : "visible",
-        opacity: isMouseDown ? "0.45" : "0.55",
-        filter: isMouseDown ? "blur(48px)" : "blur(64px)",
+        opacity: isMouseDown ? "0.5" : "0.55",
+        filter: isMouseDown ? "blur(40px)" : "blur(64px)",
       }}
     ></span>
   );
