@@ -6,6 +6,14 @@ import { Button } from "../button";
 
 import Link from "next/link";
 import Image from "next/image";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../breadcrumb";
 
 export default function PageHeader() {
   const path = usePathname();
@@ -23,7 +31,7 @@ export default function PageHeader() {
           />
         </Link>
 
-        {path == "/" ? (
+        {path == "/" && (
           <div className="flex gap-2 rounded-lg">
             <Link href={"/music"}>
               <Button variant={"outline"} className="bg-transparent">
@@ -36,29 +44,40 @@ export default function PageHeader() {
               </Button>
             </Link>
           </div>
-        ) : (
-          <span>{">"}</span>
         )}
-        <div className="flex gap-2">
-          {pathArray.map((item, key) => {
-            // dont create an element for the first item of the array as its empty
-            if (item == "") return;
-            // path to the subfolder
-            const subPath = pathArray.slice(0, key + 1).join("/");
-            return (
-              <div key={key} className="flex items-center gap-2">
-                {/* subfolder item */}
-                <Link href={subPath}>
-                  <Button variant={"outline"} className="bg-transparent">
-                    {item[0].toUpperCase() + item.slice(1)}
-                  </Button>
-                </Link>
-                {/* path separator */}
-                {key != pathArray.length - 1 ? <span>/</span> : ""}
-              </div>
-            );
-          })}
-        </div>
+        <Breadcrumb>
+          <BreadcrumbList>
+            {pathArray.map((item, key) => {
+              // dont create an element for the first item of the array as its empty
+              if (item == "") return;
+              // path to the subfolder
+              const subPath = pathArray.slice(0, key + 1).join("/");
+              if (subPath != pathArray.join("/")) {
+                return (
+                  <div
+                    key={key}
+                    className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 text-muted-foreground text-sm break-words"
+                  >
+                    <BreadcrumbItem key={key}>
+                      <BreadcrumbLink href={subPath} className="font-medium">
+                        {item[0].toUpperCase() + item.slice(1)}
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="mt-0.5" />
+                  </div>
+                );
+              } else {
+                return (
+                  <BreadcrumbItem key={key}>
+                    <BreadcrumbPage className="font-medium">
+                      {item[0].toUpperCase() + item.slice(1)}
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                );
+              }
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
     </div>
   );
