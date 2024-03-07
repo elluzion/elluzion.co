@@ -26,10 +26,14 @@ export default function PageHeader() {
         {path == "/" ? (
           <div className="flex gap-2 rounded-lg">
             <Link href={"/music"}>
-              <Button variant={"outline"}>Music</Button>
+              <Button variant={"outline"} className="bg-transparent">
+                Music
+              </Button>
             </Link>
             <Link href={"/projects"}>
-              <Button variant={"outline"}>Projects</Button>
+              <Button variant={"outline"} className="bg-transparent">
+                Projects
+              </Button>
             </Link>
           </div>
         ) : (
@@ -45,7 +49,7 @@ export default function PageHeader() {
               <div key={key} className="flex items-center gap-2">
                 {/* subfolder item */}
                 <Link href={subPath}>
-                  <Button variant={"outline"}>
+                  <Button variant={"outline"} className="bg-transparent">
                     {item[0].toUpperCase() + item.slice(1)}
                   </Button>
                 </Link>
