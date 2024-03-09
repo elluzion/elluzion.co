@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${mainFont.variable} ${monoFont.variable}`}>
+      <body className={`${mainFont.variable} ${monoFont.variable} font-sans`}>
         <CursorBacklight />
         <PageHeader />
         <div className="mt-16 px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">

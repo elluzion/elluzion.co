@@ -1,5 +1,3 @@
-import type { Config } from "tailwindcss";
-
 /** @type {import('tailwindcss').Config} */
 const config = {
   content: [
@@ -51,15 +49,15 @@ const config = {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
         },
-        fontFamily: {
-          sans: ["var(--font-geist)"],
-          mono: ["var(--font-jbmono)"],
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        sans: ["var(--font-geist)"],
+        mono: ["var(--font-jbmono)"],
       },
       keyframes: {
         "accordion-down": {
