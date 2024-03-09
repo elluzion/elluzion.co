@@ -63,7 +63,7 @@ export default function PageHeader() {
                         {item[0].toUpperCase() + item.slice(1)}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
-                    <BreadcrumbSeparator className="mt-0.5" />
+                    <BreadcrumbSeparator />
                   </div>
                 );
               } else {
