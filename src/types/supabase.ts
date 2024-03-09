@@ -199,7 +199,7 @@ export type Database = {
           art_url: string | null
           created_at: string
           description: string | null
-          genre: number | null
+          genre_id: number | null
           id: number
           key: string | null
           label_id: number | null
@@ -213,7 +213,7 @@ export type Database = {
           art_url?: string | null
           created_at?: string
           description?: string | null
-          genre?: number | null
+          genre_id?: number | null
           id?: number
           key?: string | null
           label_id?: number | null
@@ -227,7 +227,7 @@ export type Database = {
           art_url?: string | null
           created_at?: string
           description?: string | null
-          genre?: number | null
+          genre_id?: number | null
           id?: number
           key?: string | null
           label_id?: number | null
@@ -240,7 +240,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "public_releases_genre_fkey"
-            columns: ["genre"]
+            columns: ["genre_id"]
             isOneToOne: false
             referencedRelation: "genres"
             referencedColumns: ["id"]
