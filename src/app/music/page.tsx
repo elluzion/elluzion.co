@@ -71,12 +71,12 @@ export default async function Music() {
             <span className="font-semibold">{song.title}</span>
             <div className="flex gap-3">
               <span className="text-muted-foreground">
-                {firstSong.release_artists
+                {song.release_artists
                   .map((artist) => artist.artists?.name)
                   .join(", ")}
               </span>
               <span className="bg-secondary px-3 py-1 rounded-full font-medium font-mono text-muted-foreground text-xs">
-                {firstSong.genres?.name}
+                {song.genres?.name}
               </span>
             </div>
           </div>
