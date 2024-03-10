@@ -54,8 +54,8 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex flex-col mb-8 w-full">
-      <Card className="bg-gradient-to-br from-popover to-background">
+    <main className="flex flex-col mt-16 mb-8 w-full">
+      <Card>
         <div className="flex flex-row gap-4">
           <div>
             <CardHeader>

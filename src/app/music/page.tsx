@@ -19,18 +19,18 @@ export default async function Music() {
     // first song is a card, others are list items
     const firstSong = songs[0];
     const mostRecentItem = (
-      <Card className="bg-gradient-to-br from-popover to-background">
+      <Card>
         <div className="flex">
           <CardHeader className="flex flex-row gap-2 w-full">
             <div className="flex flex-col gap-1 grow">
               <CardTitle>{firstSong.title}</CardTitle>
               <h3 className="font-sans">
-                {firstSong.release_artists
+                {firstSong.artists
                   .map((artist) => artist.artists?.name)
                   .join(", ")}
               </h3>
               <CardDescription className="font-medium">
-                {firstSong.genres?.name}
+                {firstSong.genre?.name}
               </CardDescription>
             </div>
             <Image
@@ -44,7 +44,7 @@ export default async function Music() {
         </div>
         <CardContent className="flex gap-2">
           <Badge variant={"secondary"}>{firstSong.release_date}</Badge>
-          <Badge variant={"outline"}>{firstSong.release_types?.title}</Badge>
+          <Badge variant={"outline"}>{firstSong.type?.title}</Badge>
         </CardContent>
         <CardFooter>
           <Link className="w-full" href={"music/" + firstSong.written_id}>
@@ -71,12 +71,10 @@ export default async function Music() {
             <span className="font-semibold">{song.title}</span>
             <div className="flex gap-3">
               <span className="text-muted-foreground">
-                {song.release_artists
-                  .map((artist) => artist.artists?.name)
-                  .join(", ")}
+                {song.artists?.map((artist) => artist.artists?.name).join(", ")}
               </span>
               <span className="bg-secondary px-3 py-1 rounded-full font-medium font-mono text-muted-foreground text-xs">
-                {song.genres?.name}
+                {song.genre?.name}
               </span>
             </div>
           </div>
@@ -84,7 +82,7 @@ export default async function Music() {
       </Link>
     ));
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mt-16">
         <div className="prose-invert prose">
           <h1 className="mb-3 font-bold">Music</h1>
           <p className="font-mono text-lg text-muted-foreground">Newest</p>
