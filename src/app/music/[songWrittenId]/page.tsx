@@ -17,6 +17,8 @@ import { PlatformButton } from "./PlatformButton";
 import { DragHandle } from "@/components/ui/drag-handle";
 import { redirect } from "next/navigation";
 
+import { pascalCase } from "@/lib/utils";
+
 export default async function SongPage({
   params,
 }: {
@@ -24,16 +26,25 @@ export default async function SongPage({
 }) {
   const writtenSongId = params.songWrittenId;
 
+  // gather all info from the database
   const songInfo = await getSong(writtenSongId);
 
+  // redirect if song not found
   if (!songInfo) redirect("/music");
 
+  // split downloads into two sections, wav and mp3
   const downloadsMp3 = songInfo?.downloads.filter(
     (item) => item.format == "mp3"
   );
   const downloadsWav = songInfo?.downloads.filter(
     (item) => item.format == "wav"
   );
+
+  // parse songInfo for card sub-title line
+  const subTitleContent = [];
+  if (songInfo?.tempo) subTitleContent.push(songInfo.tempo + "BPM");
+  if (songInfo?.key) subTitleContent.push(songInfo.key);
+  if (songInfo?.label?.name) subTitleContent.push(songInfo?.label?.name);
 
   return (
     <div className="flex flex-col">
@@ -57,14 +68,18 @@ export default async function SongPage({
       {/* INFO CARD */}
       <Card className="md:mx-4 -mt-16 rounded-3xl">
         <CardContent className="flex flex-col gap-4 pt-6">
-          <p className="font-mono">{songInfo?.description}</p>
+          <p className="font-mono leading-7">{songInfo?.description}</p>
           <span className="font-mono text-muted-foreground">
-            {songInfo?.tempo}BPM • {songInfo?.key} • {songInfo?.label?.name}
+            {subTitleContent.join(" • ")}
           </span>
           <div className="flex gap-2">
-            <Badge>{songInfo?.genre?.name}</Badge>
-            <Badge variant={"secondary"}>{songInfo?.release_date}</Badge>
-            <Badge variant={"outline"}>{songInfo?.type?.title}</Badge>
+            {songInfo?.genre?.name && <Badge>{songInfo.genre.name}</Badge>}
+            {songInfo?.release_date && (
+              <Badge variant={"secondary"}>{songInfo.release_date}</Badge>
+            )}
+            {songInfo?.type?.title && (
+              <Badge variant={"outline"}>{songInfo.type.title}</Badge>
+            )}
           </div>
           <div className="gap-4 hidden has-[:first-child]:grid grid-flow-col">
             {downloadsMp3 != null && downloadsMp3.length > 0 && (
@@ -128,5 +143,3 @@ export default async function SongPage({
     </div>
   );
 }
-
-const pascalCase = (input: string) => input[0].toUpperCase() + input.slice(1);
