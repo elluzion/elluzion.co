@@ -46,12 +46,6 @@ export const Platforms: Array<Platform> = [
     icon: <SiSpotify />,
   },
   {
-    id: "deezer",
-    name: "Deezer",
-    accentColour: "#007bff",
-    icon: <SiApplemusic />,
-  },
-  {
     id: "tidal",
     name: "Tidal",
     accentColour: "#17a2b8",
@@ -68,12 +62,6 @@ export const Platforms: Array<Platform> = [
     name: "SoundCloud",
     accentColour: "#FF5500",
     icon: <SiSoundcloud />,
-  },
-  {
-    id: "napster",
-    name: "Napster",
-    accentColour: "#000000",
-    icon: <SiYoutube />,
   },
   {
     id: "facebook",
