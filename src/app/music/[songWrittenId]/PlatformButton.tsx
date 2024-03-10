@@ -27,7 +27,7 @@ export const PlatformButton = React.forwardRef<
 
   return (
     <Button
-      className={`h-14 w-full flex gap-2 text-md ${
+      className={`h-14 w-full flex gap-2 text-md hover:scale-[.98] transition-[transform,filter] hover:brightness-110 ${
         darkForeground ? "text-zinc-950" : "text-white"
       }`}
       style={{
