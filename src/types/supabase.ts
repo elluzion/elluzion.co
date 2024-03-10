@@ -54,41 +54,20 @@ export type Database = {
         }
         Relationships: []
       }
-      platforms: {
-        Row: {
-          accent_color: string | null
-          id: number
-          name: string
-        }
-        Insert: {
-          accent_color?: string | null
-          id?: number
-          name: string
-        }
-        Update: {
-          accent_color?: string | null
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       release_artists: {
         Row: {
           artist_id: number
           artist_type: Database["public"]["Enums"]["artist-type"]
-          id: number
           release_id: number
         }
         Insert: {
           artist_id: number
           artist_type: Database["public"]["Enums"]["artist-type"]
-          id?: number
           release_id: number
         }
         Update: {
           artist_id?: number
           artist_type?: Database["public"]["Enums"]["artist-type"]
-          id?: number
           release_id?: number
         }
         Relationships: [
@@ -146,30 +125,23 @@ export type Database = {
       release_links: {
         Row: {
           id: number
-          platform_id: number | null
+          platform: Database["public"]["Enums"]["platforms"] | null
           release_id: number
           url: string
         }
         Insert: {
           id?: number
-          platform_id?: number | null
+          platform?: Database["public"]["Enums"]["platforms"] | null
           release_id: number
           url: string
         }
         Update: {
           id?: number
-          platform_id?: number | null
+          platform?: Database["public"]["Enums"]["platforms"] | null
           release_id?: number
           url?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "public_release_links_platform_id_fkey"
-            columns: ["platform_id"]
-            isOneToOne: false
-            referencedRelation: "platforms"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "public_release_links_release_id_fkey"
             columns: ["release_id"]
@@ -271,6 +243,21 @@ export type Database = {
     Enums: {
       "artist-type": "main" | "feature" | "remixer"
       "audio-filetype": "mp3" | "wav"
+      platforms:
+        | "spotify"
+        | "applemusic"
+        | "youtube"
+        | "amazonmusic"
+        | "deezer"
+        | "tidal"
+        | "pandora"
+        | "soundcloud"
+        | "napster"
+        | "facebook"
+        | "instagram"
+        | "tiktok"
+        | "twitter"
+        | "reddit"
       "song-edit": "regular" | "extended"
     }
     CompositeTypes: {
