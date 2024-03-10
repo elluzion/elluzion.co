@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
 import PageHeader from "@/components/ui/unique/PageHeader";
@@ -30,6 +31,7 @@ export default function RootLayout({
         </div>
         {/* Vercel analytics */}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
