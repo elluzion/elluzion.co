@@ -19,7 +19,7 @@ export default function PageHeader() {
   const path = usePathname();
   const pathArray = path.split("/");
   return (
-    <div className="fixed flex justify-center items-center bg-zinc-950 bg-opacity-50 backdrop-blur-2xl w-full h-16">
+    <div className="z-50 fixed flex justify-center items-center bg-zinc-950 bg-opacity-80 backdrop-blur-[120px] w-full h-16">
       <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[700px]">
         <Link href="/">
           <Image

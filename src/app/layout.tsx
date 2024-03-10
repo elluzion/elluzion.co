@@ -3,8 +3,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
-import PageHeader from "@/components/ui/unique/PageHeader";
-import CursorBacklight from "@/components/ui/unique/CursorBacklight";
+import PageHeader from "@/components/ui/single-use/PageHeader";
+import CursorBacklight from "@/components/ui/single-use/CursorBacklight";
 
 import "./globals.css";
 
@@ -28,7 +28,7 @@ export default function RootLayout({
       >
         <CursorBacklight />
         <PageHeader />
-        <div className="px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">
+        <div className="mb-4 px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">
           {children}
         </div>
         {/* Vercel analytics */}
