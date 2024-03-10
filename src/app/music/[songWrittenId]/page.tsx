@@ -59,7 +59,7 @@ export default async function SongPage({
         />
         <div className="bg-gradient-to-b from-transparent to-background w-full h-[400px] -translate-y-[400px]" />
         <div className="flex flex-col justify-center items-center gap-2 p-8 w-full h-[336px] -translate-y-[800px]">
-          <h1 className="font-semibold text-4xl">{songInfo?.title}</h1>
+          <h1 className="font-semibold text-4xl text-center">{songInfo?.title}</h1>
           <span className="text-muted-foreground">
             {songInfo?.artists.map((artist) => artist.artists?.name).join(", ")}
           </span>
