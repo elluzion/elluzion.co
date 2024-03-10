@@ -15,6 +15,7 @@ import Link from "next/link";
 
 import { PlatformButton } from "./PlatformButton";
 import { DragHandle } from "@/components/ui/drag-handle";
+import { redirect } from "next/navigation";
 
 export default async function SongPage({
   params,
@@ -24,6 +25,8 @@ export default async function SongPage({
   const writtenSongId = params.songWrittenId;
 
   const songInfo = await getSong(writtenSongId);
+
+  if (!songInfo) redirect("/music");
 
   const downloadsMp3 = songInfo?.downloads.filter(
     (item) => item.format == "mp3"
