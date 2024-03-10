@@ -18,10 +18,13 @@ export const PlatformButton = React.forwardRef<
   const accent = platformData?.accentColour || "#242424";
   const name = platformData?.name || "Generic";
   const icon = platformData?.icon || <SiSpotify />;
+  const darkForeground = platformData?.darkForeground || false;
 
   return (
     <Button
-      className={`h-14 w-full text-white flex gap-2 text-md`}
+      className={`h-14 w-full flex gap-2 text-md ${
+        darkForeground ? "text-zinc-950" : "text-white"
+      }`}
       style={{
         backgroundColor: accent,
       }}

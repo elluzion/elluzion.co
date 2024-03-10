@@ -18,6 +18,7 @@ interface Platform {
   name: string;
   accentColour: string;
   icon: ReactElement<any, any>;
+  darkForeground?: boolean;
 }
 
 export const Platforms: Array<Platform> = [
@@ -26,12 +27,14 @@ export const Platforms: Array<Platform> = [
     name: "Spotify",
     accentColour: "#1ED760",
     icon: <SiSpotify />,
+    darkForeground: true,
   },
   {
     id: "applemusic",
     name: "Apple Music",
-    accentColour: "#000000",
+    accentColour: "#ffffff",
     icon: <SiApplemusic />,
+    darkForeground: true,
   },
   {
     id: "youtube",
@@ -56,6 +59,7 @@ export const Platforms: Array<Platform> = [
     name: "Pandora",
     accentColour: "#00EAFF",
     icon: <SiPandora />,
+    darkForeground: true,
   },
   {
     id: "soundcloud",
