@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 
-const supabase = createClient();
-
 /**
  * @returns A list of all songs in the database with including a list of their artists.
  */
 export const getSongList = async () => {
+  const supabase = createClient();
+
   const { data: releases } = await supabase
     .from("releases")
     .select(
@@ -21,6 +21,8 @@ export const getSongList = async () => {
  * @returns the numeric ID of the release, to be used inside the DB.
  */
 export const resolveTrackId = async (writtenId: string) => {
+  const supabase = createClient();
+
   const { data: release } = await supabase
     .from("releases")
     .select("id")
