@@ -9,12 +9,10 @@ import { SongInfoCard } from "./SongInfoCard";
 export default async function SongPage({
   params,
 }: {
-  params: { songWrittenId: string };
+  params: { songId: string };
 }) {
-  const writtenSongId = params.songWrittenId;
-
   // gather all info from the database
-  const songData = await getSong(writtenSongId);
+  const songData = await getSong(params.songId);
 
   // redirect if song not found
   if (!songData) redirect("/music");
