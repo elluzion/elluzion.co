@@ -16,14 +16,14 @@ export const getSongList = async () => {
       written_id,
       title,
       description,
-      genre:genres(name),
+      genre,
       release_date,
-      label:labels(name),
+      label,
       tempo,
       art_url,
-      type:release_types(title),
+      type,
       key,
-      artists:release_artists(artists(id, name))
+      artists(id, name)
     `
   );
 
@@ -51,14 +51,14 @@ export async function getSong(songId: string | number) {
         written_id,
         title,
         description,
-        genres(name),
+        genre,
         release_date,
-        labels(name),
+        label,
         tempo,
         art_url,
         type,
         key,
-        release_artists(artists(id, name)),
+        artists(id, name),
         release_links(platform, url),
         release_downloads(download_url, edit, format)
       `

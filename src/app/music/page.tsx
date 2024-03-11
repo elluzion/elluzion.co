@@ -25,12 +25,10 @@ export default async function Music() {
             <div className="flex flex-col gap-1 grow">
               <CardTitle>{firstSong.title}</CardTitle>
               <h3 className="font-sans">
-                {firstSong.artists
-                  .map((artist) => artist.artists?.name)
-                  .join(", ")}
+                {firstSong.artists.map((artist) => artist.name).join(", ")}
               </h3>
               <CardDescription className="font-medium">
-                {firstSong.genre?.name}
+                {firstSong.genre}
               </CardDescription>
             </div>
             <Image
@@ -46,8 +44,8 @@ export default async function Music() {
           {firstSong.release_date && (
             <Badge variant={"secondary"}>{firstSong.release_date}</Badge>
           )}
-          {firstSong.type?.title && (
-            <Badge variant={"outline"}>{firstSong.type.title}</Badge>
+          {firstSong.type && (
+            <Badge variant={"outline"}>{firstSong.type}</Badge>
           )}
         </CardContent>
         <CardFooter>
@@ -75,10 +73,10 @@ export default async function Music() {
             <span className="font-semibold">{song.title}</span>
             <div className="flex items-center gap-3">
               <span className="text-muted-foreground">
-                {song.artists?.map((artist) => artist.artists?.name).join(", ")}
+                {song.artists.map((artist) => artist.name).join(", ")}
               </span>
               <Badge variant={"secondary"} className="h-6">
-                {song.genre?.name}
+                {song.genre}
               </Badge>
             </div>
           </div>

@@ -17,11 +17,11 @@ interface SongInfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   description: string | null;
   tempo: number | null;
   songKey: string | null;
-  label: string | undefined | undefined;
+  label: string | null;
   genre: string | undefined;
   release_date: string | undefined;
   type: string | undefined;
-  downloads: Database["public"]["Tables"]["release_downloads"]["Row"][];
+  downloads: { download_url: string; edit: string; format: "mp3" | "wav" }[];
 }
 
 export const SongInfoCard = React.forwardRef<

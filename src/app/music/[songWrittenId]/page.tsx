@@ -36,9 +36,7 @@ export default async function SongPage({
             {songData?.title}
           </h1>
           <span className="text-muted-foreground">
-            {songData?.release_artists
-              .map((artist) => artist.artists?.name)
-              .join(", ")}
+            {songData?.artists.map((artist) => artist.name).join(", ")}
           </span>
         </div>
       </div>
@@ -47,11 +45,11 @@ export default async function SongPage({
         description={songData?.description}
         tempo={songData?.tempo}
         songKey={songData?.key}
-        label={songData?.labels?.name}
-        genre={songData?.genres?.name}
+        label={songData?.label}
+        genre={songData?.genre}
         release_date={songData.release_date}
-        type={songData?.release_types?.title}
-        downloads={[]}
+        type={songData?.type}
+        downloads={songData?.release_downloads}
       />
       {/* LINK SECTION */}
       <div className="flex justify-center items-center w-full h-8">

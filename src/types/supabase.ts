@@ -24,36 +24,6 @@ export type Database = {
         }
         Relationships: []
       }
-      genres: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
-      labels: {
-        Row: {
-          id: number
-          name: string
-        }
-        Insert: {
-          id?: number
-          name: string
-        }
-        Update: {
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       release_artists: {
         Row: {
           artist_id: number
@@ -145,87 +115,50 @@ export type Database = {
           }
         ]
       }
-      release_types: {
-        Row: {
-          id: number
-          title: string
-        }
-        Insert: {
-          id?: number
-          title: string
-        }
-        Update: {
-          id?: number
-          title?: string
-        }
-        Relationships: []
-      }
       releases: {
         Row: {
           art_url: string | null
           created_at: string
           description: string | null
-          genre_id: number | null
+          genre: string
           id: number
           key: string | null
-          label_id: number | null
+          label: string | null
           release_date: string
-          release_type_id: number | null
           tempo: number | null
           title: string
+          type: string
           written_id: string
         }
         Insert: {
           art_url?: string | null
           created_at?: string
           description?: string | null
-          genre_id?: number | null
+          genre: string
           id?: number
           key?: string | null
-          label_id?: number | null
+          label?: string | null
           release_date: string
-          release_type_id?: number | null
           tempo?: number | null
           title: string
+          type: string
           written_id: string
         }
         Update: {
           art_url?: string | null
           created_at?: string
           description?: string | null
-          genre_id?: number | null
+          genre?: string
           id?: number
           key?: string | null
-          label_id?: number | null
+          label?: string | null
           release_date?: string
-          release_type_id?: number | null
           tempo?: number | null
           title?: string
+          type?: string
           written_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_releases_genre_fkey"
-            columns: ["genre_id"]
-            isOneToOne: false
-            referencedRelation: "genres"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_releases_label_id_fkey"
-            columns: ["label_id"]
-            isOneToOne: false
-            referencedRelation: "labels"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "public_releases_release_type_id_fkey"
-            columns: ["release_type_id"]
-            isOneToOne: false
-            referencedRelation: "release_types"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {
