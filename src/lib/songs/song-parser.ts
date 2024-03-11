@@ -1,12 +1,9 @@
-import { createClient } from "@/lib/supabase/server";
-import { SupabaseClient } from "@supabase/supabase-js";
+import supabase from "@/lib/supabase";
 
 /**
  * @returns A list of all songs in the database with including a list of their artists.
  */
 export const getSongList = async () => {
-  const supabase = createClient();
-
   /** TODO: find a way to directly reference columns of referenced tables without them being nested
    * example
    *   labels { name: "xyz" }
@@ -40,11 +37,9 @@ export const getSongList = async () => {
  * @type Song
  */
 export async function getSong(songId: string | number) {
-  const supabase = createClient();
-
   // convert songId to number if necessary
   if (typeof songId == "string") {
-    songId = await resolveTrackId(supabase, songId.toString());
+    songId = await resolveTrackId(songId.toString());
   }
 
   // fetch release info
@@ -61,7 +56,7 @@ export async function getSong(songId: string | number) {
         labels(name),
         tempo,
         art_url,
-        release_types(title),
+        type,
         key,
         release_artists(artists(id, name)),
         release_links(platform, url),
@@ -79,7 +74,7 @@ export async function getSong(songId: string | number) {
  * @param writtenId the "written_id" value of the release, for example from url parameters.
  * @returns the numeric ID of the release, to be used inside the DB.
  */
-const resolveTrackId = async (supabase: SupabaseClient, writtenId: string) => {
+const resolveTrackId = async (writtenId: string) => {
   const { data: release } = await supabase
     .from("releases")
     .select("id")
