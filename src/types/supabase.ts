@@ -57,17 +57,14 @@ export type Database = {
       release_artists: {
         Row: {
           artist_id: number
-          artist_type: Database["public"]["Enums"]["artist-type"]
           release_id: number
         }
         Insert: {
           artist_id: number
-          artist_type: Database["public"]["Enums"]["artist-type"]
           release_id: number
         }
         Update: {
           artist_id?: number
-          artist_type?: Database["public"]["Enums"]["artist-type"]
           release_id?: number
         }
         Relationships: [
@@ -89,25 +86,22 @@ export type Database = {
       }
       release_downloads: {
         Row: {
-          created_at: string
           download_url: string
-          edit: Database["public"]["Enums"]["song-edit"]
+          edit: string
           format: Database["public"]["Enums"]["audio-filetype"]
           id: number
           release_id: number
         }
         Insert: {
-          created_at?: string
           download_url: string
-          edit: Database["public"]["Enums"]["song-edit"]
+          edit: string
           format: Database["public"]["Enums"]["audio-filetype"]
           id?: number
           release_id: number
         }
         Update: {
-          created_at?: string
           download_url?: string
-          edit?: Database["public"]["Enums"]["song-edit"]
+          edit?: string
           format?: Database["public"]["Enums"]["audio-filetype"]
           id?: number
           release_id?: number
@@ -125,19 +119,19 @@ export type Database = {
       release_links: {
         Row: {
           id: number
-          platform: Database["public"]["Enums"]["platforms"] | null
+          platform: string | null
           release_id: number
           url: string
         }
         Insert: {
           id?: number
-          platform?: Database["public"]["Enums"]["platforms"] | null
+          platform?: string | null
           release_id: number
           url: string
         }
         Update: {
           id?: number
-          platform?: Database["public"]["Enums"]["platforms"] | null
+          platform?: string | null
           release_id?: number
           url?: string
         }
@@ -241,24 +235,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      "artist-type": "main" | "feature" | "remixer"
       "audio-filetype": "mp3" | "wav"
-      platforms:
-        | "spotify"
-        | "applemusic"
-        | "youtube"
-        | "amazonmusic"
-        | "deezer"
-        | "tidal"
-        | "pandora"
-        | "soundcloud"
-        | "napster"
-        | "facebook"
-        | "instagram"
-        | "tiktok"
-        | "twitter"
-        | "reddit"
-      "song-edit": "regular" | "extended"
     }
     CompositeTypes: {
       [_ in never]: never
