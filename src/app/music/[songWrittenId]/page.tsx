@@ -1,23 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-
-import { getSong } from "@/lib/songs/song-parser";
-
+import { DragHandle } from "@/components/ui/drag-handle";
 import Image from "next/image";
 import Link from "next/link";
-
 import { PlatformButton } from "./PlatformButton";
-import { DragHandle } from "@/components/ui/drag-handle";
+import { getSong } from "@/lib/songs/song-parser";
 import { redirect } from "next/navigation";
-
-import { pascalCase } from "@/lib/utils";
+import { SongInfoCard } from "./SongInfoCard";
 
 export default async function SongPage({
   params,
@@ -27,24 +14,10 @@ export default async function SongPage({
   const writtenSongId = params.songWrittenId;
 
   // gather all info from the database
-  const songInfo = await getSong(writtenSongId);
+  const songData = await getSong(writtenSongId);
 
   // redirect if song not found
-  if (!songInfo) redirect("/music");
-
-  // split downloads into two sections, wav and mp3
-  const downloadsMp3 = songInfo?.downloads.filter(
-    (item) => item.format == "mp3"
-  );
-  const downloadsWav = songInfo?.downloads.filter(
-    (item) => item.format == "wav"
-  );
-
-  // parse songInfo for card sub-title line
-  const subTitleContent = [];
-  if (songInfo?.tempo) subTitleContent.push(songInfo.tempo + "BPM");
-  if (songInfo?.key) subTitleContent.push(songInfo.key);
-  if (songInfo?.label?.name) subTitleContent.push(songInfo?.label?.name);
+  if (!songData) redirect("/music");
 
   return (
     <div className="flex flex-col">
@@ -52,89 +25,44 @@ export default async function SongPage({
       <div className="relative -left-4 md:left-0 rounded-t-3xl w-screen md:w-full h-[400px] overflow-clip mix-blend-lighten">
         <Image
           alt="cover"
-          src={songInfo?.art_url || ""}
+          src={songData?.art_url || ""}
           className="blur-3xl w-full h-[400px]"
           width={256}
           height={256}
         />
         <div className="bg-gradient-to-b from-transparent to-background w-full h-[400px] -translate-y-[400px]" />
         <div className="flex flex-col justify-center items-center gap-2 p-8 w-full h-[336px] -translate-y-[800px]">
-          <h1 className="font-semibold text-4xl text-center">{songInfo?.title}</h1>
+          <h1 className="font-semibold text-4xl text-center">
+            {songData?.title}
+          </h1>
           <span className="text-muted-foreground">
-            {songInfo?.artists.map((artist) => artist.artists?.name).join(", ")}
+            {songData?.release_artists
+              .map((artist) => artist.artists?.name)
+              .join(", ")}
           </span>
         </div>
       </div>
       {/* INFO CARD */}
-      <Card className="md:mx-4 -mt-16 rounded-3xl">
-        <CardContent className="flex flex-col gap-4 pt-6">
-          <p className="font-mono leading-7">{songInfo?.description}</p>
-          <span className="font-mono text-muted-foreground">
-            {subTitleContent.join(" • ")}
-          </span>
-          <div className="flex gap-2">
-            {songInfo?.genre?.name && <Badge>{songInfo.genre.name}</Badge>}
-            {songInfo?.release_date && (
-              <Badge variant={"secondary"}>{songInfo.release_date}</Badge>
-            )}
-            {songInfo?.type?.title && (
-              <Badge variant={"outline"}>{songInfo.type.title}</Badge>
-            )}
-          </div>
-          <div className="gap-4 hidden has-[:first-child]:grid grid-flow-col">
-            {downloadsMp3 != null && downloadsMp3.length > 0 && (
-              <div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="w-full">
-                    <Button className="w-full">Download MP3</Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {downloadsMp3?.map((item, key) => {
-                      return (
-                        <Link href={item.url} key={key} target="_blank">
-                          <DropdownMenuItem>
-                            {pascalCase(item.edit)}
-                          </DropdownMenuItem>
-                        </Link>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            )}
-            {downloadsWav != null && downloadsWav.length > 0 && (
-              <div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="w-full">
-                    <Button className="w-full">Download WAV</Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {downloadsWav?.map((item, key) => {
-                      return (
-                        <Link href={item.url} key={key} target="_blank">
-                          <DropdownMenuItem>
-                            {pascalCase(item.edit)}
-                          </DropdownMenuItem>
-                        </Link>
-                      );
-                    })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <SongInfoCard
+        description={songData?.description}
+        tempo={songData?.tempo}
+        songKey={songData?.key}
+        label={songData?.labels?.name}
+        genre={songData?.genres?.name}
+        release_date={songData.release_date}
+        type={songData?.release_types?.title}
+        downloads={[]}
+      />
       {/* LINK SECTION */}
       <div className="flex justify-center items-center w-full h-8">
         <DragHandle width={64} height={2} />
       </div>
       <div>
-        {songInfo?.links != null && songInfo.links.length > 0 && (
+        {songData.release_links.length > 0 && (
           <div className="flex flex-col gap-2">
-            {songInfo?.links.map((link, key) => (
+            {songData?.release_links.map((link, key) => (
               <Link key={key} href={link.url} target="_blank">
-                <PlatformButton platform={link.platform} />
+                <PlatformButton entry={key} platform={link.platform} />
               </Link>
             ))}
           </div>

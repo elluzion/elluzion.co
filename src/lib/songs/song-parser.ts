@@ -56,16 +56,16 @@ export async function getSong(songId: string | number) {
         written_id,
         title,
         description,
-        genre:genres(name),
+        genres(name),
         release_date,
-        label:labels(name),
+        labels(name),
         tempo,
         art_url,
-        type:release_types(title),
+        release_types(title),
         key,
-        artists:release_artists(artists(id, name)),
-        links:release_links(platform, url),
-        downloads:release_downloads(url:download_url, edit, format)
+        release_artists(artists(id, name)),
+        release_links(platform, url),
+        release_downloads(download_url, edit, format)
       `
     )
     .eq("id", songId)
