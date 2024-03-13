@@ -4,177 +4,177 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
       artists: {
         Row: {
-          id: number
-          name: string | null
-        }
+          id: number;
+          name: string;
+        };
         Insert: {
-          id?: number
-          name?: string | null
-        }
+          id?: number;
+          name?: string;
+        };
         Update: {
-          id?: number
-          name?: string | null
-        }
-        Relationships: []
-      }
+          id?: number;
+          name?: string;
+        };
+        Relationships: [];
+      };
       release_artists: {
         Row: {
-          artist_id: number
-          release_id: number
-        }
+          artist_id: number;
+          release_id: number;
+        };
         Insert: {
-          artist_id: number
-          release_id: number
-        }
+          artist_id: number;
+          release_id: number;
+        };
         Update: {
-          artist_id?: number
-          release_id?: number
-        }
+          artist_id?: number;
+          release_id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_release_artists_artist_id_fkey"
-            columns: ["artist_id"]
-            isOneToOne: false
-            referencedRelation: "artists"
-            referencedColumns: ["id"]
+            foreignKeyName: "public_release_artists_artist_id_fkey";
+            columns: ["artist_id"];
+            isOneToOne: false;
+            referencedRelation: "artists";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "public_release_artists_release_id_fkey"
-            columns: ["release_id"]
-            isOneToOne: false
-            referencedRelation: "releases"
-            referencedColumns: ["id"]
+            foreignKeyName: "public_release_artists_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "releases";
+            referencedColumns: ["id"];
           }
-        ]
-      }
+        ];
+      };
       release_downloads: {
         Row: {
-          download_url: string
-          edit: string
-          format: Database["public"]["Enums"]["audio-filetype"]
-          id: number
-          release_id: number
-        }
+          download_url: string;
+          edit: string;
+          format: Database["public"]["Enums"]["audio-filetype"];
+          id: number;
+          release_id: number;
+        };
         Insert: {
-          download_url: string
-          edit: string
-          format: Database["public"]["Enums"]["audio-filetype"]
-          id?: number
-          release_id: number
-        }
+          download_url: string;
+          edit: string;
+          format: Database["public"]["Enums"]["audio-filetype"];
+          id?: number;
+          release_id: number;
+        };
         Update: {
-          download_url?: string
-          edit?: string
-          format?: Database["public"]["Enums"]["audio-filetype"]
-          id?: number
-          release_id?: number
-        }
+          download_url?: string;
+          edit?: string;
+          format?: Database["public"]["Enums"]["audio-filetype"];
+          id?: number;
+          release_id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_release_downloads_release_id_fkey"
-            columns: ["release_id"]
-            isOneToOne: false
-            referencedRelation: "releases"
-            referencedColumns: ["id"]
+            foreignKeyName: "public_release_downloads_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "releases";
+            referencedColumns: ["id"];
           }
-        ]
-      }
+        ];
+      };
       release_links: {
         Row: {
-          id: number
-          platform: string | null
-          release_id: number
-          url: string
-        }
+          id: number;
+          platform: string | null;
+          release_id: number;
+          url: string;
+        };
         Insert: {
-          id?: number
-          platform?: string | null
-          release_id: number
-          url: string
-        }
+          id?: number;
+          platform?: string | null;
+          release_id: number;
+          url: string;
+        };
         Update: {
-          id?: number
-          platform?: string | null
-          release_id?: number
-          url?: string
-        }
+          id?: number;
+          platform?: string | null;
+          release_id?: number;
+          url?: string;
+        };
         Relationships: [
           {
-            foreignKeyName: "public_release_links_release_id_fkey"
-            columns: ["release_id"]
-            isOneToOne: false
-            referencedRelation: "releases"
-            referencedColumns: ["id"]
+            foreignKeyName: "public_release_links_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "releases";
+            referencedColumns: ["id"];
           }
-        ]
-      }
+        ];
+      };
       releases: {
         Row: {
-          art_url: string | null
-          created_at: string
-          description: string | null
-          genre: string
-          id: number
-          key: string | null
-          label: string | null
-          release_date: string
-          tempo: number | null
-          title: string
-          type: string
-          written_id: string
-        }
+          art_url: string | null;
+          created_at: string;
+          description: string | null;
+          genre: string;
+          id: number;
+          key: string | null;
+          label: string | null;
+          release_date: string;
+          tempo: number | null;
+          title: string;
+          type: string;
+          written_id: string;
+        };
         Insert: {
-          art_url?: string | null
-          created_at?: string
-          description?: string | null
-          genre: string
-          id?: number
-          key?: string | null
-          label?: string | null
-          release_date: string
-          tempo?: number | null
-          title: string
-          type: string
-          written_id: string
-        }
+          art_url?: string | null;
+          created_at?: string;
+          description?: string | null;
+          genre: string;
+          id?: number;
+          key?: string | null;
+          label?: string | null;
+          release_date: string;
+          tempo?: number | null;
+          title: string;
+          type: string;
+          written_id: string;
+        };
         Update: {
-          art_url?: string | null
-          created_at?: string
-          description?: string | null
-          genre?: string
-          id?: number
-          key?: string | null
-          label?: string | null
-          release_date?: string
-          tempo?: number | null
-          title?: string
-          type?: string
-          written_id?: string
-        }
-        Relationships: []
-      }
-    }
+          art_url?: string | null;
+          created_at?: string;
+          description?: string | null;
+          genre?: string;
+          id?: number;
+          key?: string | null;
+          label?: string | null;
+          release_date?: string;
+          tempo?: number | null;
+          title?: string;
+          type?: string;
+          written_id?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
-      "audio-filetype": "mp3" | "wav"
-    }
+      "audio-filetype": "mp3" | "wav";
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -187,7 +187,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
       Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -195,11 +195,11 @@ export type Tables<
       Database["public"]["Views"])
   ? (Database["public"]["Tables"] &
       Database["public"]["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
-  : never
+  : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -210,17 +210,17 @@ export type TablesInsert<
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
   ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
-  : never
+  : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -231,17 +231,17 @@ export type TablesUpdate<
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
   ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
-  : never
+  : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -254,4 +254,4 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
   ? Database["public"]["Enums"][PublicEnumNameOrOptions]
-  : never
+  : never;

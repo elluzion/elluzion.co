@@ -30,8 +30,13 @@ export const PlatformButton = React.forwardRef<
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0.1 * entry } }}
+      initial={{ opacity: 0, scale: 0.95, translateY: "-16px" }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        translateY: "0px",
+        transition: { delay: 0.07 * entry },
+      }}
       className="w-full h-14"
     >
       <Button
