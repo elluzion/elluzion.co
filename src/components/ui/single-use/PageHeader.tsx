@@ -14,10 +14,29 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../breadcrumb";
+import LogOutButton from "./LogOutButton";
+import { createClient } from "@/lib/supabase/client";
+import { useState } from "react";
+import { pascalCase } from "@/lib/utils";
 
 export default function PageHeader() {
   const path = usePathname();
   const pathArray = path.split("/");
+
+  const [logoutButtonVisible, setLogoutButtonVisible] = useState(false);
+
+  const supabase = createClient();
+  supabase.auth.getUser().then((res) => {
+    if (res.data.user) setLogoutButtonVisible(true);
+  });
+
+  const formatUrlSection = (item: string) => {
+    return item
+      .split("-") // separate into array
+      .map((word) => (word = pascalCase(word))) // format each word
+      .join(" "); /* combine back together */
+  };
+
   return (
     <div className="z-50 fixed flex justify-center items-center bg-zinc-950 bg-opacity-80 backdrop-blur-[120px] w-full h-16">
       <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[700px]">
@@ -60,7 +79,7 @@ export default function PageHeader() {
                   >
                     <BreadcrumbItem key={key}>
                       <BreadcrumbLink href={subPath} className="font-medium">
-                        {item[0].toUpperCase() + item.slice(1)}
+                        {formatUrlSection(item)}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
@@ -70,7 +89,7 @@ export default function PageHeader() {
                 return (
                   <BreadcrumbItem key={key}>
                     <BreadcrumbPage className="font-medium">
-                      {item[0].toUpperCase() + item.slice(1)}
+                      {formatUrlSection(item)}
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                 );
@@ -78,6 +97,8 @@ export default function PageHeader() {
             })}
           </BreadcrumbList>
         </Breadcrumb>
+        <span className="grow"></span>
+        {logoutButtonVisible && <LogOutButton />}
       </div>
     </div>
   );

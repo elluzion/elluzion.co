@@ -11,8 +11,15 @@ import {
 import { getSongList } from "@/lib/songs/song-parser";
 import Image from "next/image";
 import Link from "next/link";
+import AddSongButton from "./AddSongButton";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function Music() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   var songs = await getSongList();
 
   if (songs) {
@@ -91,6 +98,7 @@ export default async function Music() {
         </div>
         {mostRecentItem}
         <div className="flex flex-col gap-4">{secondaryItems}</div>
+        {user && <AddSongButton />}
       </div>
     );
   }

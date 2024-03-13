@@ -10,6 +10,7 @@ import {
   SiInstagram,
   SiTiktok,
   SiTwitter,
+  SiAmazonmusic,
 } from "@icons-pack/react-simple-icons";
 import { ReactElement } from "react";
 
@@ -46,7 +47,7 @@ export const Platforms: Array<Platform> = [
     id: "amazonmusic",
     name: "Amazon Music",
     accentColour: "#FF9900",
-    icon: <SiSpotify />,
+    icon: <SiAmazonmusic />,
   },
   {
     id: "tidal",

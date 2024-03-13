@@ -19,8 +19,10 @@ export const getSongList = async () => {
    * should instead return
    *   label: "xyz"
    */
-  var { data: releases } = await supabase.from("releases").select(
-    `
+  var { data: releases } = await supabase
+    .from("releases")
+    .select(
+      `
       id,
       written_id,
       title,
@@ -34,7 +36,8 @@ export const getSongList = async () => {
       key,
       artists(id, name)
     `
-  );
+    )
+    .order("release_date", { ascending: false });
 
   return releases;
 };

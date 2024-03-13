@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
 import PageHeader from "@/components/ui/single-use/PageHeader";
 import CursorBacklight from "@/components/ui/single-use/CursorBacklight";
+import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       >
         <CursorBacklight />
         <PageHeader />
+        <Toaster />
         <div className="mb-4 px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">
           {children}
         </div>

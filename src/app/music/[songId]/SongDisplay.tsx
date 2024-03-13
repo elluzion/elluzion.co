@@ -8,12 +8,26 @@ import { Song } from "@/lib/songs/song-parser";
 import { PlatformButton } from "./PlatformButton";
 
 import { motion } from "framer-motion";
+import { createClient } from "@/lib/supabase/client";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import Icon from "@mdi/react";
+import { mdiTrashCan } from "@mdi/js";
+import { useRouter } from "next/navigation";
 
 type Props = {
   song: Song;
 };
 
 export function SongDisplay(props: Props) {
+  const router = useRouter();
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const supabase = createClient();
+  supabase.auth
+    .getUser()
+    .then((data) => setLoggedIn(data.data.user ? true : false));
+
   const song = props.song;
   return (
     <div className="flex flex-col">
@@ -49,6 +63,25 @@ export function SongDisplay(props: Props) {
       >
         <SongInfoCard song={song} />
       </motion.div>
+      {/* DELETE SONG BUTTON */}
+      {loggedIn && (
+        <Button
+          variant={"destructive"}
+          className="mt-4"
+          onClick={() => {
+            supabase
+              .from("releases")
+              .delete()
+              .eq("written_id", song.written_id)
+              .then(() => {
+                router.push("/music");
+              });
+          }}
+        >
+          <Icon path={mdiTrashCan} size={0.75} />
+          Delete Song
+        </Button>
+      )}
       {/* LINK SECTION */}
       <motion.div
         initial={{ opacity: 0 }}
