@@ -38,7 +38,9 @@ export const SongInfoCard = React.forwardRef<
   return (
     <Card className="md:mx-4 -mt-16 rounded-3xl">
       <CardContent className="flex flex-col gap-4 pt-6">
-        <p className="font-mono leading-7">{song.description}</p>
+        {song.description && (
+          <p className="font-mono leading-7">{song.description}</p>
+        )}
         <span className="font-mono text-muted-foreground">
           {subTitleContent.join(" • ")}
         </span>
