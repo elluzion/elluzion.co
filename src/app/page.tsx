@@ -94,15 +94,15 @@ export default function Home() {
       <div className="flex flex-col mt-8 max-w-full prose-invert prose prose-zinc">
         <p>
           since 2018, i've been a <b>music producer</b>. ever since i first
-          picked up FL Studio, i have spent countless hours in it, working on
-          music, sound designing, mixing and mastering my own EDM tracks, some
+          picked up fl studio, i have spent countless hours in it, working on
+          music, sound designing, mixing and mastering my own edm tracks, some
           of which you can listen to on{" "}
           <a
-            href="http://soundcloud.com/elluzion.music"
+            href="http://soundcloud.com/elluzionmusic"
             target="_blank"
             className="text-orange-400"
           >
-            SoundCloud
+            soundcloud
           </a>
           ,{" "}
           <a
@@ -110,7 +110,7 @@ export default function Home() {
             target="_blank"
             className="text-green-400"
           >
-            Spotify
+            spotify
           </a>{" "}
           or{" "}
           <a
@@ -118,7 +118,7 @@ export default function Home() {
             target="_blank"
             className="text-red-400"
           >
-            YouTube
+            youtube
           </a>
           , amassing roughly over 800k streams globally.
           <br />
@@ -126,21 +126,20 @@ export default function Home() {
           moreover, i've been working on various (mostly private) software
           projects, such as{" "}
           <a href="https://github.com/project-fluid" target="_blank">
-            Project Fluid
+            project fluid
           </a>
-          , a redesigned AOSP-based custom rom, as well as device-side
-          development for the Xiaomi Mi 9 for roughly 2 years. nowadays i really
+          , a redesigned aosp-based custom rom, as well as device-side
+          development for the xiaomi mi 9 for roughly 2 years. nowadays i really
           like working on the web, using frameworks like next.js (which this
-          website is written in) or NUXT in combination with TailwindCSS.
+          website is written in) or nuxt in combination with tailwind.
         </p>
 
         <h4>what else?</h4>
         <p>
           uh, i love cars and tech. driving a '99 mazda mx-5 (miata), i have a
-          special interest in both old and new JDM cars, and believe that fun
-          and emotion should always play a role in the future of cars, also the
-          EVs. nevertheless, i am always looking forward to the future and new
-          exciting technologies and opportunities!
+          special interest in both old and new jdm cars. nevertheless, i am
+          always looking forward to the future and new exciting technologies and
+          opportunities!
         </p>
       </div>
     </main>
