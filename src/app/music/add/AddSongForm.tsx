@@ -25,7 +25,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { XIcon } from "lucide-react";
 import Icon from "@mdi/react";
-import { mdiPlay } from "@mdi/js";
+import { mdiImport, mdiPlay } from "@mdi/js";
 import {
   Select,
   SelectContent,
@@ -38,9 +38,10 @@ import { createClient } from "@/lib/supabase/client";
 import { Database } from "@/types/supabase";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DragHandle } from "@/components/ui/drag-handle";
-import { addSong } from "./actions";
+import { addSong, fetchSoundcloudSongData } from "./actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { SoundcloudTrackV2 } from "soundcloud.ts";
 
 export function AddSongForm(props: {
   index: number;
@@ -68,6 +69,27 @@ export function AddSongForm(props: {
     props.setShouldSubmitCallback(false);
   }, [props, props.shouldSubmit]);
 
+  function populateImportData(song: SoundcloudTrackV2) {
+    console.log(song);
+    form.setValue("songTitle", song.title);
+    form.setValue("description", song.description || "");
+    form.setValue("writtenId", song.permalink);
+    form.setValue("coverUrl", song.artwork_url);
+    form.setValue("genre", song.genre);
+    form.setValue("label", song.label_name || "");
+    form.setValue("releaseDate", new Date(song.release_date));
+
+    const soundcloudStreamLink = [
+      {
+        name: "Soundcloud",
+        platformId: "soundcloud",
+        url: song.permalink_url,
+      },
+    ];
+    form.setValue("streamLinks", soundcloudStreamLink);
+    setStreamLinks(soundcloudStreamLink);
+  }
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
@@ -90,6 +112,7 @@ export function AddSongForm(props: {
             form={form}
             artists={artists}
             setArtists={setArtists}
+            populateImportData={populateImportData}
           />
           <FormPart2 index={props.index} form={form} />
           <FormPart3
@@ -116,16 +139,19 @@ function FormPart1(
   props: FormPartProps & {
     artists: Artist[];
     setArtists: (newList: Artist[]) => void;
+    populateImportData: (imported: SoundcloudTrackV2) => void;
   }
 ) {
+  const supabase = createClient();
+  const { toast } = useToast();
+
+  const songImportRef = useRef<HTMLInputElement | null>(null);
   const [selectedArtistId, setSelectedArtistId] = useState(0);
   const [customArtistName, setCustomArtistName] = useState("");
 
   const [existingArtists, setExistingArtists] = useState<
     Database["public"]["Tables"]["artists"]["Row"][] | undefined
   >(undefined);
-
-  const supabase = createClient();
 
   useEffect(() => {
     if (!existingArtists) {
@@ -143,11 +169,61 @@ function FormPart1(
     props.form.setValue("artists", newList);
   }
 
+  function handleImportSong() {
+    const songUrl = songImportRef.current?.value || "";
+    if (!songUrl.startsWith("https://soundcloud.com/")) {
+      return;
+    }
+    fetchSoundcloudSongData(songUrl)
+      .catch(() => {
+        toast({
+          title: "Song not found!",
+          description: songUrl,
+        });
+      })
+      .then((res) => {
+        try {
+          const song = res as SoundcloudTrackV2;
+          props.populateImportData(song);
+          toast({
+            title: "Imported song!",
+            description: song.title,
+          });
+        } catch (e: any) {
+          toast({
+            title: "Error",
+            description: e.toString(),
+          });
+        }
+      });
+  }
+
   return (
     <div
       className="space-y-4"
       style={{ display: props.index == 0 ? "block" : "none" }}
     >
+      <FormItem>
+        <FormLabel>Import from Soundcloud</FormLabel>
+        <div className="flex gap-2">
+          <Input
+            ref={songImportRef}
+            className="bg-popover w-auto grow"
+            placeholder="Enter Soundcloud URL"
+            type="url"
+          />
+          <Button
+            size={"icon"}
+            onClick={(event) => {
+              handleImportSong();
+              event.preventDefault();
+            }}
+          >
+            <Icon size={0.75} path={mdiImport} />
+          </Button>
+        </div>
+      </FormItem>
+
       <FormField
         control={props.form.control}
         name="songTitle"

@@ -1,16 +1,24 @@
 "use server";
 
+import Soundcloud from "soundcloud.ts";
+
 import { z } from "zod";
 import { formSchema } from "./formSchema";
 import { createClient } from "@/lib/supabase/server";
 import { Database } from "@/types/supabase";
+
+export const fetchSoundcloudSongData = async (songUrl: string) => {
+  const soundcloud = new Soundcloud();
+
+  const track = await soundcloud.tracks.getV2(songUrl);
+  return track;
+};
 
 /**
  *
  * NEEDS AUTHORIZATION
  *
  */
-
 export async function addSong(data: z.infer<typeof formSchema>) {
   const supabase = createClient();
 
