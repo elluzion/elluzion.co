@@ -3,7 +3,7 @@ import { DragHandle } from "@/components/drag-handle";
 import { Input } from "@/components/input";
 import { Platforms } from "@/lib/songs/platforms";
 import { pascalCase } from "@/lib/utils";
-import { mdiPlay } from "@mdi/js";
+import { mdiDragHorizontalVariant, mdiPlay } from "@mdi/js";
 import Icon from "@mdi/react";
 import {
   Select,
@@ -18,7 +18,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/toggle-group";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { DownloadLink, FormPartProps, StreamLink } from "./types";
-import { Reorder } from "framer-motion";
+import { Reorder, useDragControls } from "framer-motion";
 
 export default function FormPart3(
   props: FormPartProps & {
@@ -48,6 +48,48 @@ export default function FormPart3(
       .split(" ") // separate into array
       .map((word) => (word = pascalCase(word))) // format each word
       .join(" "); /* combine back together */
+  }
+
+  function StreamLinkReoderItem(_props: { index: number; link: StreamLink }) {
+    const dragControls = useDragControls();
+
+    return (
+      <Reorder.Item
+        value={_props.link}
+        dragControls={dragControls}
+        className="flex items-center gap-4 bg-popover py-2 pr-2 pl-4 rounded-lg"
+      >
+        <div
+          className="cursor-grab"
+          onPointerDown={(e) => dragControls.start(e)}
+        >
+          <Icon path={mdiDragHorizontalVariant} size={1} />
+        </div>
+        {Platforms.find((item) => {
+          return item.id == _props.link.platformId;
+        })?.icon || <Icon path={mdiPlay} size={1.2} />}
+        <a
+          className="font-mono text-sm truncate grow"
+          href={_props.link.url}
+          target="_blank"
+        >
+          {_props.link.url}
+        </a>
+        <Button
+          type="button"
+          variant={"ghost"}
+          size={"icon"}
+          className="text-red-500"
+          onClick={() => {
+            const newArr = [...props.streamLinks];
+            newArr.splice(_props.index, 1);
+            props.setStreamLinks(newArr);
+          }}
+        >
+          <XIcon />
+        </Button>
+      </Reorder.Item>
+    );
   }
 
   return (
@@ -220,35 +262,7 @@ export default function FormPart3(
         className="has-[:first-child]:flex flex-col gap-2 hidden"
       >
         {props.streamLinks.map((link, key) => (
-          <Reorder.Item
-            value={link}
-            className="flex items-center gap-4 bg-popover py-2 pr-2 pl-4 rounded-lg"
-            key={key}
-          >
-            {Platforms.find((item) => {
-              return item.id == link.platformId;
-            })?.icon || <Icon path={mdiPlay} size={1.2} />}
-            <a
-              className="font-mono text-sm truncate grow"
-              href={link.url}
-              target="_blank"
-            >
-              {link.url}
-            </a>
-            <Button
-              type="button"
-              variant={"ghost"}
-              size={"icon"}
-              className="text-red-500"
-              onClick={() => {
-                const newArr = [...props.streamLinks];
-                newArr.splice(key, 1);
-                props.setStreamLinks(newArr);
-              }}
-            >
-              <XIcon />
-            </Button>
-          </Reorder.Item>
+          <StreamLinkReoderItem index={key} key={key} link={link} />
         ))}
       </Reorder.Group>
       <span className="my-4 font-mono text-muted-foreground text-sm">
