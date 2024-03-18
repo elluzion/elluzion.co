@@ -5,6 +5,7 @@ import type { StreamLink } from "@/app/add/types";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import Soundcloud from "soundcloud.ts";
 import YouTube from "youtube-sr";
+import { customsearch } from "@googleapis/customsearch";
 
 const URL_SPOTIFY = (trackId: string) =>
   `https://open.spotify.com/track/${trackId}`;
@@ -50,6 +51,27 @@ const fetchSpotifySong = async (searchQuery: string) => {
   return search.tracks.items[0];
 };
 
+/*
+this workaround scrapes google for the song from apple music
+success rate is "okay", it might throw wrong results when the track just released
+and is not yet scraped by google 
+*/
+const fetchAppleMusicSong = async (searchQuery: string) => {
+  const { data } = await customsearch("v1").cse.list({
+    q: searchQuery,
+    cx: process.env.GOOGLE_SEARCH_ENGINE_ID,
+    key: process.env.GOOGLE_API_KEY,
+    siteSearch: "music.apple.com",
+    siteSearchFilter: "i",
+  });
+
+  const songTitle = searchQuery.split(" - ")[1];
+
+  if (!data.items) return;
+  const item = data.items.find((item) => item.title?.includes(songTitle));
+  return item;
+};
+
 const fetchYoutubeSong = async (searchQuery: string) => {
   const search = await YouTube.search(searchQuery, { type: "video", limit: 1 });
   return search[0];
@@ -92,8 +114,18 @@ export const fetchLinksForPlatforms = async (
   }
 
   // apple music
-  // $99/YEAR 💀
-  // TODO: https://developer.apple.com/documentation/applemusicapi/
+  // workaround through google search, might take some time to find a link for a song on release day
+  // due to slow indexing of new releases
+  if (platforms.includes("applemusic")) {
+    const song = await fetchAppleMusicSong(query);
+    if (song && song.link) {
+      links.push({
+        platformId: "applemusic",
+        name: "Apple Music",
+        url: song.link,
+      });
+    }
+  }
 
   // youtube
   if (platforms.includes("youtube")) {
