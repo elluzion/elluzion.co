@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { DragHandle } from "@/components/ui/drag-handle";
+import { DragHandle } from "@/components/drag-handle";
 import { SongInfoCard } from "./SongInfoCard";
 import { Song } from "@/lib/songs/song-parser";
 import { PlatformButton } from "./PlatformButton";
@@ -10,7 +10,7 @@ import { PlatformButton } from "./PlatformButton";
 import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import Icon from "@mdi/react";
 import { mdiTrashCan } from "@mdi/js";
 import { useRouter } from "next/navigation";
@@ -74,7 +74,7 @@ export function SongDisplay(props: Props) {
               .delete()
               .eq("written_id", song.written_id)
               .then(() => {
-                router.push("/music");
+                router.push("/");
               });
           }}
         >

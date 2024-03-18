@@ -2,8 +2,6 @@
 
 import { usePathname } from "next/navigation";
 
-import { Button } from "../button";
-
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -13,10 +11,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../breadcrumb";
+} from "@/components/breadcrumb";
 import LogOutButton from "./LogOutButton";
 import { createClient } from "@/lib/supabase/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { pascalCase } from "@/lib/utils";
 
 export default function PageHeader() {
@@ -25,9 +23,13 @@ export default function PageHeader() {
 
   const [logoutButtonVisible, setLogoutButtonVisible] = useState(false);
 
-  const supabase = createClient();
-  supabase.auth.getUser().then((res) => {
-    if (res.data.user) setLogoutButtonVisible(true);
+  useEffect(() => {
+    const supabase = createClient();
+    try {
+      supabase.auth.getUser().then((res) => {
+        if (res.data.user) setLogoutButtonVisible(true);
+      });
+    } catch (e) {}
   });
 
   const formatUrlSection = (item: string) => {
@@ -50,20 +52,6 @@ export default function PageHeader() {
           />
         </Link>
 
-        {path == "/" && (
-          <div className="flex gap-2 rounded-lg">
-            <Link href={"/music"}>
-              <Button variant={"outline"} className="bg-transparent">
-                Music
-              </Button>
-            </Link>
-            <Link href={"/projects"}>
-              <Button variant={"outline"} className="bg-transparent">
-                Projects
-              </Button>
-            </Link>
-          </div>
-        )}
         <Breadcrumb>
           <BreadcrumbList>
             {pathArray.map((item, key) => {

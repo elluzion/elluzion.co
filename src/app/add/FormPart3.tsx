@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { DragHandle } from "@/components/ui/drag-handle";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/button";
+import { DragHandle } from "@/components/drag-handle";
+import { Input } from "@/components/input";
 import { Platforms } from "@/lib/songs/platforms";
 import { pascalCase } from "@/lib/utils";
 import { mdiPlay } from "@mdi/js";
@@ -11,9 +11,9 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+} from "@/components/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/toggle-group";
 
 import { XIcon } from "lucide-react";
 import { useState } from "react";

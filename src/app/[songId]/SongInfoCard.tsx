@@ -1,14 +1,14 @@
 import React from "react";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+} from "@/components/dropdown-menu";
+import { Badge } from "@/components/badge";
+import { Button } from "@/components/button";
 import { pascalCase } from "@/lib/utils";
 import Link from "next/link";
 import { Song } from "@/lib/songs/song-parser";

@@ -1,5 +1,11 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/form";
+import { Input } from "@/components/input";
 import { FormPartProps } from "./types";
 
 export default function FormPart2(props: FormPartProps) {

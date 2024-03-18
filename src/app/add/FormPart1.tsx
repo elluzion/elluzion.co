@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import {
   FormItem,
   FormLabel,
   FormField,
   FormControl,
   FormMessage,
-} from "@/components/ui/form";
-import { Input, TextArea } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+} from "@/components/form";
+import { Input, TextArea } from "@/components/input";
+import { useToast } from "@/components/use-toast";
 import { fetchSoundcloudSong } from "@/lib/songs/song-fetcher";
 import { mdiDragHorizontalVariant, mdiImport } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -17,7 +17,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
+} from "@/components/select";
 import { useDragControls, Reorder } from "framer-motion";
 import { XIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
@@ -192,7 +192,7 @@ export default function FormPart1(
           <FormItem>
             <FormLabel>Song URL</FormLabel>
             <div className="flex items-center gap-3">
-              <FormLabel>elluzion.co/music/</FormLabel>
+              <FormLabel>elluzion.co/</FormLabel>
               <FormControl>
                 <Input placeholder="enemy" {...field} />
               </FormControl>

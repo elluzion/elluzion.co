@@ -1,6 +1,6 @@
 "use server";
 
-import type { StreamLink } from "@/app/music/add/types";
+import type { StreamLink } from "@/app/add/types";
 
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import Soundcloud from "soundcloud.ts";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { createClient } from "@/lib/supabase/client";
 

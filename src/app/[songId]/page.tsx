@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Song, getSong } from "@/lib/songs/song-parser";
 import { SongDisplay } from "./SongDisplay";
 import { Suspense } from "react";
-import { LoadingContainer } from "@/components/ui/loading-container";
+import { LoadingContainer } from "@/components/loading-container";
 
 export default async function SongPage({
   params,
@@ -12,7 +12,7 @@ export default async function SongPage({
   // gather all info from the database
 
   const song: Song | null = await getSong(params.songId);
-  if (!song) redirect("/music");
+  if (!song) redirect("/");
 
   return (
     <Suspense fallback={LoadingContainer()}>

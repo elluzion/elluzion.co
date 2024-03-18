@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/button";
 import { AddSongHeaderSection } from "./AddSongHeaderContent";
 import { useRef, useState } from "react";
 import { AddSongForm } from "./AddSongForm";

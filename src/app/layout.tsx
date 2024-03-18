@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-import { mainFont, monoFont } from "@/components/ui/providers/font-provider";
-import PageHeader from "@/components/ui/single-use/PageHeader";
-import CursorBacklight from "@/components/ui/single-use/CursorBacklight";
-import { Toaster } from "@/components/ui/toaster";
+import { mainFont, monoFont } from "@/lib/fonts/font-provider";
+import PageHeader from "@/components/single-use/PageHeader";
+import CursorBacklight from "@/components/single-use/CursorBacklight";
+import { Toaster } from "@/components/toaster";
 
 import "./globals.css";
 
@@ -14,7 +14,7 @@ import "./globals.css";
  */
 export const metadata: Metadata = {
   title: "Elluzion",
-  description: "Software developer at day, music producer at night.",
+  description: "German EDM producer",
 };
 
 export default function RootLayout({

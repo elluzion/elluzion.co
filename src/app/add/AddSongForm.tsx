@@ -3,7 +3,7 @@
 import type { Artist, StreamLink, DownloadLink } from "./types";
 
 import { formSchema } from "./formSchema";
-import { Form } from "@/components/ui/form";
+import { Form } from "@/components/form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { pushSongToDatabase } from "./actions";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/use-toast";
 import { SoundcloudTrackV2 } from "soundcloud.ts";
 import FormPart1 from "./FormPart1";
 import FormPart2 from "./FormPart2";
@@ -131,7 +131,7 @@ export function AddSongForm(props: {
           description: e.toString(),
         });
       })
-      .then(() => router.push("/music"));
+      .then(() => router.push("/"));
   }
 
   return (

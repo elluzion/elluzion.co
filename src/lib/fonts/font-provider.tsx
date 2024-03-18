@@ -10,13 +10,13 @@ import localFont from "next/font/local";
  */
 
 const geistFont = localFont({
-  src: "fonts/GeistVariable.ttf",
+  src: "GeistVariable.ttf",
   display: "swap",
   variable: "--font-geist",
 });
 
 const JBMonoFont = localFont({
-  src: "fonts/JetBrainsMonoVariable.ttf",
+  src: "JetBrainsMonoVariable.ttf",
   display: "swap",
   variable: "--font-jbmono",
 });
