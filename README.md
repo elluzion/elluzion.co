@@ -1,9 +1,19 @@
 ## Getting Started
 
+### Required .env.local variables:
+
+```bash
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_CLIENT_ID=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
 Run the development server using:
 
 ```bash
 bun dev
+
 # alternatively
 npm run dev
 ```
