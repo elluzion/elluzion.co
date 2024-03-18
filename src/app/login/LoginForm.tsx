@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 export default function LoginForm() {
   const signInWithGithub = async () => {
     const supabase = createClient();
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
         redirectTo: location.origin + "/login/callback",

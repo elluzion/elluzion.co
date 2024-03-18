@@ -1,25 +1,16 @@
 "use server";
 
-import Soundcloud from "soundcloud.ts";
-
 import { z } from "zod";
 import { formSchema } from "./formSchema";
 import { createClient } from "@/lib/supabase/server";
 import { Database } from "@/types/supabase";
-
-export const fetchSoundcloudSongData = async (songUrl: string) => {
-  const soundcloud = new Soundcloud();
-
-  const track = await soundcloud.tracks.getV2(songUrl);
-  return track;
-};
 
 /**
  *
  * NEEDS AUTHORIZATION
  *
  */
-export async function addSong(data: z.infer<typeof formSchema>) {
+export async function pushSongToDatabase(data: z.infer<typeof formSchema>) {
   const supabase = createClient();
 
   try {
@@ -43,7 +34,7 @@ export async function addSong(data: z.infer<typeof formSchema>) {
       .insert(release)
       .select()
       .single();
-    if (!newRow || error1) throw Error("Error adding release!");
+    if (!newRow || error1) throw error1;
     const releaseId = newRow.id;
 
     /**
@@ -53,17 +44,17 @@ export async function addSong(data: z.infer<typeof formSchema>) {
     const { data: existingArtists, error: error2 } = await supabase
       .from("artists")
       .select("*");
-    if (!existingArtists || error2) throw Error("Error fetching artists!");
+    if (!existingArtists || error2) throw error2;
 
     // add new + return their rows
-    const artistsWithId = data.artists.filter((x) => x.id);
+    const artistsWithId = data.artists.filter((x) => x.id != null);
     const artistsWithoutId = data.artists.filter((x) => x.id == null);
 
     const { data: artistsAdded, error: error3 } = await supabase
       .from("artists")
       .insert(artistsWithoutId)
       .select();
-    if (!artistsAdded || error3) throw Error("Error inserting artists!");
+    if (!artistsAdded || error3) throw error3;
 
     const newArtists = artistsAdded;
     artistsWithId.map((artist) => {
@@ -84,7 +75,7 @@ export async function addSong(data: z.infer<typeof formSchema>) {
     const { error: error4 } = await supabase
       .from("release_artists")
       .insert(releaseArtists);
-    if (error4) throw Error("Error while establishing artist-song relation!");
+    if (error4) throw error4;
 
     /**
      * stream links
@@ -101,7 +92,7 @@ export async function addSong(data: z.infer<typeof formSchema>) {
     const { error: error5 } = await supabase
       .from("release_links")
       .insert(formattedStreamlinks);
-    if (error5) throw Error("Error inserting streaming links!");
+    if (error5) throw error5;
 
     /**
      * download links
@@ -121,12 +112,12 @@ export async function addSong(data: z.infer<typeof formSchema>) {
       const { error: error6 } = await supabase
         .from("release_downloads")
         .insert(formattedDownloadlinks);
-      if (error6) throw Error("Error inserting download links!");
+      if (error6) throw error6;
     }
-  } catch (e: any) {
+  } catch (e) {
     // remove again when something bad happens
     await supabase.from("releases").delete().eq("written_id", data.writtenId);
 
-    throw Error(e.toString());
+    throw e;
   }
 }

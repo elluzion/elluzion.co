@@ -30,7 +30,7 @@ export default function RootLayout({
         <CursorBacklight />
         <PageHeader />
         <Toaster />
-        <div className="mb-4 px-4 md:px-0 pt-16 w-full max-w-[700px] transition-all self-center">
+        <div className="mb-4 px-4 md:px-0 pt-16 w-full max-w-[768px] transition-all self-center">
           {children}
         </div>
         {/* Vercel analytics */}

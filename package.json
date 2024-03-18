@@ -47,6 +47,7 @@
     "soundcloud.ts": "^0.5.2",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "youtube-sr": "^4.3.10",
     "zod": "^3.22.4"
   },
   "devDependencies": {

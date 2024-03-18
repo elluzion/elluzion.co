@@ -39,7 +39,7 @@ export default function PageHeader() {
 
   return (
     <div className="z-50 fixed flex justify-center items-center bg-zinc-950 bg-opacity-80 backdrop-blur-[120px] w-full h-16">
-      <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[700px]">
+      <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[768px]">
         <Link href="/">
           <Image
             src="/icons/elluzion_small_icon.svg"
