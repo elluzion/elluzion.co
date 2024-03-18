@@ -135,7 +135,6 @@ export default function FormPart3(
                     ...props.streamLinks,
                     {
                       platformId: customPlatformId,
-                      name: formatCustomPlatformName(customPlatformId),
                       url: customPlatformUrl,
                     },
                   ];

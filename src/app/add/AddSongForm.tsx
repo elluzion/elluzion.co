@@ -8,10 +8,10 @@ import { Form } from "@/components/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { pushSongToDatabase } from "./actions";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useToast } from "@/components/use-toast";
 import { SoundcloudTrackV2 } from "soundcloud.ts";
 import FormPart1 from "./FormPart1";
@@ -19,8 +19,10 @@ import FormPart2 from "./FormPart2";
 import FormPart3 from "./FormPart3";
 import { createClient } from "@/lib/supabase/client";
 import { fetchLinksForPlatforms } from "@/lib/songs/song-fetcher";
+import { getSong } from "@/lib/songs/song-parser";
 
 export function AddSongForm(props: {
+  editing?: string;
   index: number;
   shouldSubmit: boolean;
   setShouldSubmitCallback: (newState: boolean) => void;
@@ -38,14 +40,7 @@ export function AddSongForm(props: {
   const [streamLinks, setStreamLinks] = useState<Array<StreamLink>>([]);
   const [downloadLinks, setDownloadLinks] = useState<Array<DownloadLink>>([]);
 
-  useEffect(() => {
-    if (props.shouldSubmit && refSubmitButtom.current) {
-      refSubmitButtom.current.click();
-    }
-    props.setShouldSubmitCallback(false);
-  }, [props, props.shouldSubmit]);
-
-  function populateImportData(song: SoundcloudTrackV2) {
+  function handleSoundcloudImport(song: SoundcloudTrackV2) {
     const splitTitle = song.title.split("-");
     const formattedTitle =
       splitTitle[splitTitle.length - 1].trim() || song.title;
@@ -58,12 +53,58 @@ export function AddSongForm(props: {
     form.setValue("releaseDate", new Date(song.release_date));
 
     const soundcloudLink: StreamLink = {
-      name: "Soundcloud",
       platformId: "soundcloud",
       url: song.permalink_url,
     };
     updateStreamLinks([...streamLinks, soundcloudLink]);
   }
+
+  const handleEditImport: () => void = useCallback(() => {
+    if (!props.editing) return;
+    getSong(props.editing).then((song) => {
+      if (!song) {
+        redirect("/");
+      }
+
+      // page 1
+      form.setValue("songTitle", song.title);
+      form.setValue("description", song.description || undefined);
+      form.setValue("writtenId", song.written_id);
+      form.setValue("artists", song.artists);
+      setArtists(song.artists);
+
+      // page 2
+      form.setValue("coverUrl", song.art_url);
+      form.setValue("bpm", song.tempo || undefined);
+      form.setValue("genre", song.genre);
+      form.setValue("releaseType", song.type);
+      form.setValue("key", song.key || undefined);
+      form.setValue("releaseDate", new Date(song.release_date));
+      form.setValue("label", song.label || undefined);
+
+      // page3
+      const parsedStreamLinks: StreamLink[] = song.release_links.map((x) => {
+        return {
+          platformId: x.platform,
+          url: x.url,
+        };
+      });
+      const parsedDownloadLinks: DownloadLink[] = song.release_downloads.map(
+        (x) => {
+          return {
+            format: x.format,
+            edit: x.edit,
+            url: x.download_url,
+          };
+        }
+      );
+      form.setValue("streamLinks", parsedStreamLinks);
+      setStreamLinks(parsedStreamLinks);
+
+      form.setValue("downloadLinks", parsedDownloadLinks);
+      setDownloadLinks(parsedDownloadLinks);
+    });
+  }, [props.editing, form]);
 
   function updateStreamLinks(newList: StreamLink[]) {
     form.setValue("streamLinks", newList);
@@ -73,6 +114,11 @@ export function AddSongForm(props: {
   function updateDownloadLinks(newList: DownloadLink[]) {
     form.setValue("downloadLinks", newList);
     setDownloadLinks(newList);
+  }
+
+  function updateArtists(newList: Artist[]) {
+    setArtists(newList);
+    form.setValue("artists", newList);
   }
 
   function handleFetchPlatformLinks(platformIds: string[]) {
@@ -115,38 +161,68 @@ export function AddSongForm(props: {
       .select()
       .eq("written_id", values.writtenId)
       .then((res) => {
-        if (res.data && res.data.length > 0) {
+        if (res.data && res.data.length > 0 && !props.editing) {
           toast({
             title: `Song with ID ${values.writtenId} already exists!`,
           });
           return;
         }
+
+        // wait to re-push in case of editing
+        if (props.editing) {
+          supabase
+            .from("releases")
+            .delete()
+            .eq("written_id", values.writtenId)
+            .then(() => pushSong());
+        } else {
+          pushSong();
+        }
       });
 
-    // push the song up to the DB
-    pushSongToDatabase(values)
-      .catch((e: any) => {
-        toast({
-          title: "Error",
-          description: e.toString(),
+    function pushSong() {
+      // push the song up to the DB
+      pushSongToDatabase(values)
+        .catch((e: any) => {
+          toast({
+            title: "Adding song failed",
+          });
+        })
+        .then(() => {
+          router.refresh();
+          router.push("/");
         });
-      })
-      .then(() => router.push("/"));
+    }
   }
+
+  useEffect(() => {
+    if (props.shouldSubmit && refSubmitButtom.current) {
+      refSubmitButtom.current.click();
+    }
+    props.setShouldSubmitCallback(false);
+  }, [props, form]);
+
+  useEffect(() => {
+    if (props.editing) {
+      handleEditImport();
+    }
+  }, [handleEditImport, props.editing]);
 
   return (
     <Form {...form}>
       <div className="-ml-4 md:ml-0 p-4 md:p-0 w-screen md:w-full overflow-x-hidden overflow-y-auto grow">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormPart1
+            editing={props.editing}
             index={props.index}
             form={form}
             artists={artists}
-            setArtists={setArtists}
-            populateImportData={populateImportData}
+            setArtists={updateArtists}
+            handleSoundcloudImport={handleSoundcloudImport}
           />
-          <FormPart2 index={props.index} form={form} />
+          <FormPart2 editing={props.editing} index={props.index} form={form} />
           <FormPart3
+            editing={props.editing}
             index={props.index}
             form={form}
             streamLinks={streamLinks}

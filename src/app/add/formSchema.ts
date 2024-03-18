@@ -24,7 +24,6 @@ export const formSchema = z.object({
   streamLinks: z.array(
     z.object({
       platformId: z.string().min(1),
-      name: z.string().min(1),
       url: z.string().url().min(1),
     })
   ),

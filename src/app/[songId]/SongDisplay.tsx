@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 import { Button } from "@/components/button";
 import Icon from "@mdi/react";
-import { mdiTrashCan } from "@mdi/js";
+import { mdiNoteEdit, mdiTrashCan } from "@mdi/js";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -65,22 +65,34 @@ export function SongDisplay(props: Props) {
       </motion.div>
       {/* DELETE SONG BUTTON */}
       {loggedIn && (
-        <Button
-          variant={"destructive"}
-          className="mt-4"
-          onClick={() => {
-            supabase
-              .from("releases")
-              .delete()
-              .eq("written_id", song.written_id)
-              .then(() => {
-                router.push("/");
-              });
-          }}
-        >
-          <Icon path={mdiTrashCan} size={0.75} />
-          Delete Song
-        </Button>
+        <div className="flex gap-2 *:grow">
+          <Button
+            variant={"secondary"}
+            className="mt-4"
+            onClick={() => {
+              router.push(window.location.href + "/edit");
+            }}
+          >
+            <Icon path={mdiNoteEdit} size={0.75} />
+            Edit
+          </Button>
+          <Button
+            variant={"destructive"}
+            className="mt-4"
+            onClick={() => {
+              supabase
+                .from("releases")
+                .delete()
+                .eq("written_id", song.written_id)
+                .then(() => {
+                  router.push("/");
+                });
+            }}
+          >
+            <Icon path={mdiTrashCan} size={0.75} />
+            Delete
+          </Button>
+        </div>
       )}
       {/* LINK SECTION */}
       <motion.div

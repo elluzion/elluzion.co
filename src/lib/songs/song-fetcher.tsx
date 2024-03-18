@@ -106,7 +106,6 @@ export const fetchLinksForPlatforms = async (
       if (!isrc) isrc = song.external_ids.isrc;
       links.push({
         platformId: "spotify",
-        name: "Spotify",
         url: URL_SPOTIFY(song.id),
       });
       removePlatform("spotify");
@@ -121,7 +120,6 @@ export const fetchLinksForPlatforms = async (
     if (song && song.link) {
       links.push({
         platformId: "applemusic",
-        name: "Apple Music",
         url: song.link,
       });
     }
@@ -133,7 +131,6 @@ export const fetchLinksForPlatforms = async (
     if (song) {
       links.push({
         platformId: "youtube",
-        name: "YouTube",
         url: song.id ? URL_YOUTUBE(song.id) : song.url,
       });
       removePlatform("youtube");
@@ -146,7 +143,6 @@ export const fetchLinksForPlatforms = async (
     if (song) {
       links.push({
         platformId: "soundcloud",
-        name: "Soundcloud",
         url: URL_SOUNDCLOUD(song.user.permalink, song.permalink),
       });
       removePlatform("soundcloud");
@@ -162,7 +158,6 @@ export const fetchLinksForPlatforms = async (
     if (song) {
       links.push({
         platformId: "deezer",
-        name: "deezer",
         url: URL_DEEZER(song.id),
       });
       removePlatform("deezer");

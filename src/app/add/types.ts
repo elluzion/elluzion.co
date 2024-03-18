@@ -7,7 +7,6 @@ export type Artist = {
 
 export type StreamLink = {
   platformId: string;
-  name: string;
   url: string;
 };
 
@@ -18,6 +17,7 @@ export type DownloadLink = {
 };
 
 export type FormPartProps = {
+  editing?: string;
   index: number;
   form: UseFormReturn<any, any, undefined>;
 };

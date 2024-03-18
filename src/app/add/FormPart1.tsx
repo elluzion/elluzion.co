@@ -30,12 +30,13 @@ export default function FormPart1(
   props: FormPartProps & {
     artists: Artist[];
     setArtists: (newList: Artist[]) => void;
-    populateImportData: (imported: SoundcloudTrackV2) => void;
+    handleSoundcloudImport: (imported: SoundcloudTrackV2) => void;
   }
 ) {
   const supabase = createClient();
   const { toast } = useToast();
 
+  // artists
   const [selectedArtistId, setSelectedArtistId] = useState(0);
   const [customArtistName, setCustomArtistName] = useState("");
   const [existingArtists, setExistingArtists] = useState<
@@ -53,13 +54,7 @@ export default function FormPart1(
     }
   }, [supabase, existingArtists]);
 
-  function updateArtists(newList: Artist[]) {
-    props.setArtists(newList);
-    props.form.setValue("artists", newList);
-  }
-
   function ArtistItem(_props: { index: number; artist: Artist }) {
-    // artist selection
     const dragControls = useDragControls();
 
     return (
@@ -85,7 +80,7 @@ export default function FormPart1(
           onClick={(e) => {
             const newArr = [...props.artists];
             newArr.splice(_props.index, 1);
-            updateArtists(newArr);
+            props.setArtists(newArr);
           }}
         >
           <XIcon />
@@ -95,7 +90,9 @@ export default function FormPart1(
   }
 
   // song import
-  const [showImportSection, setShowImportSection] = useState(true);
+  const [showImportSection, setShowImportSection] = useState<boolean>(
+    !props.editing
+  );
   const songImportRef = useRef<HTMLInputElement | null>(null);
 
   function handleImportSong() {
@@ -113,7 +110,7 @@ export default function FormPart1(
       .then((res) => {
         try {
           const song = res as SoundcloudTrackV2;
-          props.populateImportData(song);
+          props.handleSoundcloudImport(song);
           toast({
             title: "Imported song!",
             description: song.title,
@@ -210,7 +207,7 @@ export default function FormPart1(
         <Reorder.Group
           axis="y"
           values={props.artists}
-          onReorder={updateArtists}
+          onReorder={props.setArtists}
           className="has-[:first-child]:flex flex-col gap-2 hidden"
         >
           {props.artists.map((artist, key) => (
@@ -262,7 +259,7 @@ export default function FormPart1(
                 id: artistId,
                 name: artistName,
               });
-              updateArtists(newlist);
+              props.setArtists(newlist);
             }
           }}
         >

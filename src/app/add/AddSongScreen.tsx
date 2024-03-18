@@ -5,7 +5,7 @@ import { AddSongHeaderSection } from "./AddSongHeaderContent";
 import { useRef, useState } from "react";
 import { AddSongForm } from "./AddSongForm";
 
-export function AddSongScreen() {
+export function AddSongScreen(props: { editing?: string }) {
   const [formPageIndex, setFormPageIndex] = useState(0);
   const formPageIndexMax = 2; // starting from 0, 3 pages
 
@@ -17,9 +17,14 @@ export function AddSongScreen() {
   return (
     <div className="flex flex-col gap-4 pt-16 h-[calc(100vh-80px)]">
       {/* HEADER SECTION */}
-      <AddSongHeaderSection index={formPageIndex} indexMax={formPageIndexMax} />
+      <AddSongHeaderSection
+        editing={props.editing}
+        index={formPageIndex}
+        indexMax={formPageIndexMax}
+      />
       {/* FORM CONTENT */}
       <AddSongForm
+        editing={props.editing}
         shouldSubmit={shouldSubmitForm}
         setShouldSubmitCallback={setShouldSubmitForm}
         index={formPageIndex}
