@@ -50,7 +50,10 @@ export function AddSongForm(props: {
     form.setValue("coverUrl", song.artwork_url);
     form.setValue("genre", song.genre);
     form.setValue("label", song.label_name || "");
-    form.setValue("releaseDate", new Date(song.release_date));
+    form.setValue(
+      "releaseDate",
+      new Date(song.release_date || song.display_date)
+    );
 
     const soundcloudLink: StreamLink = {
       platformId: "soundcloud",
