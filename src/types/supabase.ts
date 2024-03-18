@@ -16,7 +16,7 @@ export type Database = {
         };
         Insert: {
           id?: number;
-          name?: string;
+          name: string;
         };
         Update: {
           id?: number;
@@ -89,19 +89,19 @@ export type Database = {
       release_links: {
         Row: {
           id: number;
-          platform: string | null;
+          platform: string;
           release_id: number;
           url: string;
         };
         Insert: {
           id?: number;
-          platform?: string | null;
+          platform: string;
           release_id: number;
           url: string;
         };
         Update: {
           id?: number;
-          platform?: string | null;
+          platform?: string;
           release_id?: number;
           url?: string;
         };
@@ -117,8 +117,7 @@ export type Database = {
       };
       releases: {
         Row: {
-          art_url: string | null;
-          created_at: string;
+          art_url: string;
           description: string | null;
           genre: string;
           id: number;
@@ -131,8 +130,7 @@ export type Database = {
           written_id: string;
         };
         Insert: {
-          art_url?: string | null;
-          created_at?: string;
+          art_url: string;
           description?: string | null;
           genre: string;
           id?: number;
@@ -145,8 +143,7 @@ export type Database = {
           written_id: string;
         };
         Update: {
-          art_url?: string | null;
-          created_at?: string;
+          art_url?: string;
           description?: string | null;
           genre?: string;
           id?: number;
@@ -165,7 +162,48 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      delete_claim: {
+        Args: {
+          uid: string;
+          claim: string;
+        };
+        Returns: string;
+      };
+      get_claim: {
+        Args: {
+          uid: string;
+          claim: string;
+        };
+        Returns: Json;
+      };
+      get_claims: {
+        Args: {
+          uid: string;
+        };
+        Returns: Json;
+      };
+      get_my_claim: {
+        Args: {
+          claim: string;
+        };
+        Returns: Json;
+      };
+      get_my_claims: {
+        Args: Record<PropertyKey, never>;
+        Returns: Json;
+      };
+      is_claims_admin: {
+        Args: Record<PropertyKey, never>;
+        Returns: boolean;
+      };
+      set_claim: {
+        Args: {
+          uid: string;
+          claim: string;
+          value: Json;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       "audio-filetype": "mp3" | "wav";
