@@ -191,8 +191,7 @@ export function AddSongForm(props: {
       // push the song up to the DB
       pushSongToDatabase(values)
         .then(() => {
-          router.refresh();
-          router.push("/");
+          window.location.href = "/";
         })
         .catch((e) => {
           toast({ title: "Process failed" });
