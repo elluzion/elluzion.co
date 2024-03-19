@@ -21,6 +21,8 @@ import {
   SiSpotify,
   SiDiscord,
 } from "@icons-pack/react-simple-icons";
+import { mdiInformation } from "@mdi/js";
+import Icon from "@mdi/react";
 
 const socialItems = [
   {
@@ -138,6 +140,10 @@ export default async function Music() {
           </div>
           <p className="font-mono text-lg text-muted-foreground">Newest</p>
         </div>
+        <span className="flex items-center gap-2 opacity-75 font-mono text-blue-400 text-sm">
+          <Icon path={mdiInformation} size={0.75} />
+          This website is still highly work in progress. Some bugs may occur.
+        </span>
         {mostRecentItem}
         <div className="flex flex-col gap-4">{secondaryItems}</div>
         {user && <AddSongButton />}
