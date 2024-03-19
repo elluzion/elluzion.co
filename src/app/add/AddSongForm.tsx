@@ -40,6 +40,9 @@ export function AddSongForm(props: {
   const [streamLinks, setStreamLinks] = useState<Array<StreamLink>>([]);
   const [downloadLinks, setDownloadLinks] = useState<Array<DownloadLink>>([]);
 
+  // store written id at the beginning of editing in case it gets changed
+  const [editBeforeWrittenId, setEditBeforeWrittenId] = useState<string>("");
+
   function handleSoundcloudImport(song: SoundcloudTrackV2) {
     const splitTitle = song.title.split("-");
     const formattedTitle =
@@ -72,9 +75,10 @@ export function AddSongForm(props: {
       // page 1
       form.setValue("songTitle", song.title);
       form.setValue("description", song.description || undefined);
-      form.setValue("writtenId", song.written_id);
       form.setValue("artists", song.artists);
       setArtists(song.artists);
+      form.setValue("writtenId", song.written_id);
+      setEditBeforeWrittenId(song.written_id);
 
       // page 2
       form.setValue("coverUrl", song.art_url);
@@ -176,7 +180,7 @@ export function AddSongForm(props: {
           supabase
             .from("releases")
             .delete()
-            .eq("written_id", values.writtenId)
+            .eq("written_id", editBeforeWrittenId)
             .then(() => pushSong());
         } else {
           pushSong();
