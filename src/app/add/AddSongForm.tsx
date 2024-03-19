@@ -187,9 +187,15 @@ export function AddSongForm(props: {
       // push the song up to the DB
       pushSongToDatabase(values)
         .catch((e: any) => {
-          toast({
-            title: "Adding song failed",
-          });
+          toast({ title: "Process failed" });
+
+          if (!props.editing) {
+            // remove again when something bad happens
+            supabase
+              .from("releases")
+              .delete()
+              .eq("written_id", values.writtenId);
+          }
         })
         .then(() => {
           router.refresh();
