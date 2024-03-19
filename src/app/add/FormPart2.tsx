@@ -19,7 +19,7 @@ export default function FormPart2(props: FormPartProps) {
         name="coverUrl"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Album cover URL (or Soundcloud URL)</FormLabel>
+            <FormLabel>Album cover URL</FormLabel>
             <FormControl>
               <Input placeholder="https://i1.sndcdn.com/..." {...field} />
             </FormControl>
