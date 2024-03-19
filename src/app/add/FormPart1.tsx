@@ -49,7 +49,13 @@ export default function FormPart1(
         .from("artists")
         .select("*")
         .then((res) => {
-          if (res.data) setExistingArtists(res.data);
+          if (res.data) {
+            // sort by alphabet
+            const sorted = res.data.sort((a, b) => {
+              return a.name.localeCompare(b.name);
+            });
+            setExistingArtists(sorted);
+          }
         });
     }
   }, [supabase, existingArtists]);
