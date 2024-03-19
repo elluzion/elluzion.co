@@ -101,15 +101,8 @@ export default function FormPart1(
       return;
     }
     fetchSoundcloudSong(songUrl)
-      .catch(() => {
-        toast({
-          title: "Song not found!",
-          description: songUrl,
-        });
-      })
-      .then((res) => {
+      .then((song) => {
         try {
-          const song = res as SoundcloudTrackV2;
           props.handleSoundcloudImport(song);
           toast({
             title: "Imported song!",
@@ -122,6 +115,12 @@ export default function FormPart1(
             description: e.toString(),
           });
         }
+      })
+      .catch(() => {
+        toast({
+          title: "Song not found!",
+          description: songUrl,
+        });
       });
   }
 

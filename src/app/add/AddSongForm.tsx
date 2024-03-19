@@ -186,7 +186,11 @@ export function AddSongForm(props: {
     function pushSong() {
       // push the song up to the DB
       pushSongToDatabase(values)
-        .catch((e: any) => {
+        .then(() => {
+          router.refresh();
+          router.push("/");
+        })
+        .catch((e) => {
           toast({ title: "Process failed" });
 
           if (!props.editing) {
@@ -196,10 +200,6 @@ export function AddSongForm(props: {
               .delete()
               .eq("written_id", values.writtenId);
           }
-        })
-        .then(() => {
-          router.refresh();
-          router.push("/");
         });
     }
   }
