@@ -144,9 +144,9 @@ export default async function Music() {
           <Icon path={mdiInformation} size={0.75} />
           This website is still highly work in progress. Some bugs may occur.
         </span>
+        {user && <AddSongButton />}
         {mostRecentItem}
         <div className="flex flex-col gap-4">{secondaryItems}</div>
-        {user && <AddSongButton />}
       </div>
     );
   }
