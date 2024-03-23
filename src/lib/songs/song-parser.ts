@@ -26,14 +26,10 @@ export const getSongList = async () => {
       id,
       written_id,
       title,
-      description,
       genre,
       release_date,
-      label,
-      tempo,
       art_url,
       type,
-      key,
       artists(id, name)
     `
     )
@@ -46,13 +42,13 @@ export const getSongList = async () => {
  *
  * @param songId either the song Id or the "written_id" value of the release, for example from url parameters.
  * @returns All info about a release, including streaming and download links.
- * @type Song
  */
 export async function getSong(songId: string | number) {
   const supabase = createClient();
   // convert songId to number if necessary
   if (typeof songId == "string") {
     songId = await resolveTrackId(songId.toString());
+    if (songId == -1) return;
   }
 
   // fetch release info
@@ -83,9 +79,10 @@ export async function getSong(songId: string | number) {
 }
 
 /**
+ * Convert "written_id" of song into numeric ID inside database
  *
  * @param writtenId the "written_id" value of the release, for example from url parameters.
- * @returns the numeric ID of the release, to be used inside the DB.
+ * @returns the numeric ID of the release, to be used inside the DB, and 0 if not found
  */
 const resolveTrackId = async (writtenId: string) => {
   const supabase = createClient();
@@ -95,7 +92,17 @@ const resolveTrackId = async (writtenId: string) => {
     .select("id")
     .eq("written_id", writtenId)
     .single();
-  return release?.id || 0;
+  return release?.id || -1;
+};
+
+/**
+ *
+ * @param writtenId the "written_id" value of the release, for example from url parameters.
+ * @returns the numeric ID of the release, to be used inside the DB.
+ */
+export const trackExists = async (writtenId: string) => {
+  const songId = await resolveTrackId(writtenId);
+  return songId == -1 ? false : true;
 };
 
 /**

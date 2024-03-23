@@ -6,9 +6,9 @@ import {
   FormMessage,
 } from "@/components/form";
 import { Input } from "@/components/input";
-import { FormPartProps } from "./types";
+import { FormPageProps } from "../types";
 
-export default function FormPart2(props: FormPartProps) {
+export default function FormPage2(props: FormPageProps) {
   return (
     <div
       className="space-y-4"

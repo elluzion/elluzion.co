@@ -16,7 +16,7 @@ export type DownloadLink = {
   url: string;
 };
 
-export type FormPartProps = {
+export type FormPageProps = {
   editing?: string;
   index: number;
   form: UseFormReturn<any, any, undefined>;

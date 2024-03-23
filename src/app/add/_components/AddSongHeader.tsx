@@ -1,7 +1,7 @@
 import { Badge } from "@/components/badge";
 import React from "react";
 
-export function AddSongHeaderSection(props: {
+export function AddSongHeader(props: {
   editing?: string;
   index: number;
   indexMax: number;
