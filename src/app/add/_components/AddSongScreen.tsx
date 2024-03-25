@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-import { AddSongHeader } from "./AddSongHeader";
 import { AddSongForm } from "../_form/AddSongForm";
 import AddSongControls from "./AddSongControls";
+import { AddSongHeader } from "./AddSongHeader";
 
 export function AddSongScreen(props: { editing?: string }) {
   const [formIndex, setFormIndex] = useState(0);
@@ -13,7 +13,7 @@ export function AddSongScreen(props: { editing?: string }) {
   const [shouldSubmitForm, setShouldSubmitForm] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 pt-16 h-[calc(100vh-80px)]">
+    <div className="flex flex-col gap-4 pt-16 h-contentDvh">
       {/* HEADER SECTION */}
       <AddSongHeader
         editing={props.editing}

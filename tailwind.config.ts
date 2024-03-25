@@ -59,6 +59,9 @@ const config = {
         sans: ["var(--font-geist)"],
         mono: ["var(--font-jbmono)"],
       },
+      spacing: {
+        contentDvh: "calc(100dvh - 80px)",
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
