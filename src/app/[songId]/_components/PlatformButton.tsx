@@ -1,16 +1,12 @@
 "use client";
 
 import { Button } from "@/components/button";
-import React from "react";
-
 import { Platforms } from "@/lib/songs/platforms";
-
 import { pascalCase } from "@/lib/utils";
-
-import Icon from "@mdi/react";
 import { mdiPlay } from "@mdi/js";
-
+import Icon from "@mdi/react";
 import { motion } from "framer-motion";
+import React from "react";
 
 interface PlatformButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {

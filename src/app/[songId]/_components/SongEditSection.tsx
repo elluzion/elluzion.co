@@ -1,10 +1,10 @@
 import { Button } from "@/components/button";
-import Icon from "@mdi/react";
-import { mdiNoteEdit, mdiTrashCan } from "@mdi/js";
-import { createClient } from "@/lib/supabase/client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Song } from "@/lib/songs/song-parser";
+import { createClient } from "@/lib/supabase/client";
+import { mdiNoteEdit, mdiTrashCan } from "@mdi/js";
+import Icon from "@mdi/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function SongEditSection(props: { song: Song }) {
   const router = useRouter();

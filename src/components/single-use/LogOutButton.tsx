@@ -1,7 +1,7 @@
+import { Button } from "@/components/button";
 import { createClient } from "@/lib/supabase/client";
 import { mdiLogout } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Button } from "@/components/button";
 
 export default function LogOutButton() {
   const supabase = createClient();

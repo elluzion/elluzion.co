@@ -1,9 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
-import Link from "next/link";
-import Image from "next/image";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,10 +8,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/breadcrumb";
-import LogOutButton from "./LogOutButton";
 import { createClient } from "@/lib/supabase/client";
-import { useEffect, useState } from "react";
 import { pascalCase } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import LogOutButton from "./LogOutButton";
 
 export default function PageHeader() {
   const path = usePathname();

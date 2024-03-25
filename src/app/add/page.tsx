@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { AddSongScreen } from "./_components/AddSongScreen";
 import { redirect } from "next/navigation";
+import { AddSongScreen } from "./_components/AddSongScreen";
 
 export default async function AddSong() {
   const supabase = createClient();

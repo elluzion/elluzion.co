@@ -1,11 +1,11 @@
 import {
+  SiAmazonmusic,
   SiApplemusic,
-  SiSpotify,
-  SiYoutube,
-  SiTidal,
   SiPandora,
   SiSoundcloud,
-  SiAmazonmusic,
+  SiSpotify,
+  SiTidal,
+  SiYoutube,
 } from "@icons-pack/react-simple-icons";
 import { mdiPlay } from "@mdi/js";
 import Icon from "@mdi/react";

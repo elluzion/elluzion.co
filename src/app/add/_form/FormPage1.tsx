@@ -1,14 +1,14 @@
 import {
+  FormControl,
+  FormField,
   FormItem,
   FormLabel,
-  FormField,
-  FormControl,
   FormMessage,
 } from "@/components/form";
 import { Input, TextArea } from "@/components/input";
-import { FormPageProps, Artist } from "../types";
 import { ArtistSection } from "../_components/ArtistSection";
 import SoundcloudImportSection from "../_components/SoundcloudImportSection";
+import { Artist, FormPageProps } from "../types";
 
 export default function FormPage1(
   props: FormPageProps & {

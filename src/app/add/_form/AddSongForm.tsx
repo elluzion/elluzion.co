@@ -1,27 +1,25 @@
 "use client";
 
-import type { Artist, StreamLink, DownloadLink } from "../types";
-
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { Form } from "@/components/form";
+import { useToast } from "@/components/use-toast";
+import { useOnChange } from "@/hooks/useOnChange";
 import {
   fetchLinksForPlatforms,
   fetchSoundcloudSong,
 } from "@/lib/songs/song-fetcher";
 import { getSong, trackExists } from "@/lib/songs/song-parser";
+import { createClient } from "@/lib/supabase/client";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
-import { useToast } from "@/components/use-toast";
-
+import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { pushSongToDatabase } from "../actions";
+import { formSchema } from "../formSchema";
+import type { Artist, DownloadLink, StreamLink } from "../types";
 import FormPage1 from "./FormPage1";
 import FormPage2 from "./FormPage2";
 import FormPage3 from "./FormPage3";
-import { formSchema } from "../formSchema";
-import { Form } from "@/components/form";
-import { pushSongToDatabase } from "../actions";
-import { useOnChange } from "@/hooks/useOnChange";
 
 export function AddSongForm(props: {
   editing?: string;

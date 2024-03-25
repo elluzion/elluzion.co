@@ -1,13 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Song } from "@/lib/songs/song-parser";
-
 import { DragHandle } from "@/components/drag-handle";
-import { SongInfoCard } from "./SongInfoCard";
+import { Song } from "@/lib/songs/song-parser";
+import { motion } from "framer-motion";
 import LinkSection from "./LinkSection";
 import SongEditSection from "./SongEditSection";
 import SongHeader from "./SongHeader";
+import { SongInfoCard } from "./SongInfoCard";
 
 export function SongDisplay(props: { song: Song }) {
   const song = props.song;

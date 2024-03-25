@@ -1,20 +1,20 @@
-import { mdiDragHorizontalVariant, mdiImport } from "@mdi/js";
-import { useDragControls, Reorder } from "framer-motion";
-import { XIcon } from "lucide-react";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/select";
-import { Artist } from "../types";
-import { Database } from "@/types/supabase";
-import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import Icon from "@mdi/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/select";
 import { createClient } from "@/lib/supabase/client";
+import { Database } from "@/types/supabase";
+import { mdiDragHorizontalVariant } from "@mdi/js";
+import Icon from "@mdi/react";
+import { Reorder, useDragControls } from "framer-motion";
+import { XIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Artist } from "../types";
 
 export function ArtistSection(props: {
   artists: Artist[];

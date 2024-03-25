@@ -1,5 +1,5 @@
-import React from "react";
-
+import { Badge } from "@/components/badge";
+import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
 import {
   DropdownMenu,
@@ -7,11 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu";
-import { Badge } from "@/components/badge";
-import { Button } from "@/components/button";
+import { Song } from "@/lib/songs/song-parser";
 import { pascalCase } from "@/lib/utils";
 import Link from "next/link";
-import { Song } from "@/lib/songs/song-parser";
+import React from "react";
 
 interface SongInfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   song: Song;

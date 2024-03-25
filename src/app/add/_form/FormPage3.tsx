@@ -1,24 +1,23 @@
 import { Button } from "@/components/button";
 import { DragHandle } from "@/components/drag-handle";
 import { Input } from "@/components/input";
-import { Platforms } from "@/lib/songs/platforms";
-import { pascalCase } from "@/lib/utils";
-import { mdiDragHorizontalVariant, mdiPlay } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/select";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/toggle-group";
+import { Platforms } from "@/lib/songs/platforms";
+import { mdiDragHorizontalVariant, mdiPlay } from "@mdi/js";
+import Icon from "@mdi/react";
 
+import { Reorder, useDragControls } from "framer-motion";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { DownloadLink, FormPageProps, StreamLink } from "../types";
-import { Reorder, useDragControls } from "framer-motion";
 
 export default function FormPage3(
   props: FormPageProps & {

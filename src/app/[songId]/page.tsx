@@ -1,8 +1,8 @@
-import { redirect } from "next/navigation";
-import { getSong } from "@/lib/songs/song-parser";
-import { SongDisplay } from "./_components/SongDisplay";
-import { Suspense } from "react";
 import { LoadingContainer } from "@/components/loading-container";
+import { getSong } from "@/lib/songs/song-parser";
+import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { SongDisplay } from "./_components/SongDisplay";
 
 export default async function SongPage({
   params,
