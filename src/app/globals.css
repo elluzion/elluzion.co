@@ -39,5 +39,5 @@ body {
 }
 
 * {
-  @apply border-border;
+  @apply dark:[color-scheme:dark] border-border;
 }
