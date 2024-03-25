@@ -10,10 +10,13 @@ import {
 } from "@/components/breadcrumb";
 import { createClient } from "@/lib/supabase/client";
 import { pascalCase } from "@/lib/utils";
+import { mdiToolbox } from "@mdi/js";
+import Icon from "@mdi/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "../button";
 import LogOutButton from "./LogOutButton";
 
 export default function PageHeader() {
@@ -40,7 +43,7 @@ export default function PageHeader() {
 
   return (
     <div className="z-50 fixed flex justify-center items-center bg-zinc-950 bg-opacity-80 backdrop-blur-[120px] w-full h-16">
-      <div className="flex justify-normal items-center gap-4 px-4 md:px-0 w-full max-w-[768px]">
+      <div className="flex justify-normal items-center gap-2 px-4 md:px-0 w-full max-w-[768px]">
         <Link href="/">
           <Image
             src="/icons/elluzion_small_icon.svg"
@@ -50,8 +53,7 @@ export default function PageHeader() {
             className="hover:bg-accent p-2.5 rounded-md w-10 h-10 transition-colors"
           />
         </Link>
-
-        <Breadcrumb>
+        <Breadcrumb className="ml-2">
           <BreadcrumbList>
             {pathArray.map((item, key) => {
               // dont create an element for the first item of the array as its empty
@@ -85,6 +87,14 @@ export default function PageHeader() {
           </BreadcrumbList>
         </Breadcrumb>
         <span className="grow"></span>
+        {/* TOOLS BUTTON */}
+        {path != "/tools" && (
+          <Link href={"/tools"}>
+            <Button variant={"outline"} size="icon">
+              <Icon size={0.75} path={mdiToolbox} />
+            </Button>
+          </Link>
+        )}
         {logoutButtonVisible && <LogOutButton />}
       </div>
     </div>
