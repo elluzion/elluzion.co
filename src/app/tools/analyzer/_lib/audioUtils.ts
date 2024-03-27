@@ -49,7 +49,6 @@ function monomix(buffer: AudioBuffer) {
   // downmix to mono
   let monoAudio;
   if (buffer.numberOfChannels > 1) {
-    console.log("mixing down to mono...");
     const leftCh = buffer.getChannelData(0);
     const rightCh = buffer.getChannelData(1);
     monoAudio = leftCh.map((sample, i) => 0.5 * (sample + rightCh[i]));
@@ -81,7 +80,6 @@ function downsampleArray(
   let offsetResult = 0;
   let offsetAudioIn = 0;
 
-  console.log(`Downsampling to ${sampleRateOut} kHz...`);
   while (offsetResult < result.length) {
     let nextOffsetAudioIn = Math.round((offsetResult + 1) * sampleRateRatio);
     let accum = 0,
