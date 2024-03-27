@@ -8,31 +8,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/breadcrumb";
-import { createClient } from "@/lib/supabase/client";
 import { pascalCase } from "@/lib/utils";
 import { mdiToolbox } from "@mdi/js";
 import Icon from "@mdi/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Button } from "../button";
 import LogOutButton from "./LogOutButton";
 
 export default function PageToolbar() {
   const path = usePathname();
   const pathArray = path.split("/");
-
-  const [logoutButtonVisible, setLogoutButtonVisible] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    try {
-      supabase.auth.getUser().then((res) => {
-        if (res.data.user) setLogoutButtonVisible(true);
-      });
-    } catch (e) {}
-  });
 
   const formatUrlSection = (item: string) => {
     return item
@@ -95,7 +82,7 @@ export default function PageToolbar() {
             </Button>
           </Link>
         )}
-        {logoutButtonVisible && <LogOutButton />}
+        <LogOutButton />
       </div>
     </div>
   );
