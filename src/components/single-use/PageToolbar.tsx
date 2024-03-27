@@ -75,7 +75,7 @@ export default function PageToolbar() {
         </Breadcrumb>
         <span className="grow"></span>
         {/* TOOLS BUTTON */}
-        {path != "/tools" && (
+        {path == "/" && (
           <Link href={"/tools"}>
             <Button variant={"outline"} size="icon">
               <Icon size={0.75} path={mdiToolbox} />
