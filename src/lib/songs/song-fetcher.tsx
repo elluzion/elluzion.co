@@ -13,7 +13,7 @@ const URL_SOUNDCLOUD = (accountId: string, trackId: string) =>
   `https://soundcloud.com/${accountId}/${trackId}`;
 
 const URL_YOUTUBE = (videoId: string) =>
-  `https://music.youtube.com/watch?v=${videoId}`;
+  `https://youtube.com/watch?v=${videoId}`;
 
 const URL_DEEZER = (trackId: string) =>
   `https://www.deezer.com/track/${trackId}`;
