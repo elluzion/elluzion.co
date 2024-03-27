@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import type { Metadata } from "next";
 
-import { mainFont, monoFont } from "@/lib/fonts/font-provider";
-import PageHeader from "@/components/single-use/PageHeader";
 import CursorBacklight from "@/components/single-use/CursorBacklight";
+import PageToolbar from "@/components/single-use/PageToolbar";
 import { Toaster } from "@/components/toaster";
+import { mainFont, monoFont } from "@/lib/fonts/font-provider";
 
 import "./globals.css";
 
@@ -28,7 +28,7 @@ export default function RootLayout({
         className={`${mainFont.variable} ${monoFont.variable} font-sans overflow-x-hidden`}
       >
         <CursorBacklight />
-        <PageHeader />
+        <PageToolbar />
         <Toaster />
         <div className="mb-4 px-4 md:px-0 pt-16 w-full max-w-[768px] transition-all self-center">
           {children}

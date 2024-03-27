@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../button";
 import LogOutButton from "./LogOutButton";
 
-export default function PageHeader() {
+export default function PageToolbar() {
   const path = usePathname();
   const pathArray = path.split("/");
 
