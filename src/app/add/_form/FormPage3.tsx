@@ -25,7 +25,7 @@ export default function FormPage3(
     setStreamLinks: (newList: StreamLink[]) => void;
     downloadLinks: DownloadLink[];
     setDownloadLinks: (newList: DownloadLink[]) => void;
-    fetchLinksForPlatforms: (selectedPlatformIds: string[]) => void;
+    handleFetchPlatformLinks: (selectedPlatformIds: string[]) => void;
   }
 ) {
   // Streaming links
@@ -40,7 +40,7 @@ export default function FormPage3(
   const [addDownloadEdit, setAddDownloadEdit] = useState("");
 
   function handleFetchPlatforms() {
-    props.fetchLinksForPlatforms(selectedPlatforms);
+    props.handleFetchPlatformLinks(selectedPlatforms);
     setSelectedPlatforms([]);
   }
 

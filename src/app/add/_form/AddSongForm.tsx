@@ -121,11 +121,13 @@ export function AddSongForm(props: {
       });
       return;
     }
-    var searchQuery = artists.map((artist) => artist.name).join(", "); // artists
-    searchQuery += ` - ${form.getValues("songTitle")}`; // song name
 
     // fetch the platforms
-    fetchLinksForPlatforms(searchQuery, platformIds).then((res) => {
+    fetchLinksForPlatforms(
+      artists,
+      form.getValues("songTitle"),
+      platformIds
+    ).then((res) => {
       if (!res) return;
       if (res.notFound.length > 0)
         toast({
@@ -255,7 +257,7 @@ export function AddSongForm(props: {
             setStreamLinks={setStreamLinks}
             downloadLinks={downloadLinks}
             setDownloadLinks={setDownloadLinks}
-            fetchLinksForPlatforms={handleFetchPlatformLinks}
+            handleFetchPlatformLinks={handleFetchPlatformLinks}
           />
           <button hidden={true} ref={refSubmitButtom} type="submit" />
         </form>

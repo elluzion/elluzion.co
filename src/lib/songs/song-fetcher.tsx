@@ -1,6 +1,6 @@
 "use server";
 
-import type { StreamLink } from "@/app/add/types";
+import type { Artist, StreamLink } from "@/app/add/types";
 import { customsearch } from "@googleapis/customsearch";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import Soundcloud from "soundcloud.ts";
@@ -25,8 +25,8 @@ const URL_DEEZER = (trackId: string) =>
  * @returns the object of the song, or the first search query result
  */
 export const fetchSoundcloudSong = async (
-  songUrl: string | null = null,
-  searchQuery: string | null = null
+  songUrl?: string,
+  searchQuery?: string
 ) => {
   const soundcloud = new Soundcloud();
 
@@ -55,7 +55,7 @@ this workaround scrapes google for the song from apple music
 success rate is "okay", it might throw wrong results when the track just released
 and is not yet scraped by google 
 */
-const fetchAppleMusicSong = async (searchQuery: string) => {
+const fetchAppleMusicSong = async (searchQuery: string, songTitle: string) => {
   const { data } = await customsearch("v1").cse.list({
     q: searchQuery,
     cx: process.env.GOOGLE_SEARCH_ENGINE_ID,
@@ -63,8 +63,6 @@ const fetchAppleMusicSong = async (searchQuery: string) => {
     siteSearch: "music.apple.com",
     siteSearchFilter: "i",
   });
-
-  const songTitle = searchQuery.split(" - ")[1];
 
   if (!data.items) return;
   const item = data.items.find((item) => item.title?.includes(songTitle));
@@ -85,14 +83,15 @@ const fetchDeezerSong = async (searchQuery: string) => {
 };
 
 export const fetchLinksForPlatforms = async (
-  query: string,
+  artists: Artist[],
+  title: string,
   platforms: string[]
 ) => {
   // the collection of links
   const links: StreamLink[] = [];
 
-  // isrc for more reliable fetching, needs to be obtained over time
-  var isrc: string | null = null;
+  // generate a usable search query from the artists and the song title
+  var query = `${artists.map((artist) => artist.name).join(", ")} - ${title}`;
 
   const removePlatform = (id: string) =>
     platforms.splice(platforms.indexOf(id), 1);
@@ -102,7 +101,6 @@ export const fetchLinksForPlatforms = async (
   if (platforms.includes("spotify")) {
     const song = await fetchSpotifySong(query);
     if (song) {
-      if (!isrc) isrc = song.external_ids.isrc;
       links.push({
         platformId: "spotify",
         url: URL_SPOTIFY(song.id),
@@ -115,7 +113,7 @@ export const fetchLinksForPlatforms = async (
   // workaround through google search, might take some time to find a link for a song on release day
   // due to slow indexing of new releases
   if (platforms.includes("applemusic")) {
-    const song = await fetchAppleMusicSong(query);
+    const song = await fetchAppleMusicSong(query, title);
     if (song && song.link) {
       links.push({
         platformId: "applemusic",
@@ -138,7 +136,7 @@ export const fetchLinksForPlatforms = async (
 
   // soundcloud
   if (platforms.includes("soundcloud")) {
-    const song = await fetchSoundcloudSong(null, query);
+    const song = await fetchSoundcloudSong(undefined, query);
     if (song) {
       links.push({
         platformId: "soundcloud",
