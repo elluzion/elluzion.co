@@ -48,6 +48,10 @@ export default function AnalyzerScreen() {
 
   function handleOnSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault(); // dont actually submit form
+
+    // reset audio data
+    setAudioData(null);
+
     const audioContext = new AudioContext();
 
     // no file selected
