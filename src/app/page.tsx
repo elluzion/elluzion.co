@@ -125,7 +125,7 @@ export default async function Music() {
     return (
       <main>
         <div>
-          <div className="flex items-end mb-3">
+          <div className="flex items-end mb-3 w-full h-16">
             <h1 className="font-bold text-3xl grow">Music</h1>
             <div className="sm:block hidden hover:bg-popover -mb-1 -ml-1 p-1 border rounded-lg transition-colors">
               {socialItems.map((item, key) => (

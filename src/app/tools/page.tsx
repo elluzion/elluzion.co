@@ -1,3 +1,4 @@
+import PageHeader from "@/components/page-header";
 import Link from "next/link";
 
 const toolSet = [
@@ -10,11 +11,8 @@ const toolSet = [
 export default function Tools() {
   return (
     <main>
-      <div>
-        <div className="flex items-end mb-3">
-          <h1 className="font-bold text-3xl grow">Tools</h1>
-        </div>
-      </div>
+      <PageHeader title="Tools" />
+
       <ul className="list-disc list-inside">
         {toolSet.map((tool) => {
           return (

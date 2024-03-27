@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/button";
+import PageHeader from "@/components/page-header";
 import { createClient } from "@/lib/supabase/client";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 
@@ -18,7 +19,7 @@ export default function LoginForm() {
 
   return (
     <main>
-      <h1>Log in</h1>
+      <PageHeader title="Log in" />
       <Button onClick={signInWithGithub} className="flex gap-2">
         Log in with GitHub <SiGithub />
       </Button>

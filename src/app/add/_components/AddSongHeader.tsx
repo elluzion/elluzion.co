@@ -6,12 +6,12 @@ export function AddSongHeader(props: {
   indexMax: number;
 }) {
   return (
-    <div className="w-full">
+    <div className="flex flex-col justify-end gap-4 mb-3 h-16">
       <div className="flex justify-between items-end">
-        <h1 className="mb-3 font-bold text-3xl">
+        <h1 className="font-bold text-3xl">
           {props.editing ? "Edit" : "Add"} Song
         </h1>
-        <Badge className="mb-3" variant={"secondary"}>
+        <Badge variant={"secondary"}>
           {props.index + 1} / {props.indexMax + 1}
         </Badge>
       </div>

@@ -238,7 +238,7 @@ export function AddSongForm(props: {
 
   return (
     <Form {...form}>
-      <div className="-ml-4 md:ml-0 p-4 md:p-0 w-screen md:w-full overflow-x-hidden overflow-y-auto grow">
+      <div className="-ml-4 md:ml-0 px-4 md:p-0 w-screen md:w-full overflow-x-hidden overflow-y-auto grow">
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormPage1
             editing={props.editing}
