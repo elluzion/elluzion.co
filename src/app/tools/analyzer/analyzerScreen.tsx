@@ -68,6 +68,10 @@ export default function AnalyzerScreen() {
     });
   }
 
+  function doubleIfLow(bpm: number) {
+    return bpm < 89 ? bpm * 2 : bpm;
+  }
+
   return (
     <div className="flex flex-col gap-8">
       <form className="mb-4" onSubmit={handleOnSubmit}>
@@ -103,7 +107,7 @@ export default function AnalyzerScreen() {
             <th>Loudness</th>
           </tr>
           <tr>
-            <td>{Math.round(audioData.tempo)} BPM</td>
+            <td>{Math.round(doubleIfLow(audioData.tempo))} BPM</td>
             <td>
               {audioData.key} {audioData.scale}
             </td>
