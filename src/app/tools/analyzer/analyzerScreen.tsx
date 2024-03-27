@@ -119,18 +119,20 @@ export default function AnalyzerScreen() {
           </tr>
         </table>
       )}
-      <p className="flex items-center gap-4 bg-popover opacity-75 p-4 rounded-lg font-mono text-popover-foreground text-sm">
-        <Icon path={mdiInformation} size={0.75} />
-        This website uses{" "}
-        <Link
-          href="https://mtg.github.io/essentia.js/"
-          target="_blank"
-          className="underline underline-offset-4"
-        >
-          essentia.js
-        </Link>{" "}
-        and may produce wrong results from time to time.
-      </p>
+      <div className="flex gap-4 bg-popover opacity-75 p-4 rounded-lg font-mono text-popover-foreground text-sm">
+        <Icon path={mdiInformation} size={0.75} className="shrink-0" />
+        <p>
+          This website uses{" "}
+          <Link
+            href="https://mtg.github.io/essentia.js/"
+            target="_blank"
+            className="underline underline-offset-4"
+          >
+            essentia.js
+          </Link>{" "}
+          and may produce wrong results from time to time.
+        </p>
+      </div>
     </div>
   );
 }
