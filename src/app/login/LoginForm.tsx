@@ -17,7 +17,7 @@ export default function LoginForm() {
   };
 
   return (
-    <main className="flex flex-col mt-16 mb-8 w-full prose-invert prose">
+    <main>
       <h1>Log in</h1>
       <Button onClick={signInWithGithub} className="flex gap-2">
         Log in with GitHub <SiGithub />

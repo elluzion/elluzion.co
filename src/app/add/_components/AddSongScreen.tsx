@@ -12,7 +12,7 @@ export function AddSongScreen(props: { editing?: string }) {
   const [shouldSubmitForm, setShouldSubmitForm] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 pt-16 h-contentDvh">
+    <main className="h-contentDvh">
       {/* HEADER SECTION */}
       <AddSongHeader
         editing={props.editing}
@@ -33,6 +33,6 @@ export function AddSongScreen(props: { editing?: string }) {
         maxIndex={formIndexMax}
         setShouldSubmitForm={setShouldSubmitForm}
       />
-    </div>
+    </main>
   );
 }

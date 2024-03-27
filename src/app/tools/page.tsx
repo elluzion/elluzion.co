@@ -9,7 +9,7 @@ const toolSet = [
 
 export default function Tools() {
   return (
-    <div className="flex flex-col gap-4 mt-16">
+    <main>
       <div>
         <div className="flex items-end mb-3">
           <h1 className="font-bold text-3xl grow">Tools</h1>
@@ -24,6 +24,6 @@ export default function Tools() {
           );
         })}
       </ul>
-    </div>
+    </main>
   );
 }

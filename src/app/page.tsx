@@ -8,21 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/card";
-import { getSongList } from "@/lib/songs/song-parser";
-import Image from "next/image";
-import Link from "next/link";
 import AddSongButton from "@/components/single-use/AddSongButton";
+import { getSongList } from "@/lib/songs/song-parser";
 import { createClient } from "@/lib/supabase/server";
-
 import {
+  SiDiscord,
   SiInstagram,
-  SiYoutube,
   SiSoundcloud,
   SiSpotify,
-  SiDiscord,
+  SiYoutube,
 } from "@icons-pack/react-simple-icons";
 import { mdiInformation } from "@mdi/js";
 import Icon from "@mdi/react";
+import Image from "next/image";
+import Link from "next/link";
 
 const socialItems = [
   {
@@ -124,7 +123,7 @@ export default async function Music() {
       </Link>
     ));
     return (
-      <div className="flex flex-col gap-4 mt-16">
+      <main>
         <div>
           <div className="flex items-end mb-3">
             <h1 className="font-bold text-3xl grow">Music</h1>
@@ -147,7 +146,7 @@ export default async function Music() {
         {user && <AddSongButton />}
         {mostRecentItem}
         <div className="flex flex-col gap-4">{secondaryItems}</div>
-      </div>
+      </main>
     );
   }
   return <div>Error!</div>;

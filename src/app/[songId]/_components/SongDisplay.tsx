@@ -11,7 +11,7 @@ import { SongInfoCard } from "./SongInfoCard";
 export function SongDisplay(props: { song: Song }) {
   const song = props.song;
   return (
-    <div className="flex flex-col">
+    <main className="mt-0">
       {/* HEADER */}
       <SongHeader song={song} />
       {/* INFO CARD */}
@@ -37,6 +37,6 @@ export function SongDisplay(props: { song: Song }) {
       </motion.div>
       {/* LINK SECTION */}
       <LinkSection song={song} />
-    </div>
+    </main>
   );
 }

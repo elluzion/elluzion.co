@@ -2,7 +2,7 @@ import AnalyzerScreen from "./analyzerScreen";
 
 export default function Analyzer() {
   return (
-    <div className="flex flex-col gap-4 mt-16">
+    <main>
       <div>
         <div className="flex items-end mb-3">
           <h1 className="font-bold text-3xl grow">Analyzer</h1>
@@ -12,6 +12,6 @@ export default function Analyzer() {
         </p>
       </div>
       <AnalyzerScreen />
-    </div>
+    </main>
   );
 }
