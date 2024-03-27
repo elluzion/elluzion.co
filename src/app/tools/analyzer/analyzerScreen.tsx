@@ -86,7 +86,7 @@ export default function AnalyzerScreen() {
           <Button type={"submit"}>Analyze</Button>
           {isLoading && (
             <span className="ml-4 font-mono text-muted-foreground">
-              Uploading and analyzing...
+              Analyzing...
             </span>
           )}
         </div>
