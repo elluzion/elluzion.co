@@ -3,6 +3,9 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { useToast } from "@/components/use-toast";
+import { mdiInformation } from "@mdi/js";
+import Icon from "@mdi/react";
+import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import type { AudioData } from "./types";
@@ -66,7 +69,7 @@ export default function AnalyzerScreen() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-8">
       <form className="mb-4" onSubmit={handleOnSubmit}>
         <div className="flex items-center gap-4 mb-4">
           <span className="font-medium">Upload:</span>
@@ -82,7 +85,7 @@ export default function AnalyzerScreen() {
             required
           />
         </div>
-        <div className="mb-8">
+        <div>
           <Button type={"submit"}>Analyze</Button>
           {isLoading && (
             <span className="ml-4 font-mono text-muted-foreground">
@@ -108,6 +111,18 @@ export default function AnalyzerScreen() {
           </tr>
         </table>
       )}
+      <p className="flex items-center gap-4 bg-popover opacity-75 p-4 rounded-lg font-mono text-popover-foreground text-sm">
+        <Icon path={mdiInformation} size={0.75} />
+        This website uses{" "}
+        <Link
+          href="https://mtg.github.io/essentia.js/"
+          target="_blank"
+          className="underline underline-offset-4"
+        >
+          essentia.js
+        </Link>{" "}
+        and may produce wrong results from time to time.
+      </p>
     </div>
   );
 }
