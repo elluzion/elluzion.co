@@ -1,8 +1,9 @@
 "use client";
 
+import { InfoCard } from "@/components/info-card";
 import { Input } from "@/components/input";
 import { useToast } from "@/components/use-toast";
-import { mdiInformation, mdiRefresh, mdiUpload } from "@mdi/js";
+import { mdiRefresh, mdiUpload } from "@mdi/js";
 import Icon from "@mdi/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -155,20 +156,17 @@ export default function AnalyzerScreen() {
           </tr>
         </table>
       )}
-      <div className="flex gap-4 bg-popover opacity-75 p-4 rounded-lg font-mono text-popover-foreground text-sm">
-        <Icon path={mdiInformation} size={0.75} className="shrink-0" />
-        <p>
-          This website uses{" "}
-          <Link
-            href="https://mtg.github.io/essentia.js/"
-            target="_blank"
-            className="underline underline-offset-4"
-          >
-            essentia.js
-          </Link>{" "}
-          and may produce wrong results from time to time.
-        </p>
-      </div>
+      <InfoCard>
+        This website uses{" "}
+        <Link
+          href="https://mtg.github.io/essentia.js/"
+          target="_blank"
+          className="underline underline-offset-4"
+        >
+          essentia.js
+        </Link>{" "}
+        and may produce wrong results from time to time.
+      </InfoCard>
     </div>
   );
 }
