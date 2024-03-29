@@ -15,7 +15,7 @@ export function SongDisplay(props: { song: Song }) {
     (link) => link.platform == "soundcloud"
   )?.url;
   return (
-    <main className="mt-0">
+    <main className="pt-0">
       {/* HEADER */}
       <SongHeader song={song} />
       {/* INFO CARD */}
