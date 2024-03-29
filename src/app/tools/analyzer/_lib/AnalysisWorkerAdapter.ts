@@ -18,8 +18,6 @@ export default class AnalysisWorkerAdapter {
    *
    * Moreover, the worker would error out due to essentia referencing the nodejs "fs" library, which throws an error in the browser.
    * That's why we need a workaround for a simplified and type-safe communication, a.k.a. this adapter.
-   *
-   * @param worker This needs to be passed from the application, otherwise it will error out due to security precautions.
    */
   constructor() {
     this.worker = new Worker(new URL("./analysisWorker.js", import.meta.url));
