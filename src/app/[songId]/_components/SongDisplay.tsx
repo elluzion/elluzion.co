@@ -7,9 +7,13 @@ import LinkSection from "./LinkSection";
 import SongEditSection from "./SongEditSection";
 import SongHeader from "./SongHeader";
 import { SongInfoCard } from "./SongInfoCard";
+import SoundcloudEmbed from "./SoundcloudEmbed";
 
 export function SongDisplay(props: { song: Song }) {
   const song = props.song;
+  const soundcloudUrl = props.song.release_links.find(
+    (link) => link.platform == "soundcloud"
+  )?.url;
   return (
     <main className="mt-0">
       {/* HEADER */}
@@ -27,11 +31,13 @@ export function SongDisplay(props: { song: Song }) {
       </motion.div>
       {/* EDIT SONG */}
       <SongEditSection song={song} />
+      {/* SOUNDCLOUD EMBED */}
+      <SoundcloudEmbed trackUrl={soundcloudUrl} />
       {/* DRAG HANDLE */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { delay: 0.3 } }}
-        className="flex justify-center items-center w-full h-8"
+        className="flex justify-center items-center w-full h-4"
       >
         <DragHandle width={64} height={2} />
       </motion.div>
