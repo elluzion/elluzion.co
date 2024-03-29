@@ -4,6 +4,14 @@ import { motion } from "framer-motion";
 
 export default function SoundcloudEmbed(props: { trackUrl?: string }) {
   if (!props.trackUrl) return;
+
+  const embedParams = new URLSearchParams({
+    url: props.trackUrl,
+    color: "#2563eb",
+    hide_related: "true",
+    show_comments: "false",
+  }).toString();
+
   return (
     <motion.div
       className="rounded-lg overflow-clip"
@@ -17,8 +25,8 @@ export default function SoundcloudEmbed(props: { trackUrl?: string }) {
       <iframe
         title="Soundcloud Embed"
         width="100%"
-        height="166"
-        src={`https://w.soundcloud.com/player/?url=${props.trackUrl}&color=%232563eb`}
+        height="114"
+        src={`https://w.soundcloud.com/player/?${embedParams}`}
       />
     </motion.div>
   );
