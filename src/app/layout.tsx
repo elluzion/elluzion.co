@@ -2,8 +2,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 
-import CursorBacklight from "@/components/single-use/CursorBacklight";
-import PageToolbar from "@/components/single-use/PageToolbar";
+import CursorBacklight from "@/app/_components/CursorBacklight";
+import PageToolbar from "@/app/_components/PageToolbar";
 import { Toaster } from "@/components/toaster";
 import { mainFont, monoFont } from "@/lib/fonts/font-provider";
 

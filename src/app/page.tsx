@@ -1,3 +1,4 @@
+import AddSongButton from "@/app/_components/AddSongButton";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import {
@@ -8,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/card";
-import AddSongButton from "@/components/single-use/AddSongButton";
 import { getSongList } from "@/lib/songs/song-parser";
 import { createClient } from "@/lib/supabase/server";
 import {
