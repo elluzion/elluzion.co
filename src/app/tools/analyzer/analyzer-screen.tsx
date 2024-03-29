@@ -1,16 +1,20 @@
 "use client";
 
 import { InfoCard } from "@/components/info-card";
-import { Input } from "@/components/input";
-import { useToast } from "@/components/use-toast";
-import { mdiRefresh, mdiUpload } from "@mdi/js";
+import {
+  mdiCheck,
+  mdiContentCopy,
+  mdiPiano,
+  mdiSpeaker,
+  mdiSpeedometer,
+} from "@mdi/js";
 import Icon from "@mdi/react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import FileUploadInput from "./_components/file-upload-input";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import type { AudioData } from "./types";
-
-const ALLOWED_FILE_TYPES = ["audio/wav", "audio/flac", "audio/mpeg"];
 
 export default function AnalyzerScreen() {
   /**
@@ -24,10 +28,6 @@ export default function AnalyzerScreen() {
   /**
    * UI
    */
-  // toast for user error reporting
-  const { toast } = useToast();
-  // element over the file input
-  const uploadOverlayRef = useRef<HTMLLabelElement>(null);
   // loading/working indicator
   const [isLoading, setIsLoading] = useState(false);
 
@@ -57,17 +57,6 @@ export default function AnalyzerScreen() {
 
     const audioContext = new AudioContext();
 
-    // no file selected
-    if (!file) return;
-
-    // error: file type invalid
-    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      toast({
-        title: "File type not allowed!",
-        description: `File has to be of type ${ALLOWED_FILE_TYPES.join(", ")}`,
-      });
-      return;
-    }
     // get optimized audio channel for the file and pass it to the worker
     getProcessedAudio(file, audioContext).then((audio) => {
       if (!audio || !workerRef.current) return;
@@ -76,86 +65,41 @@ export default function AnalyzerScreen() {
     });
   }
 
-  function handleInputHoverOn() {
-    uploadOverlayRef.current?.classList.add(
-      "!ring-2",
-      "!ring-ring",
-      "!ring-offset-2",
-      "!bg-opacity-5"
-    );
-  }
-
-  function handleInputHoverOff() {
-    uploadOverlayRef.current?.classList.remove(
-      "!ring-2",
-      "!ring-ring",
-      "!ring-offset-2",
-      "!bg-opacity-5"
-    );
-  }
-
-  function doubleIfLow(bpm: number) {
-    return bpm < 89 ? bpm * 2 : bpm;
-  }
-
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 grow">
       {/* INPUT UI */}
-      <div className="h-28">
-        <label
-          ref={uploadOverlayRef}
-          htmlFor="fileUpload"
-          className="flex flex-col justify-center items-center gap-4 bg-white bg-opacity-0 p-6 ring-border rounded-lg w-full h-28 text-center transition-all ring-1"
-        >
-          <div className="flex justify-center items-center gap-2 font-semibold">
-            <Icon path={isLoading ? mdiRefresh : mdiUpload} size={1} />
-            <span>{isLoading ? "Analyzing" : "Upload file"}</span>
-          </div>
-          <span className="w-full font-mono text-muted-foreground text-sm truncate">
-            {isLoading
-              ? "This will take a few seconds"
-              : ALLOWED_FILE_TYPES.join(", ")}
-          </span>
-        </label>
-        {/* ACTUAL INPUT - HIDDEN */}
-        <Input
-          id="fileUpload"
-          type="file"
-          accept=".mp3,.wav,.flac"
-          className="opacity-0 w-full h-28 -translate-y-28 cursor-pointer"
-          onMouseEnter={handleInputHoverOn}
-          onMouseLeave={handleInputHoverOff}
-          onDragEnter={handleInputHoverOn}
-          onDragLeave={handleInputHoverOff}
-          onDrop={() => {
-            setTimeout(handleInputHoverOff, 500);
-          }}
-          onChange={(e) => {
-            if (e.target.files && e.target.files.length > 0) {
-              handleSubmit(e.target.files[0]);
-            }
-          }}
-          required
-        />
-      </div>
+      <FileUploadInput onFileSubmitted={handleSubmit} isLoading={isLoading} />
 
       {/* RESULT */}
       {audioData && (
-        <table className="border-collapse w-full text-center">
-          <tr>
-            <th>Tempo</th>
-            <th>Key</th>
-            <th>Loudness</th>
-          </tr>
-          <tr>
-            <td>{Math.round(doubleIfLow(audioData.tempo))} BPM</td>
-            <td>
-              {audioData.key} {audioData.scale}
-            </td>
-            <td>{audioData.loudness.toFixed(1)} LUFS</td>
-          </tr>
-        </table>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, translateY: "16px" }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            translateY: "0px",
+            transition: { duration: 0.8, ease: [0, 0.7, 0.2, 1.0] },
+          }}
+          className="gap-2 grid grid-cols-2"
+        >
+          <DataCard
+            mdiIconPath={mdiSpeedometer}
+            title={"Tempo"}
+            subTitle={`${Math.round(doubleIfLow(audioData.tempo))} BPM`}
+          />
+          <DataCard
+            mdiIconPath={mdiPiano}
+            title={"Key"}
+            subTitle={`${audioData.key} ${audioData.scale}`}
+          />
+          <DataCard
+            mdiIconPath={mdiSpeaker}
+            title={"Loudness"}
+            subTitle={`${audioData.loudness.toFixed(1)} LUFS`}
+          />
+        </motion.div>
       )}
+      <span className="grow" />
       <InfoCard>
         This website uses{" "}
         <Link
@@ -169,4 +113,43 @@ export default function AnalyzerScreen() {
       </InfoCard>
     </div>
   );
+}
+
+function DataCard(props: {
+  mdiIconPath: string;
+  title: string;
+  subTitle: string;
+}) {
+  const [hasCopied, setHasCopied] = useState(false);
+
+  // Might error out in debug due to insecure origin settings, should be fine in production
+  function handleCopyClicked() {
+    navigator.clipboard.writeText(props.subTitle).then(() => {
+      setHasCopied(true);
+      setTimeout(() => {
+        setHasCopied(false);
+      }, 2000);
+    });
+  }
+  return (
+    <div className="flex flex-col gap-3 bg-popover p-4 rounded-lg text-card-foreground group">
+      <div className="flex items-center gap-2 font-semibold">
+        <Icon path={props.mdiIconPath} size={1} />
+        <span className="sm:text-lg grow">{props.title}</span>
+        <div
+          onClick={!hasCopied ? handleCopyClicked : () => {}}
+          className="opacity-0 group-hover:opacity-100 text-muted-foreground cursor-pointer"
+        >
+          <Icon path={hasCopied ? mdiCheck : mdiContentCopy} size={0.8} />
+        </div>
+      </div>
+      <span>{props.subTitle}</span>
+    </div>
+  );
+}
+
+export const ALLOWED_FILE_TYPES = ["audio/wav", "audio/flac", "audio/mpeg"];
+
+function doubleIfLow(bpm: number) {
+  return bpm < 89 ? bpm * 2 : bpm;
 }
