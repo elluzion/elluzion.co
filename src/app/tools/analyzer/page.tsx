@@ -1,5 +1,5 @@
 import PageHeader from "@/components/page-header";
-import AnalyzerScreen from "./analyzerScreen";
+import AnalyzerScreen from "./analyzer-screen";
 
 export default function Analyzer() {
   return (

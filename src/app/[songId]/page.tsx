@@ -1,6 +1,6 @@
 import { getSong } from "@/lib/songs/song-parser";
 import { redirect } from "next/navigation";
-import { SongDisplay } from "./_components/SongDisplay";
+import { SongDisplay } from "./_components/song-display";
 
 export default async function SongPage({
   params,

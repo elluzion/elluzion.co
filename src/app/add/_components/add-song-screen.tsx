@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { AddSongForm } from "../_form/AddSongForm";
-import AddSongControls from "./AddSongControls";
-import { AddSongHeader } from "./AddSongHeader";
+import { AddSongForm } from "../_form/add-song-form";
+import AddSongControls from "./add-song-controls";
+import { AddSongHeader } from "./add-song-header";
 
 export function AddSongScreen(props: { editing?: string }) {
   const [formIndex, setFormIndex] = useState(0);

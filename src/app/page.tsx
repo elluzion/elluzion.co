@@ -1,4 +1,4 @@
-import AddSongButton from "@/app/_components/AddSongButton";
+import AddSongButton from "@/app/_components/add-song-button";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
 import {

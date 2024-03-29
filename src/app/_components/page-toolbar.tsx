@@ -15,7 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "../../components/button";
-import LogOutButton from "./LogOutButton";
+import LogOutButton from "./log-out-button";
 
 export default function PageToolbar() {
   const path = usePathname();

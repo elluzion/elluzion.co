@@ -1,4 +1,4 @@
-import { AddSongScreen } from "@/app/add/_components/AddSongScreen";
+import { AddSongScreen } from "@/app/add/_components/add-song-screen";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 

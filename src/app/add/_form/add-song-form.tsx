@@ -17,9 +17,9 @@ import { z } from "zod";
 import { pushSongToDatabase } from "../actions";
 import { formSchema } from "../formSchema";
 import type { Artist, DownloadLink, StreamLink } from "../types";
-import FormPage1 from "./FormPage1";
-import FormPage2 from "./FormPage2";
-import FormPage3 from "./FormPage3";
+import FormPage1 from "./form-page-1";
+import FormPage2 from "./form-page-2";
+import FormPage3 from "./form-page-3";
 
 export function AddSongForm(props: {
   editing?: string;

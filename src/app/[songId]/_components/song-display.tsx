@@ -3,11 +3,11 @@
 import { DragHandle } from "@/components/drag-handle";
 import { Song } from "@/lib/songs/song-parser";
 import { motion } from "framer-motion";
-import LinkSection from "./LinkSection";
-import SongEditSection from "./SongEditSection";
-import SongHeader from "./SongHeader";
-import { SongInfoCard } from "./SongInfoCard";
-import SoundcloudEmbed from "./SoundcloudEmbed";
+import LinkSection from "./link-section";
+import SongEditSection from "./song-edit-section";
+import SongHeader from "./song-header";
+import { SongInfoCard } from "./song-info-card";
+import SoundcloudEmbed from "./soundcloud-embed";
 
 export function SongDisplay(props: { song: Song }) {
   const song = props.song;

@@ -6,8 +6,8 @@ import {
   FormMessage,
 } from "@/components/form";
 import { Input, TextArea } from "@/components/input";
-import { ArtistSection } from "../_components/ArtistSection";
-import SoundcloudImportSection from "../_components/SoundcloudImportSection";
+import { ArtistSection } from "../_components/artist-section";
+import SoundcloudImportSection from "../_components/soundcloud-import-section";
 import { Artist, FormPageProps } from "../types";
 
 export default function FormPage1(
