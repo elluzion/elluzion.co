@@ -11,19 +11,24 @@ import {
 import Icon from "@mdi/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import FileUploadInput from "./_components/file-upload-input";
 import { getProcessedAudio } from "./_lib/audioUtils";
-import type { AudioData } from "./types";
+import type {
+  AudioWorkerReturnData,
+  AudioWorkerReturnMessage,
+  KeyData,
+} from "./types";
 
 export default function AnalyzerScreen() {
   /**
    * LOGIC
    */
   // parsed data of the audio file
-  const [audioData, setAudioData] = useState<AudioData | null>(null);
-  // analyzer worker
-  const workerRef = useRef<Worker>();
+  const [key, setKey] = useState<string | null>(null);
+  const [scale, setScale] = useState<string | null>(null);
+  const [tempo, setTempo] = useState<number | null>(null);
+  const [loudness, setLoudness] = useState<number | null>(null);
 
   /**
    * UI
@@ -31,39 +36,70 @@ export default function AnalyzerScreen() {
   // loading/working indicator
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    // load worker
-    workerRef.current = new Worker(
-      new URL("./_lib/essentiaWorker.js", import.meta.url)
-    );
-    // analysis response
-    workerRef.current.addEventListener("message", (event) => {
-      setAudioData(event.data);
-      setIsLoading(false);
-    });
-    // analysis error
-    workerRef.current.addEventListener("error", (event) => {
-      console.log(event.error);
-      setIsLoading(false);
-    });
-    return () => {
-      workerRef.current?.terminate();
-    };
-  }, []);
-
   function handleSubmit(file: File) {
-    // reset audio data
-    setAudioData(null);
+    // reset
+    resetAllData();
 
     const audioContext = new AudioContext();
+    const worker = new Worker(
+      new URL("./_lib/essentiaWorker.js", import.meta.url)
+    );
+
+    // handling the returned data from the worker
+    worker.addEventListener("message", (event) => {
+      const data = event.data as AudioWorkerReturnMessage;
+      if (data.type == "data") {
+        const returnData = data.data as AudioWorkerReturnData;
+        switch (returnData.key) {
+          case "keyData": {
+            const value = returnData.value as KeyData;
+            setKey(value.key);
+            setScale(value.scale);
+            break;
+          }
+          case "loudness": {
+            setLoudness(returnData.value as number);
+            break;
+          }
+          case "tempo": {
+            setTempo(returnData.value as number);
+            break;
+          }
+        }
+      } else if (data.type == "status") {
+        if (data.data == "finished") {
+          setIsLoading(false);
+          worker.terminate();
+        }
+      }
+    });
+
+    // worker error handling
+    worker.addEventListener("error", (event) => {
+      console.log(event.error);
+      setIsLoading(false);
+      worker.terminate();
+    });
 
     // get optimized audio channel for the file and pass it to the worker
     getProcessedAudio(file, audioContext).then((audio) => {
-      if (!audio || !workerRef.current) return;
-      workerRef.current.postMessage(audio);
+      if (!audio) return;
+      worker.postMessage(audio);
       setIsLoading(true);
     });
   }
+
+  function resetAllData() {
+    setKey(null);
+    setScale(null);
+    setTempo(null);
+    setLoudness(null);
+  }
+
+  const dataAvailable = () => {
+    if (key || scale || tempo || loudness) return true;
+    return false;
+  };
 
   return (
     <div className="flex flex-col gap-8 grow">
@@ -71,32 +107,31 @@ export default function AnalyzerScreen() {
       <FileUploadInput onFileSubmitted={handleSubmit} isLoading={isLoading} />
 
       {/* RESULT */}
-      {audioData && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, translateY: "16px" }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-            translateY: "0px",
-            transition: { duration: 0.8, ease: [0, 0.7, 0.2, 1.0] },
-          }}
-          className="gap-2 grid grid-cols-2"
-        >
-          <DataCard
-            mdiIconPath={mdiSpeedometer}
-            title={"Tempo"}
-            subTitle={`${Math.round(doubleIfLow(audioData.tempo))} BPM`}
-          />
-          <DataCard
-            mdiIconPath={mdiPiano}
-            title={"Key"}
-            subTitle={`${audioData.key} ${audioData.scale}`}
-          />
-          <DataCard
-            mdiIconPath={mdiSpeaker}
-            title={"Loudness"}
-            subTitle={`${audioData.loudness.toFixed(1)} LUFS`}
-          />
+      {dataAvailable() && (
+        <motion.div className="gap-2 grid grid-cols-2">
+          {key && scale && (
+            <DataCard
+              mdiIconPath={mdiPiano}
+              title={"Key"}
+              subTitle={`${key} ${scale}`}
+            />
+          )}
+          {loudness && (
+            <DataCard
+              mdiIconPath={mdiSpeaker}
+              title={"Loudness"}
+              subTitle={`${loudness.toFixed(1)} LUFS`}
+            />
+          )}
+          {tempo && (
+            <div className="col-span-2">
+              <DataCard
+                mdiIconPath={mdiSpeedometer}
+                title={"Tempo"}
+                subTitle={`${Math.round(doubleIfLow(tempo))} BPM`}
+              />
+            </div>
+          )}
         </motion.div>
       )}
       <span className="grow" />
@@ -131,8 +166,18 @@ function DataCard(props: {
       }, 2000);
     });
   }
+
   return (
-    <div className="flex flex-col gap-3 bg-popover p-4 rounded-lg text-card-foreground group">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95, translateY: "16px" }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        translateY: "0px",
+        transition: { duration: 0.8, ease: [0, 0.7, 0.2, 1.0] },
+      }}
+      className={`flex flex-col gap-3 bg-popover p-4 rounded-lg text-card-foreground group`}
+    >
       <div className="flex items-center gap-2 font-semibold">
         <Icon path={props.mdiIconPath} size={1} />
         <span className="sm:text-lg grow">{props.title}</span>
@@ -144,7 +189,7 @@ function DataCard(props: {
         </div>
       </div>
       <span>{props.subTitle}</span>
-    </div>
+    </motion.div>
   );
 }
 

@@ -8,18 +8,6 @@ addEventListener("message", (msg) => {
   // convert passed audio to vector signal
   const vectorSignal = essentia.arrayToVector(msg.data);
 
-  // bpm
-  const bpm = essentia.PercivalBpmEstimator(
-    vectorSignal,
-    1024,
-    2048,
-    128,
-    128,
-    210,
-    50,
-    16000
-  ).bpm;
-
   // key
   const keyData = essentia.KeyExtractor(
     vectorSignal,
@@ -38,6 +26,7 @@ addEventListener("message", (msg) => {
     "cosine",
     "hann"
   );
+  postMessage({ type: "data", data: { key: "keyData", value: keyData } });
 
   // loudness
   const loudness = essentia.DynamicComplexity(
@@ -45,13 +34,21 @@ addEventListener("message", (msg) => {
     0.2,
     16000 // downsampled
   ).loudness;
+  postMessage({ type: "data", data: { key: "loudness", value: loudness } });
 
-  // return data
-  const data = {
-    tempo: bpm,
-    key: keyData.key,
-    scale: keyData.scale,
-    loudness: loudness,
-  };
-  postMessage(data);
+  // bpm - slowest, so it's at the end of the chain
+  const bpm = essentia.PercivalBpmEstimator(
+    vectorSignal,
+    1024,
+    2048,
+    128,
+    128,
+    210,
+    50,
+    16000
+  ).bpm;
+  postMessage({ type: "data", data: { key: "tempo", value: bpm } });
+
+  // all done
+  postMessage({ type: "status", data: "finished" });
 });
