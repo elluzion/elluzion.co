@@ -1,6 +1,7 @@
 "use client";
 
 import { InfoCard } from "@/components/info-card";
+import { useToast } from "@/components/use-toast";
 import {
   mdiCheck,
   mdiContentCopy,
@@ -13,12 +14,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import FileUploadInput from "./_components/file-upload-input";
+import AnalysisWorkerAdapter from "./_lib/AnalysisWorkerAdapter";
 import { getProcessedAudio } from "./_lib/audioUtils";
-import type {
-  AudioWorkerReturnData,
-  AudioWorkerReturnMessage,
-  KeyData,
-} from "./types";
+import type { KeyData } from "./types";
 
 export default function AnalyzerScreen() {
   /**
@@ -35,56 +33,52 @@ export default function AnalyzerScreen() {
    */
   // loading/working indicator
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   function handleSubmit(file: File) {
     // reset
     resetAllData();
 
     const audioContext = new AudioContext();
-    const worker = new Worker(
-      new URL("./_lib/essentiaWorker.js", import.meta.url)
-    );
+    const workerAdapter = new AnalysisWorkerAdapter();
 
-    // handling the returned data from the worker
-    worker.addEventListener("message", (event) => {
-      const data = event.data as AudioWorkerReturnMessage;
-      if (data.type == "data") {
-        const returnData = data.data as AudioWorkerReturnData;
-        switch (returnData.key) {
-          case "keyData": {
-            const value = returnData.value as KeyData;
-            setKey(value.key);
-            setScale(value.scale);
-            break;
-          }
-          case "loudness": {
-            setLoudness(returnData.value as number);
-            break;
-          }
-          case "tempo": {
-            setTempo(returnData.value as number);
-            break;
-          }
+    // receiving partial data from worker
+    workerAdapter.onData((data) => {
+      switch (data.key) {
+        case "keyData": {
+          const value = data.value as KeyData;
+          setKey(value.key);
+          setScale(value.scale);
+          break;
         }
-      } else if (data.type == "status") {
-        if (data.data == "finished") {
-          setIsLoading(false);
-          worker.terminate();
+        case "loudness": {
+          setLoudness(data.value as number);
+          break;
+        }
+        case "tempo": {
+          setTempo(data.value as number);
+          break;
         }
       }
     });
 
-    // worker error handling
-    worker.addEventListener("error", (event) => {
-      console.log(event.error);
+    // worker errored out
+    workerAdapter.onError((error) => {
+      console.log(error);
       setIsLoading(false);
-      worker.terminate();
+      toast({
+        title: "An error occured ",
+        description: "Check console for more info.",
+      });
     });
+
+    // work finished
+    workerAdapter.onFinished(() => setIsLoading(false));
 
     // get optimized audio channel for the file and pass it to the worker
     getProcessedAudio(file, audioContext).then((audio) => {
       if (!audio) return;
-      worker.postMessage(audio);
+      workerAdapter.invoke(audio);
       setIsLoading(true);
     });
   }
