@@ -1,30 +1,34 @@
 "use client";
 
-import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { useToast } from "@/components/use-toast";
-import { mdiInformation } from "@mdi/js";
+import { mdiInformation, mdiRefresh, mdiUpload } from "@mdi/js";
 import Icon from "@mdi/react";
 import Link from "next/link";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import type { AudioData } from "./types";
 
 const ALLOWED_FILE_TYPES = ["audio/wav", "audio/flac", "audio/mpeg"];
 
 export default function AnalyzerScreen() {
-  // audio file to be selected through the input
-  const [file, setFile] = useState<File | null>(null);
+  /**
+   * LOGIC
+   */
   // parsed data of the audio file
   const [audioData, setAudioData] = useState<AudioData | null>(null);
-  // loading/working indicator
-  const [isLoading, setIsLoading] = useState(false);
-
   // analyzer worker
   const workerRef = useRef<Worker>();
 
-  // UI toast for user error reporting
+  /**
+   * UI
+   */
+  // toast for user error reporting
   const { toast } = useToast();
+  // element over the file input
+  const uploadOverlayRef = useRef<HTMLLabelElement>(null);
+  // loading/working indicator
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // load worker
@@ -46,9 +50,7 @@ export default function AnalyzerScreen() {
     };
   }, []);
 
-  function handleOnSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // dont actually submit form
-
+  function handleSubmit(file: File) {
     // reset audio data
     setAudioData(null);
 
@@ -56,11 +58,12 @@ export default function AnalyzerScreen() {
 
     // no file selected
     if (!file) return;
+
     // error: file type invalid
     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
       toast({
         title: "File type not allowed!",
-        description: `${file.type}, has to be ${ALLOWED_FILE_TYPES.join(", ")}`,
+        description: `File has to be of type ${ALLOWED_FILE_TYPES.join(", ")}`,
       });
       return;
     }
@@ -72,36 +75,69 @@ export default function AnalyzerScreen() {
     });
   }
 
+  function handleInputHoverOn() {
+    uploadOverlayRef.current?.classList.add(
+      "!ring-2",
+      "!ring-ring",
+      "!ring-offset-2",
+      "!bg-opacity-5"
+    );
+  }
+
+  function handleInputHoverOff() {
+    uploadOverlayRef.current?.classList.remove(
+      "!ring-2",
+      "!ring-ring",
+      "!ring-offset-2",
+      "!bg-opacity-5"
+    );
+  }
+
   function doubleIfLow(bpm: number) {
     return bpm < 89 ? bpm * 2 : bpm;
   }
 
   return (
     <div className="flex flex-col gap-8">
-      <form className="mb-4" onSubmit={handleOnSubmit}>
-        <div className="flex items-center gap-4 mb-4">
-          <span className="font-medium">Upload:</span>
-          <Input
-            type="file"
-            accept=""
-            className="w-min"
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                setFile(e.target.files[0]);
-              }
-            }}
-            required
-          />
-        </div>
-        <div>
-          <Button type={"submit"}>Analyze</Button>
-          {isLoading && (
-            <span className="ml-4 font-mono text-muted-foreground">
-              Analyzing...
-            </span>
-          )}
-        </div>
-      </form>
+      {/* INPUT UI */}
+      <div className="h-28">
+        <label
+          ref={uploadOverlayRef}
+          htmlFor="fileUpload"
+          className="flex flex-col justify-center items-center gap-4 bg-white bg-opacity-0 p-6 ring-border rounded-lg w-full h-28 text-center transition-all ring-1"
+        >
+          <div className="flex justify-center items-center gap-2 font-semibold">
+            <Icon path={isLoading ? mdiRefresh : mdiUpload} size={1} />
+            <span>{isLoading ? "Analyzing" : "Upload file"}</span>
+          </div>
+          <span className="w-full font-mono text-muted-foreground text-sm truncate">
+            {isLoading
+              ? "This will take a few seconds"
+              : ALLOWED_FILE_TYPES.join(", ")}
+          </span>
+        </label>
+        {/* ACTUAL INPUT - HIDDEN */}
+        <Input
+          id="fileUpload"
+          type="file"
+          accept=".mp3,.wav,.flac"
+          className="opacity-0 w-full h-28 -translate-y-28 cursor-pointer"
+          onMouseEnter={handleInputHoverOn}
+          onMouseLeave={handleInputHoverOff}
+          onDragEnter={handleInputHoverOn}
+          onDragLeave={handleInputHoverOff}
+          onDrop={() => {
+            setTimeout(handleInputHoverOff, 500);
+          }}
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              handleSubmit(e.target.files[0]);
+            }
+          }}
+          required
+        />
+      </div>
+
       {/* RESULT */}
       {audioData && (
         <table className="border-collapse w-full text-center">
