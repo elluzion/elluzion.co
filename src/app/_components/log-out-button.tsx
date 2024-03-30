@@ -22,6 +22,7 @@ export default function LogOutButton() {
     await supabase.auth.signOut();
     location.reload();
   };
+  if (!logoutButtonVisible) return;
   return (
     <Button onClick={HandleLogout} variant={"outline"} size="icon">
       <Icon size={0.75} path={mdiLogout} />
