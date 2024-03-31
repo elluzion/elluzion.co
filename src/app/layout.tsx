@@ -9,14 +9,6 @@ import { mainFont, monoFont } from "@/lib/fonts/font-provider";
 
 import "./globals.css";
 
-/**
- * The metadata tags of the page for SEO
- */
-export const metadata: Metadata = {
-  title: "Elluzion",
-  description: "German EDM producer",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,3 +32,14 @@ export default function RootLayout({
     </html>
   );
 }
+
+/**
+ * The metadata tags of the page for SEO
+ */
+export const metadata: Metadata = {
+  title: {
+    default: "Elluzion",
+    template: "%s | Elluzion",
+  },
+  description: "All releases of mine are stored here.",
+};

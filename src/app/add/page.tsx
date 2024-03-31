@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AddSongScreen } from "./_components/add-song-screen";
 
@@ -12,3 +13,5 @@ export default async function AddSong() {
 
   return <AddSongScreen />;
 }
+
+export const metadata: Metadata = { title: "Add song" };
