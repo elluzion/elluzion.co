@@ -24,8 +24,8 @@ export default function SongEditSection(props: { song: Song }) {
 
   useEffect(() => {
     supabase.auth
-      .getUser()
-      .then((data) => setLoggedIn(data.data.user ? true : false));
+      .getSession()
+      .then((data) => setLoggedIn(data.data.session ? true : false));
   }, [loggedIn, supabase]);
 
   return (

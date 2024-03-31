@@ -12,8 +12,8 @@ export default function LogOutButton() {
 
   useEffect(() => {
     try {
-      supabase.auth.getUser().then((res) => {
-        if (res.data.user) setLogoutButtonVisible(true);
+      supabase.auth.getSession().then((res) => {
+        if (res.data.session) setLogoutButtonVisible(true);
       });
     } catch (e) {}
   });
