@@ -1,16 +1,8 @@
 import { Badge } from "@/components/badge";
-import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/dropdown-menu";
 import { Song } from "@/lib/songs/song-parser";
-import { pascalCase } from "@/lib/utils";
-import Link from "next/link";
 import React from "react";
+import SongDownloadButton from "./song-download-button";
 
 interface SongInfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   song: Song;
@@ -51,46 +43,8 @@ export const SongInfoCard = React.forwardRef<
           {song.type && <Badge variant={"outline"}>{song.type}</Badge>}
         </div>
         <div className="gap-4 hidden has-[:first-child]:grid grid-flow-col">
-          {downloadsMp3.length > 0 && (
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-full">
-                  <Button className="w-full">Download MP3</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {downloadsMp3.map((item, key) => {
-                    return (
-                      <Link href={item.download_url} key={key} target="_blank">
-                        <DropdownMenuItem>
-                          {pascalCase(item.edit)}
-                        </DropdownMenuItem>
-                      </Link>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
-          {downloadsWav.length > 0 && (
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="w-full">
-                  <Button className="w-full">Download WAV</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {downloadsWav.map((item, key) => {
-                    return (
-                      <Link href={item.download_url} key={key} target="_blank">
-                        <DropdownMenuItem>
-                          {pascalCase(item.edit)}
-                        </DropdownMenuItem>
-                      </Link>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
+          <SongDownloadButton downloadItems={downloadsMp3} />
+          <SongDownloadButton downloadItems={downloadsWav} />
         </div>
       </CardContent>
     </Card>
