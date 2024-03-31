@@ -29,12 +29,16 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const description = `${song?.title} released on ${song?.release_date}
   ${song?.label ? " via " + song?.label : ""}.`;
 
+  /**
+   * Note: this is a hacky way of getting a larger image, since Souncloud could potentially change their API and break it
+   */
+  const image = song?.art_url.replace("large", "t500x500") || fallbackImageUrl;
   // return
   return {
     title: song?.title,
     description: description,
     openGraph: {
-      images: [song?.art_url || fallbackImageUrl],
+      images: [image],
     },
   };
 }
