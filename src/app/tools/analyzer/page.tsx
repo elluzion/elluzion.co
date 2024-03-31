@@ -1,4 +1,5 @@
 import PageHeader from "@/components/page-header";
+import { Metadata } from "next";
 import AnalyzerScreen from "./analyzer-screen";
 
 export default function Analyzer() {
@@ -12,3 +13,8 @@ export default function Analyzer() {
     </main>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Analyzer",
+  description: "Receive info about wav/mp3/flac audio files.",
+};

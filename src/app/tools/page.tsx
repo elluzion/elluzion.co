@@ -1,4 +1,5 @@
 import PageHeader from "@/components/page-header";
+import { Metadata } from "next";
 import Link from "next/link";
 
 const toolSet = [
@@ -25,3 +26,8 @@ export default function Tools() {
     </main>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Tools",
+  description: "A page full of useful mini pages for small tasks.",
+};
