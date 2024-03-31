@@ -24,7 +24,7 @@ export default function SongDownloadButton(props: {
   if (props.downloadItems.length == 1) {
     const item = props.downloadItems[0];
     return (
-      <Link href={item.download_url} target="_blank">
+      <Link href={parseDownloadLink(item.download_url)} target="_blank">
         <Button className="w-full">Download {format}</Button>
       </Link>
     );
@@ -39,7 +39,11 @@ export default function SongDownloadButton(props: {
         <DropdownMenuContent>
           {props.downloadItems.map((item, key) => {
             return (
-              <Link href={item.download_url} key={key} target="_blank">
+              <Link
+                href={parseDownloadLink(item.download_url)}
+                key={key}
+                target="_blank"
+              >
                 <DropdownMenuItem>{pascalCase(item.edit)}</DropdownMenuItem>
               </Link>
             );
@@ -49,3 +53,21 @@ export default function SongDownloadButton(props: {
     </div>
   );
 }
+
+const parseDownloadLink = (inputLink: string) => {
+  if (inputLink.includes("https://drive.google.com/file/d/")) {
+    // The file ID is located between "d/" and the next "/"
+    const startOfId = inputLink.indexOf("d/") + 2;
+    const endOfId = inputLink.indexOf("/", startOfId);
+
+    // Extract the file ID
+    const fileId = inputLink.substring(
+      startOfId,
+      endOfId != -1 ? endOfId : undefined
+    );
+
+    const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    return directLink;
+  }
+  return inputLink;
+};
