@@ -19,7 +19,7 @@ export default async function SongPage({ params }: Params) {
 // page metadata (dynamic)
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const fallbackImageUrl =
-    "https://i1.sndcdn.com/avatars-Sen1bkxTWtJUDjut-zCRlvQ-large.jpg";
+    "https://i1.sndcdn.com/avatars-Sen1bkxTWtJUDjut-zCRlvQ-t500x500.jpg";
 
   // gather info for current song
   const song = await getSong(params.songId);
