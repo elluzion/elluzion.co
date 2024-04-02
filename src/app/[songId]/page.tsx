@@ -26,8 +26,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   // generate description
   // "Song <songname> released on <dd-mm-yyyy> (via <label>)."
-  const description = `${song?.title} released on ${song?.release_date}
-  ${song?.label ? " via " + song?.label : ""}.`;
+  const description = `${song?.title} released on ${song?.release_date}${
+    song?.label ? " via " + song?.label : ""
+  }.`;
 
   /**
    * Note: this is a hacky way of getting a larger image, since Souncloud could potentially change their API and break it
