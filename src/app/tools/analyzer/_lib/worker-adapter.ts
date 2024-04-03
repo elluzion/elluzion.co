@@ -20,7 +20,7 @@ export default class AnalysisWorkerAdapter {
    * That's why we need a workaround for a simplified and type-safe communication, a.k.a. this adapter.
    */
   constructor() {
-    this.worker = new Worker(new URL("./analysisWorker.js", import.meta.url));
+    this.worker = new Worker(new URL("./worker.js", import.meta.url));
 
     this.worker.addEventListener("message", (event) => {
       const data = event.data as WorkerReturnMessage;
