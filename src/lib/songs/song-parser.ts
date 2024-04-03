@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { DBSong } from "./types";
 
 /**
  *
@@ -75,7 +76,7 @@ export async function getSong(songId: string | number) {
     .eq("id", songId)
     .single();
 
-  return release;
+  return release as DBSong;
 }
 
 /**
@@ -103,40 +104,4 @@ const resolveTrackId = async (writtenId: string) => {
 export const trackExists = async (writtenId: string) => {
   const songId = await resolveTrackId(writtenId);
   return songId == -1 ? false : true;
-};
-
-/**
- *
- * TYPES
- *
- */
-
-/**
- * The type of the returned song object gained through {@link getSong(songId)}
- */
-export type Song = {
-  id: number;
-  written_id: string;
-  title: string;
-  description: string | null;
-  genre: string;
-  release_date: string;
-  label: string | null;
-  tempo: number | null;
-  art_url: string | null;
-  type: string;
-  key: string | null;
-  artists: {
-    id: number;
-    name: string;
-  }[];
-  release_links: {
-    platform: string | null;
-    url: string;
-  }[];
-  release_downloads: {
-    download_url: string;
-    edit: string;
-    format: "mp3" | "wav";
-  }[];
 };

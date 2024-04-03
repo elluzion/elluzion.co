@@ -1,12 +1,12 @@
 import { Button } from "@/components/button";
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import { createClient } from "@/lib/supabase/client";
 import { mdiNoteEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function SongEditSection(props: { song: Song }) {
+export default function SongEditSection(props: { song: DBSong }) {
   const router = useRouter();
   const [loggedIn, setLoggedIn] = useState(false);
 

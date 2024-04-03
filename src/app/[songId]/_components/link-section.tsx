@@ -1,8 +1,8 @@
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import Link from "next/link";
 import { PlatformButton } from "./platform-button";
 
-export default function LinkSection(props: { song: Song }) {
+export default function LinkSection(props: { song: DBSong }) {
   return (
     <div>
       <div>

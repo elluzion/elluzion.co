@@ -1,7 +1,7 @@
 "use client";
 
 import { DragHandle } from "@/components/drag-handle";
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import { motion } from "framer-motion";
 import LinkSection from "./link-section";
 import SongEditSection from "./song-edit-section";
@@ -9,7 +9,7 @@ import SongHeader from "./song-header";
 import { SongInfoCard } from "./song-info-card";
 import SoundcloudEmbed from "./soundcloud-embed";
 
-export function SongDisplay(props: { song: Song }) {
+export function SongDisplay(props: { song: DBSong }) {
   const song = props.song;
   const soundcloudUrl = props.song.release_links.find(
     (link) => link.platform == "soundcloud"
