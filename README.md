@@ -27,6 +27,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Testing
+
+Add all environment variables to .env.test
+
 ## To update types
 
 ```bash
