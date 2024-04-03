@@ -2,12 +2,12 @@ import { WorkerReturnData, WorkerReturnMessage } from "../types";
 
 export default class AnalysisWorkerAdapter {
   // main worker
-  worker: Worker;
+  private worker: Worker;
 
   // callbacks
-  _onDataCallbacks: ((data: WorkerReturnData) => void)[] = [];
-  _onErrorCallbacks: ((error: ErrorEvent) => void)[] = [];
-  _onFinishedCallbacks: (() => void)[] = [];
+  private onDataCallbacks: ((data: WorkerReturnData) => void)[] = [];
+  private onErrorCallbacks: ((error: ErrorEvent) => void)[] = [];
+  private onFinishedCallbacks: (() => void)[] = [];
 
   /**
    * A Typescript adapter for the AnalysisWorker.
@@ -26,24 +26,24 @@ export default class AnalysisWorkerAdapter {
       const data = event.data as WorkerReturnMessage;
       if (data.type == "data") {
         // new analysis data received
-        this._onDataCallbacks.forEach((callback) => {
+        this.onDataCallbacks.forEach((callback) => {
           if (data.data) callback(data.data);
         });
       } else if (data.type == "status") {
         // work completed
         if (data.status == "finished") {
-          this._onFinishedCallbacks.forEach((callback) => callback());
+          this.onFinishedCallbacks.forEach((callback) => callback());
         }
       }
     });
 
     this.worker.addEventListener("error", (event) => {
       // error occured
-      this._onErrorCallbacks.forEach((callback) => {
+      this.onErrorCallbacks.forEach((callback) => {
         callback(event);
       });
       // notifying finishing too
-      this._onFinishedCallbacks.forEach((callback) => {
+      this.onFinishedCallbacks.forEach((callback) => {
         callback();
       });
     });
@@ -73,7 +73,7 @@ export default class AnalysisWorkerAdapter {
    * @param callback Callback to notify when data from the worker has been received
    */
   onData(callback: (data: WorkerReturnData) => void) {
-    this._onDataCallbacks.push(callback);
+    this.onDataCallbacks.push(callback);
   }
 
   /**
@@ -81,7 +81,7 @@ export default class AnalysisWorkerAdapter {
    * @param callback Callback to notify when an error occured
    */
   onError(callback: (error: ErrorEvent) => void) {
-    this._onErrorCallbacks.push(callback);
+    this.onErrorCallbacks.push(callback);
   }
 
   /**
@@ -89,6 +89,6 @@ export default class AnalysisWorkerAdapter {
    * @param callback Callback to notify when the worker is done working.
    */
   onFinished(callback: () => void) {
-    this._onFinishedCallbacks.push(callback);
+    this.onFinishedCallbacks.push(callback);
   }
 }
