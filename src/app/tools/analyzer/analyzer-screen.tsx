@@ -14,8 +14,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 import FileUploadInput from "./_components/file-upload-input";
-import AnalysisWorkerAdapter from "./_lib/AnalysisWorkerAdapter";
 import { getProcessedAudio } from "./_lib/audioUtils";
+import AnalysisWorkerAdapter from "./_lib/worker-adapter";
 import type { KeyData } from "./types";
 
 export default function AnalyzerScreen() {
