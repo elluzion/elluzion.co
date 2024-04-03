@@ -7,13 +7,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu";
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import { pascalCase } from "@/lib/utils";
 
 import Link from "next/link";
 
 export default function SongDownloadButton(props: {
-  downloadItems: Song["release_downloads"];
+  downloadItems: DBSong["release_downloads"];
 }) {
   // list empty
   if (props.downloadItems.length == 0) return;

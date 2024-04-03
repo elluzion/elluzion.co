@@ -1,11 +1,11 @@
 import { Badge } from "@/components/badge";
 import { Card, CardContent } from "@/components/card";
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import React from "react";
 import SongDownloadButton from "./song-download-button";
 
 interface SongInfoCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  song: Song;
+  song: DBSong;
 }
 
 export const SongInfoCard = React.forwardRef<

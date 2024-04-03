@@ -1,8 +1,8 @@
-import { Song } from "@/lib/songs/song-parser";
+import { DBSong } from "@/lib/songs/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-export default function SongHeader(props: { song: Song }) {
+export default function SongHeader(props: { song: DBSong }) {
   return (
     <motion.div
       initial={{ y: "-24px", opacity: 0 }}
