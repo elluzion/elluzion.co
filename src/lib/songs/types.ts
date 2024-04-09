@@ -9,27 +9,27 @@
  */
 export type DBSong = {
   id: number;
-  written_id: string;
+  permalink: string;
   title: string;
-  description: string | null;
+  description?: string;
   genre: string;
-  release_date: string;
-  label: string | null;
-  tempo: number | null;
-  art_url: string | null;
+  release_date: Date;
+  label?: string;
+  tempo?: number;
+  art_url: string;
   type: string;
-  key: string | null;
-  artists: {
-    id: number;
-    name: string;
-  }[];
-  release_links: {
-    platform: string | null;
+  key?: string;
+  artists: string[];
+  stream_links: {
     url: string;
   }[];
-  release_downloads: {
-    download_url: string;
+  download_links: {
+    url: string;
     edit: string;
     format: "mp3" | "wav";
   }[];
 };
+
+export type StreamLink = DBSong["stream_links"][0];
+
+export type DownloadLink = DBSong["download_links"][0];

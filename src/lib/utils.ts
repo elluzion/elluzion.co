@@ -7,3 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 
 export const pascalCase = (input: string) =>
   input[0].toUpperCase() + input.slice(1);
+
+export const formatDate = (date: Date) => date.toISOString().split("T")[0];
