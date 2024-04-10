@@ -1,4 +1,5 @@
 import { Button } from "@/components/button";
+import SongDatabase from "@/lib/songs/song-database";
 import { DBSong } from "@/lib/songs/types";
 import { createClient } from "@/lib/supabase/client";
 import { mdiNoteEdit, mdiTrashCan } from "@mdi/js";
@@ -11,15 +12,12 @@ export default function SongEditSection(props: { song: DBSong }) {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const supabase = createClient();
+  const db = new SongDatabase(supabase);
 
   function deleteSongAndReturn() {
-    supabase
-      .from("releases")
-      .delete()
-      .eq("written_id", props.song.written_id)
-      .then(() => {
-        router.push("/");
-      });
+    db.deleteSong(props.song.permalink).then(() => {
+      router.push("/");
+    });
   }
 
   useEffect(() => {

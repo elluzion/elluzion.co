@@ -11,7 +11,7 @@ export default async function AddSong() {
 
   if (!user) redirect("/login");
 
-  return <AddSongScreen />;
+  return <AddSongScreen editing={false} />;
 }
 
 export const metadata: Metadata = { title: "Add song" };

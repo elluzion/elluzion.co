@@ -11,32 +11,32 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/toggle-group";
 import { Platforms } from "@/lib/songs/platforms";
-import { mdiDragHorizontalVariant, mdiPlay } from "@mdi/js";
+import { DBSong, DownloadLink, StreamLink } from "@/lib/songs/types";
+import { mdiDragHorizontalVariant } from "@mdi/js";
 import Icon from "@mdi/react";
-
 import { Reorder, useDragControls } from "framer-motion";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
-import { DownloadLink, FormPageProps, StreamLink } from "../types";
+import { useSongFormContext } from "./contexts";
 
-export default function FormPage3(
-  props: FormPageProps & {
-    streamLinks: StreamLink[];
-    setStreamLinks: (newList: StreamLink[]) => void;
-    downloadLinks: DownloadLink[];
-    setDownloadLinks: (newList: DownloadLink[]) => void;
-    handleFetchPlatformLinks: (selectedPlatformIds: string[]) => void;
-  }
-) {
+export default function FormPage3(props: {
+  streamLinks: StreamLink[];
+  setStreamLinks: (newList: StreamLink[]) => void;
+  downloadLinks: DownloadLink[];
+  setDownloadLinks: (newList: DownloadLink[]) => void;
+  handleFetchPlatformLinks: (selectedPlatformIds: string[]) => void;
+}) {
+  const context = useSongFormContext();
+
   // Streaming links
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
 
   const [customPlatformUrl, setCustomPlatformUrl] = useState("");
-  const [customPlatformId, setCustomPlatformId] = useState("");
 
   // Download links
   const [addDownloadUrl, setAddDownloadUrl] = useState("");
-  const [addDownloadFormat, setAddDownloadFormat] = useState("");
+  const [addDownloadFormat, setAddDownloadFormat] =
+    useState<AudioFormat>("wav");
   const [addDownloadEdit, setAddDownloadEdit] = useState("");
 
   function handleFetchPlatforms() {
@@ -45,13 +45,12 @@ export default function FormPage3(
   }
 
   function handleAddStreamlinkClicked() {
-    if (!customPlatformUrl.startsWith("https://") || customPlatformId == "") {
+    if (!customPlatformUrl.startsWith("https://")) {
       return;
     } else {
       const newlinks = [
         ...props.streamLinks,
         {
-          platformId: customPlatformId,
           url: customPlatformUrl,
         },
       ];
@@ -60,19 +59,15 @@ export default function FormPage3(
   }
 
   function handleAddDownloadClicked() {
-    if (
-      !addDownloadUrl.startsWith("https://") ||
-      addDownloadFormat == "" ||
-      addDownloadEdit == ""
-    ) {
+    if (!addDownloadUrl.startsWith("https://") || addDownloadEdit == "") {
       return;
     } else {
       const newlinks = [
         ...props.downloadLinks,
         {
-          format: addDownloadFormat,
-          edit: addDownloadEdit,
           url: addDownloadUrl,
+          edit: addDownloadEdit,
+          format: addDownloadFormat,
         },
       ];
       props.setDownloadLinks(newlinks);
@@ -94,7 +89,7 @@ export default function FormPage3(
   return (
     <div
       className="flex-col"
-      style={{ display: props.index == 2 ? "flex" : "none" }}
+      style={{ display: context.index.current == 2 ? "flex" : "none" }}
     >
       {/**
        * STREAMING LINKS
@@ -112,14 +107,14 @@ export default function FormPage3(
               type={"multiple"}
               className="flex-wrap justify-start gap-2 mb-2 w-full"
             >
-              {Platforms.map((platform) => (
+              {Platforms.LIST.map((platform) => (
                 <ToggleGroupItem
                   key={platform.id}
                   value={platform.id}
                   variant={"outline"}
                   disabled={
                     props.streamLinks.find(
-                      (link) => link.platformId == platform.id
+                      (link) => Platforms.resolve(link.url).id == platform.id
                     )
                       ? true
                       : false
@@ -135,7 +130,7 @@ export default function FormPage3(
           </div>
 
           <div className="flex flex-col gap-4 mt-6">
-            <span className="font-semibold">Add custom</span>
+            <span className="font-semibold">Add</span>
 
             {/* form to add new items */}
             <div className="flex items-start gap-2 h-10">
@@ -143,16 +138,6 @@ export default function FormPage3(
                 type={"url"}
                 onChange={(e) => setCustomPlatformUrl(e.target.value)}
                 placeholder="URL"
-              />
-              <Input
-                pattern=".*\S+.*"
-                className="w-min"
-                onChange={(e) => {
-                  setCustomPlatformId(
-                    e.target.value.toLowerCase().replaceAll(/\s/g, "")
-                  );
-                }}
-                placeholder="Custom platform name"
               />
             </div>
             <Button type="button" onClick={handleAddStreamlinkClicked}>
@@ -170,7 +155,7 @@ export default function FormPage3(
             <div className="flex items-start gap-2 h-10">
               <Select
                 onValueChange={(newitem) => {
-                  setAddDownloadFormat(newitem);
+                  setAddDownloadFormat(newitem as AudioFormat);
                 }}
               >
                 <SelectTrigger className="w-[180px]">
@@ -262,9 +247,7 @@ function StreamLinkReoderItem(props: {
       <div className="cursor-grab" onPointerDown={(e) => dragControls.start(e)}>
         <Icon path={mdiDragHorizontalVariant} size={1} />
       </div>
-      {Platforms.find((item) => {
-        return item.id == props.link.platformId;
-      })?.icon || <Icon path={mdiPlay} size={1.2} />}
+      {Platforms.resolve(props.link.url).icon}
       <a
         className="font-mono text-sm truncate grow"
         href={props.link.url}
@@ -284,3 +267,5 @@ function StreamLinkReoderItem(props: {
     </Reorder.Item>
   );
 }
+
+type AudioFormat = DBSong["download_links"][0]["format"];

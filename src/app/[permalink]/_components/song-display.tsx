@@ -1,6 +1,7 @@
 "use client";
 
 import { DragHandle } from "@/components/drag-handle";
+import { Platforms } from "@/lib/songs/platforms";
 import { DBSong } from "@/lib/songs/types";
 import { motion } from "framer-motion";
 import LinkSection from "./link-section";
@@ -11,8 +12,8 @@ import SoundcloudEmbed from "./soundcloud-embed";
 
 export function SongDisplay(props: { song: DBSong }) {
   const song = props.song;
-  const soundcloudUrl = props.song.release_links.find(
-    (link) => link.platform == "soundcloud"
+  const soundcloudUrl = props.song.stream_links.find(
+    (link) => Platforms.resolve(link.url).id == "soundcloud"
   )?.url;
   return (
     <main className="pt-0">
@@ -32,7 +33,7 @@ export function SongDisplay(props: { song: DBSong }) {
       {/* EDIT SONG */}
       <SongEditSection song={song} />
       {/* SOUNDCLOUD EMBED */}
-      <SoundcloudEmbed trackUrl={soundcloudUrl} />
+      {soundcloudUrl && <SoundcloudEmbed trackUrl={soundcloudUrl} />}
       {/* DRAG HANDLE */}
       <motion.div
         initial={{ opacity: 0 }}

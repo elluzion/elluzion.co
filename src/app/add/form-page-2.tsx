@@ -6,17 +6,19 @@ import {
   FormMessage,
 } from "@/components/form";
 import { Input } from "@/components/input";
-import { FormPageProps } from "../types";
+import { useSongFormContext } from "./contexts";
 
-export default function FormPage2(props: FormPageProps) {
+export default function FormPage2() {
+  const context = useSongFormContext();
+
   return (
     <div
       className="space-y-4"
-      style={{ display: props.index == 1 ? "block" : "none" }}
+      style={{ display: context.index.current == 1 ? "block" : "none" }}
     >
       <FormField
-        control={props.form.control}
-        name="coverUrl"
+        control={context.form.control}
+        name="art_url"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Album cover URL</FormLabel>
@@ -33,8 +35,8 @@ export default function FormPage2(props: FormPageProps) {
       </span>
       <div className="gap-4 grid grid-cols-2">
         <FormField
-          control={props.form.control}
-          name="bpm"
+          control={context.form.control}
+          name="tempo"
           render={({ field }) => (
             <FormItem>
               <FormLabel>BPM</FormLabel>
@@ -46,7 +48,7 @@ export default function FormPage2(props: FormPageProps) {
           )}
         />
         <FormField
-          control={props.form.control}
+          control={context.form.control}
           name="genre"
           render={({ field }) => (
             <FormItem>
@@ -59,20 +61,20 @@ export default function FormPage2(props: FormPageProps) {
           )}
         />
         <FormField
-          control={props.form.control}
-          name="releaseType"
+          control={context.form.control}
+          name="type"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Release Type</FormLabel>
               <FormControl>
-                <Input placeholder="Remix" {...field} />
+                <Input placeholder="Original, Remix" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
-          control={props.form.control}
+          control={context.form.control}
           name="key"
           render={({ field }) => (
             <FormItem>
@@ -85,8 +87,8 @@ export default function FormPage2(props: FormPageProps) {
           )}
         />
         <FormField
-          control={props.form.control}
-          name="releaseDate"
+          control={context.form.control}
+          name="release_date"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Release date</FormLabel>
@@ -106,7 +108,7 @@ export default function FormPage2(props: FormPageProps) {
           )}
         />
         <FormField
-          control={props.form.control}
+          control={context.form.control}
           name="label"
           render={({ field }) => (
             <FormItem>

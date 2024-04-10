@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default function SoundcloudEmbed(props: { trackUrl?: string }) {
-  if (!props.trackUrl) return;
-
+export default function SoundcloudEmbed(props: { trackUrl: string }) {
   const embedParams = new URLSearchParams({
     url: props.trackUrl,
     color: "#2563eb",

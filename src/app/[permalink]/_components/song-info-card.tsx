@@ -1,6 +1,7 @@
 import { Badge } from "@/components/badge";
 import { Card, CardContent } from "@/components/card";
 import { DBSong } from "@/lib/songs/types";
+import { formatDate } from "@/lib/utils";
 import React from "react";
 import SongDownloadButton from "./song-download-button";
 
@@ -13,10 +14,10 @@ export const SongInfoCard = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & SongInfoCardProps
 >(({ className, song, ...props }, ref) => {
   // split downloads into two sections, wav and mp3
-  const downloadsMp3 = song.release_downloads.filter(
+  const downloadsMp3 = song.download_links.filter(
     (item) => item.format == "mp3"
   );
-  const downloadsWav = song.release_downloads.filter(
+  const downloadsWav = song.download_links.filter(
     (item) => item.format == "wav"
   );
 
@@ -38,7 +39,7 @@ export const SongInfoCard = React.forwardRef<
         <div className="flex gap-2">
           {song.genre && <Badge>{song.genre}</Badge>}
           {song.release_date && (
-            <Badge variant={"secondary"}>{song.release_date}</Badge>
+            <Badge variant={"secondary"}>{formatDate(song.release_date)}</Badge>
           )}
           {song.type && <Badge variant={"outline"}>{song.type}</Badge>}
         </div>

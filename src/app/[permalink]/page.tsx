@@ -1,15 +1,21 @@
-import { getSong } from "@/lib/songs/song-parser";
+import SongDatabase from "@/lib/songs/song-database";
+import { createClient } from "@/lib/supabase/client";
+import { formatDate } from "@/lib/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SongDisplay } from "./_components/song-display";
 
 type Params = {
-  params: { songId: string };
+  params: { permalink: string };
 };
+
+const supabase = createClient();
+const db = new SongDatabase(supabase);
 
 export default async function SongPage({ params }: Params) {
   // gather all info from the database
-  const song = await getSong(params.songId);
+  const song = await db.getSong(params.permalink);
+
   // return to home page if track not found
   if (!song) redirect("/");
 
@@ -21,22 +27,28 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const fallbackImageUrl =
     "https://i1.sndcdn.com/avatars-Sen1bkxTWtJUDjut-zCRlvQ-t500x500.jpg";
 
-  // gather info for current song
-  const song = await getSong(params.songId);
+  // gather all info from the database
+  const song = await db.getSong(params.permalink);
+
+  if (!song) {
+    return {
+      title: `Song ${params.permalink} doesn't exist`,
+    };
+  }
 
   // generate description
   // "Song <songname> released on <dd-mm-yyyy> (via <label>)."
-  const description = `${song?.title} released on ${song?.release_date}${
-    song?.label ? " via " + song?.label : ""
-  }.`;
+  const description = `${song.title} released on ${formatDate(
+    song.release_date
+  )}${song.label ? " via " + song.label : ""}.`;
 
   /**
    * Note: this is a hacky way of getting a larger image, since Souncloud could potentially change their API and break it
    */
-  const image = song?.art_url.replace("large", "t500x500") || fallbackImageUrl;
-  // return
+  const image = song.art_url.replace("large", "t500x500") || fallbackImageUrl;
+
   return {
-    title: song?.title,
+    title: song.title,
     description: description,
     openGraph: {
       images: [image],
