@@ -15,7 +15,10 @@ export default function SoundcloudImportSection(props: {
 
   function handleImportSong() {
     const songUrl = songImportInputRef.current?.value || "";
-    if (!songUrl.startsWith("https://")) {
+    if (
+      !songUrl.startsWith("https://") ||
+      !songUrl.includes("soundcloud.com")
+    ) {
       return;
     }
     // depending on the result of the import, hide this section

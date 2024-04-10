@@ -1,38 +1,50 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { AddSongForm } from "../_form/add-song-form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { AddSongForm } from "../add-song-form";
+import { SongFormContext, SongFormContextType } from "../contexts";
+import { formSchema } from "../formSchema";
 import AddSongControls from "./add-song-controls";
-import { AddSongHeader } from "./add-song-header";
+import AddSongHeader from "./add-song-header";
 
-export function AddSongScreen(props: { editing?: string }) {
-  const [formIndex, setFormIndex] = useState(0);
-  const formIndexMax = 2; // starting from 0, 3 pages
+export function AddSongScreen(props: { editing: boolean; permalink?: string }) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
 
+  const [index, setIndex] = useState(0);
   const [shouldSubmitForm, setShouldSubmitForm] = useState(false);
 
+  const contextState: SongFormContextType = {
+    form: form,
+    editing: {
+      is: props.editing,
+      permalink: props.permalink,
+    },
+    index: {
+      current: index,
+      max: 2,
+      set: setIndex,
+    },
+    shouldSubmit: {
+      current: shouldSubmitForm,
+      set: setShouldSubmitForm,
+    },
+  };
+
   return (
-    <main className="h-contentDvh">
-      {/* HEADER SECTION */}
-      <AddSongHeader
-        editing={props.editing}
-        index={formIndex}
-        indexMax={formIndexMax}
-      />
-      {/* FORM CONTENT */}
-      <AddSongForm
-        editing={props.editing}
-        shouldSubmit={shouldSubmitForm}
-        setShouldSubmitCallback={setShouldSubmitForm}
-        index={formIndex}
-      />
-      {/* BOTTOM SECTION */}
-      <AddSongControls
-        index={formIndex}
-        setIndex={setFormIndex}
-        maxIndex={formIndexMax}
-        setShouldSubmitForm={setShouldSubmitForm}
-      />
-    </main>
+    <SongFormContext.Provider value={contextState}>
+      <main className="h-contentDvh">
+        {/* HEADER SECTION */}
+        <AddSongHeader />
+        {/* FORM CONTENT */}
+        <AddSongForm />
+        {/* BOTTOM SECTION */}
+        <AddSongControls />
+      </main>
+    </SongFormContext.Provider>
   );
 }

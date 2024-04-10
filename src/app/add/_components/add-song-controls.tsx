@@ -1,31 +1,28 @@
 import { Button } from "@/components/button";
 import { useRef } from "react";
+import { useSongFormContext } from "../contexts";
 
-export default function AddSongControls(props: {
-  index: number;
-  setIndex: (newIndex: number) => void;
-  setShouldSubmitForm: (shouldSubmit: boolean) => void;
-  maxIndex: number;
-}) {
+export default function AddSongControls() {
+  const context = useSongFormContext();
+
   const backButton = useRef(null);
   const nextButton = useRef(null);
 
   const handleBackClicked = () => {
-    props.setIndex(props.index - 1);
+    context.index.set(context.index.current - 1);
   };
 
   const handleNextClicked = () => {
-    if (props.index != props.maxIndex) {
-      props.setIndex(props.index + 1);
+    if (context.index.current != context.index.max) {
+      context.index.set(context.index.current + 1);
     } else {
-      // try submitting the form
-      props.setShouldSubmitForm(true);
+      context.shouldSubmit.set(true);
     }
   };
 
   return (
     <div className="flex *:grow gap-2">
-      {props.index > 0 && (
+      {context.index.current > 0 && (
         <Button
           ref={backButton}
           variant={"secondary"}

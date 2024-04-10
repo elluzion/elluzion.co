@@ -1,51 +1,22 @@
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/select";
-import { createClient } from "@/lib/supabase/client";
-import { Database } from "@/types/supabase";
 import { mdiDragHorizontalVariant } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Reorder, useDragControls } from "framer-motion";
 import { XIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Artist } from "../types";
+import { useState } from "react";
 
 export function ArtistSection(props: {
-  artists: Artist[];
-  setArtists: (newList: Artist[]) => void;
+  artists: string[];
+  setArtists: (newList: string[]) => void;
 }) {
-  const customArtistNameRef = useRef<HTMLInputElement | null>(null);
-
-  // artists
-  const [selectedArtistId, setSelectedArtistId] = useState(0);
-  const [existingArtists, setExistingArtists] = useState<
-    Database["public"]["Tables"]["artists"]["Row"][] | undefined
-  >(undefined);
-
-  const supabase = createClient();
+  const [newArtistName, setNewArtistName] = useState("");
 
   function handleAddButtonClick() {
-    const customName = customArtistNameRef?.current?.value || "";
-    if (selectedArtistId == 0 && customName == "") {
-      return;
-    } else {
-      const newlist = [...props.artists];
+    const newlist = [...props.artists];
 
-      const artistId = customName ? undefined : selectedArtistId;
-      const artistName = customName
-        ? customName
-        : existingArtists?.find((x) => x.id == selectedArtistId)?.name || "";
-
-      newlist.push({
-        id: artistId,
-        name: artistName,
-      });
+    if (newArtistName != "") {
+      newlist.push(newArtistName);
       props.setArtists(newlist);
     }
   }
@@ -55,24 +26,6 @@ export function ArtistSection(props: {
     newArr.splice(index, 1);
     props.setArtists(newArr);
   }
-
-  // fetch list of existing artists from database
-  useEffect(() => {
-    if (!existingArtists) {
-      supabase
-        .from("artists")
-        .select("*")
-        .then((res) => {
-          if (res.data) {
-            // sort by alphabet
-            const sorted = res.data.sort((a, b) => {
-              return a.name.localeCompare(b.name);
-            });
-            setExistingArtists(sorted);
-          }
-        });
-    }
-  }, [supabase, existingArtists]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -96,25 +49,10 @@ export function ArtistSection(props: {
 
       {/* form to add new items */}
       <div className="flex items-start gap-2 h-10">
-        <Select
-          onValueChange={(newitem) => {
-            const idNum = parseInt(newitem);
-            setSelectedArtistId(idNum);
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Artist" />
-          </SelectTrigger>
-          <SelectContent>
-            {existingArtists?.map((artist, key) => (
-              <SelectItem key={key} value={artist.id.toString()}>
-                {artist.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
         <Input
-          ref={customArtistNameRef}
+          onChange={(e) => {
+            setNewArtistName(e.target.value);
+          }}
           placeholder="Custom artist name (empty if unused)"
         />
       </div>
@@ -127,7 +65,7 @@ export function ArtistSection(props: {
 
 function ArtistItem(props: {
   index: number;
-  artist: Artist;
+  artist: string;
   handleRemoveClicked: (index: number) => void;
 }) {
   const dragControls = useDragControls();
@@ -143,7 +81,7 @@ function ArtistItem(props: {
         <Icon path={mdiDragHorizontalVariant} size={1} />
       </div>
 
-      <span className="grow">{props.artist.name}</span>
+      <span className="grow">{props.artist}</span>
       <Button
         type="button"
         variant={"ghost"}

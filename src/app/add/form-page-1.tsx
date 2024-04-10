@@ -6,31 +6,31 @@ import {
   FormMessage,
 } from "@/components/form";
 import { Input, TextArea } from "@/components/input";
-import { ArtistSection } from "../_components/artist-section";
-import SoundcloudImportSection from "../_components/soundcloud-import-section";
-import { Artist, FormPageProps } from "../types";
+import { ArtistSection } from "./_components/artist-section";
+import SoundcloudImportSection from "./_components/soundcloud-import-section";
+import { useSongFormContext } from "./contexts";
 
-export default function FormPage1(
-  props: FormPageProps & {
-    artists: Artist[];
-    setArtists: (newList: Artist[]) => void;
-    handleSoundcloudImport: (songUrl: string) => Promise<boolean>;
-  }
-) {
+export default function FormPage1(props: {
+  artists: string[];
+  setArtists: (newList: string[]) => void;
+  handleSoundcloudImport: (songUrl: string) => Promise<boolean>;
+}) {
+  const context = useSongFormContext();
+
   return (
     <div
       className="flex-col gap-4"
-      style={{ display: props.index == 0 ? "flex" : "none" }}
+      style={{ display: context.index.current == 0 ? "flex" : "none" }}
     >
       {/* IMPORT SECTION */}
       <SoundcloudImportSection
-        show={!props.editing}
+        show={!context.editing.is}
         handleSoundcloudImport={props.handleSoundcloudImport}
       />
       {/* SONG TITLE */}
       <FormField
-        control={props.form.control}
-        name="songTitle"
+        control={context.form.control}
+        name="title"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Song Name</FormLabel>
@@ -43,7 +43,7 @@ export default function FormPage1(
       />
       {/* SONG DESCRIPTION */}
       <FormField
-        control={props.form.control}
+        control={context.form.control}
         name="description"
         render={({ field }) => (
           <FormItem>
@@ -62,8 +62,8 @@ export default function FormPage1(
       />
       {/* SONG WRITTEN ID */}
       <FormField
-        control={props.form.control}
-        name="writtenId"
+        control={context.form.control}
+        name="permalink"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Song URL</FormLabel>

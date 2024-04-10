@@ -15,6 +15,7 @@ export default function SongHeader(props: { song: DBSong }) {
         className="blur-3xl w-full h-[400px]"
         width={256}
         height={256}
+        priority
       />
       <div className="bg-gradient-to-b from-transparent to-background w-full h-[400px] -translate-y-[400px]" />
       <div className="flex flex-col justify-center items-center gap-2 p-8 w-full h-[336px] -translate-y-[800px]">
@@ -22,7 +23,7 @@ export default function SongHeader(props: { song: DBSong }) {
           {props.song.title}
         </h1>
         <span className="text-muted-foreground">
-          {props.song.artists.map((artist) => artist.name).join(", ")}
+          {props.song.artists.join(", ")}
         </span>
       </div>
     </motion.div>
