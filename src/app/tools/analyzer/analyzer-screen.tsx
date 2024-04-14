@@ -13,10 +13,10 @@ import Icon from "@mdi/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
+//@ts-ignore
 import FileUploadInput from "./_components/file-upload-input";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import AnalysisWorkerAdapter from "./_lib/worker-adapter";
-import type { KeyData } from "./types";
 
 export default function AnalyzerScreen() {
   /**
@@ -44,21 +44,15 @@ export default function AnalyzerScreen() {
 
     // receiving partial data from worker
     workerAdapter.onData((data) => {
-      switch (data.key) {
-        case "keyData": {
-          const value = data.value as KeyData;
-          setKey(value.key);
-          setScale(value.scale);
-          break;
-        }
-        case "loudness": {
-          setLoudness(data.value as number);
-          break;
-        }
-        case "tempo": {
-          setTempo(data.value as number);
-          break;
-        }
+      if (data.keyData) {
+        setKey(data.keyData.key);
+        setScale(data.keyData.scale);
+      }
+      if (data.loudness) {
+        setLoudness(data.loudness);
+      }
+      if (data.tempo) {
+        setTempo(data.tempo);
       }
     });
 
@@ -67,7 +61,7 @@ export default function AnalyzerScreen() {
       console.log(error);
       setIsLoading(false);
       toast({
-        title: "An error occured ",
+        title: "An error occured",
         description: "Check console for more info.",
       });
     });
