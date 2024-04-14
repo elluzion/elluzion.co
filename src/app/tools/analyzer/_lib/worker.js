@@ -1,3 +1,6 @@
+/**
+@typedef {import("../types.ts").WorkerReturnMessage} WorkerReturnMessage
+ */
 importScripts("/scripts/essentia-wasm.es.js");
 const EssentiaWASM = Module;
 
@@ -10,7 +13,7 @@ addEventListener("message", (msg) => {
 
   /**
    * workaround for type safety inside this worker
-   * @param {import("../types.ts").WorkerReturnMessage} msg
+   * @param {WorkerReturnMessage} msg
    */
   const postTypedMessage = (msg) => postMessage(msg);
 
@@ -32,7 +35,7 @@ addEventListener("message", (msg) => {
     "cosine",
     "hann"
   );
-  postTypedMessage({ type: "data", data: { key: "keyData", value: keyData } });
+  postTypedMessage({ data: { keyData: keyData } });
 
   // loudness
   const loudness = essentia.DynamicComplexity(
@@ -40,13 +43,10 @@ addEventListener("message", (msg) => {
     0.2,
     16000 // downsampled
   ).loudness;
-  postTypedMessage({
-    type: "data",
-    data: { key: "loudness", value: loudness },
-  });
+  postTypedMessage({ data: { loudness: loudness } });
 
-  // bpm - slowest, so it's at the end of the chain
-  const bpm = essentia.PercivalBpmEstimator(
+  // tempo - slowest, so it's at the end of the chain
+  const tempo = essentia.PercivalBpmEstimator(
     vectorSignal,
     1024,
     2048,
@@ -56,8 +56,8 @@ addEventListener("message", (msg) => {
     50,
     16000
   ).bpm;
-  postTypedMessage({ type: "data", data: { key: "tempo", value: bpm } });
+  postTypedMessage({ data: { tempo: tempo } });
 
   // all done
-  postTypedMessage({ type: "status", status: "finished" });
+  postTypedMessage({ status: "finished" });
 });

@@ -1,22 +1,15 @@
 export type WorkerReturnMessage = {
-  type: "data" | "status";
   data?: WorkerReturnData;
   status?: WorkerReturnStatus;
 };
 
 export type WorkerReturnData = {
-  key: "keyData" | "tempo" | "loudness";
-  value: number | KeyData;
+  keyData?: KeyData;
+  tempo?: number;
+  loudness?: number;
 };
 
 export type WorkerReturnStatus = "started" | "finished";
-
-export type AudioData = {
-  tempo?: number;
-  key?: string;
-  scale?: string;
-  loudness?: number;
-};
 
 export type KeyData = {
   key: string;

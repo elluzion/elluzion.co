@@ -24,12 +24,12 @@ export default class AnalysisWorkerAdapter {
 
     this.worker.addEventListener("message", (event) => {
       const data = event.data as WorkerReturnMessage;
-      if (data.type == "data") {
+      if (data.data) {
         // new analysis data received
         this.onDataCallbacks.forEach((callback) => {
           if (data.data) callback(data.data);
         });
-      } else if (data.type == "status") {
+      } else if (data.status) {
         // work completed
         if (data.status == "finished") {
           this.onFinishedCallbacks.forEach((callback) => callback());
