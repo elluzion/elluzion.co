@@ -9,6 +9,8 @@ type Params = {
   params: { permalink: string };
 };
 
+export const revalidate = 300; // revalidate data every 5 minutes to capture changes in the database
+
 const supabase = createClient();
 const db = new SongDatabase(supabase);
 
