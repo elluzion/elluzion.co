@@ -6,13 +6,18 @@ export type WorkerReturnMessage = {
 export type WorkerReturnData = {
   keyData?: KeyData;
   tempo?: number;
-  loudness?: number;
+  loudness?: {
+    overall: number;
+    range: number;
+  };
 };
 
-export type WorkerReturnStatus = "started" | "finished";
+export type WorkerReturnStatus = {
+  progress: number;
+  checkpoint: string;
+};
 
 export type KeyData = {
   key: string;
   scale: string;
-  strength: number;
 };

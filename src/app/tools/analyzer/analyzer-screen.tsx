@@ -17,22 +17,27 @@ import { useState } from "react";
 import FileUploadInput from "./_components/file-upload-input";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import AnalysisWorkerAdapter from "./_lib/worker-adapter";
+import { KeyData, WorkerReturnData } from "./types";
 
 export default function AnalyzerScreen() {
   /**
    * LOGIC
    */
   // parsed data of the audio file
-  const [key, setKey] = useState<string | null>(null);
-  const [scale, setScale] = useState<string | null>(null);
-  const [tempo, setTempo] = useState<number | null>(null);
-  const [loudness, setLoudness] = useState<number | null>(null);
+  const [key, setKey] = useState<KeyData["key"] | undefined>(undefined);
+  const [scale, setScale] = useState<KeyData["scale"] | undefined>(undefined);
+  const [tempo, setTempo] = useState<WorkerReturnData["tempo"]>(undefined);
+  const [loudness, setLoudness] =
+    useState<WorkerReturnData["loudness"]>(undefined);
 
   /**
    * UI
    */
   // loading/working indicator
   const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<string | undefined>(undefined);
+  const [progress, setProgress] = useState<number>(0);
+
   const { toast } = useToast();
 
   function handleSubmit(file: File) {
@@ -56,10 +61,17 @@ export default function AnalyzerScreen() {
       }
     });
 
+    // status updates
+    workerAdapter.onStatus((status) => {
+      setStatus(status.checkpoint);
+      setProgress(status.progress);
+    });
+
     // worker errored out
     workerAdapter.onError((error) => {
       console.log(error);
       setIsLoading(false);
+      setProgress(0);
       toast({
         title: "An error occured",
         description: "Check console for more info.",
@@ -67,7 +79,9 @@ export default function AnalyzerScreen() {
     });
 
     // work finished
-    workerAdapter.onFinished(() => setIsLoading(false));
+    workerAdapter.onFinished(() => {
+      setIsLoading(false);
+    });
 
     // get optimized audio channel for the file and pass it to the worker
     getProcessedAudio(file, audioContext).then((audio) => {
@@ -78,10 +92,10 @@ export default function AnalyzerScreen() {
   }
 
   function resetAllData() {
-    setKey(null);
-    setScale(null);
-    setTempo(null);
-    setLoudness(null);
+    setKey(undefined);
+    setScale(undefined);
+    setTempo(undefined);
+    setLoudness(undefined);
   }
 
   const dataAvailable = () => {
@@ -92,7 +106,12 @@ export default function AnalyzerScreen() {
   return (
     <div className="flex flex-col gap-8 grow">
       {/* INPUT UI */}
-      <FileUploadInput onFileSubmitted={handleSubmit} isLoading={isLoading} />
+      <FileUploadInput
+        onFileSubmitted={handleSubmit}
+        isLoading={isLoading}
+        loadingStatusMessage={status}
+        loadingProgress={progress}
+      />
 
       {/* RESULT */}
       {dataAvailable() && (
@@ -104,21 +123,28 @@ export default function AnalyzerScreen() {
               subTitle={`${key} ${scale}`}
             />
           )}
-          {loudness && (
-            <DataCard
-              mdiIconPath={mdiSpeaker}
-              title={"Loudness"}
-              subTitle={`${loudness.toFixed(1)} LUFS`}
-            />
-          )}
           {tempo && (
-            <div className="col-span-2">
+            <div>
               <DataCard
                 mdiIconPath={mdiSpeedometer}
                 title={"Tempo"}
                 subTitle={`${Math.round(doubleIfLow(tempo))} BPM`}
               />
             </div>
+          )}
+          {loudness?.overall && (
+            <DataCard
+              mdiIconPath={mdiSpeaker}
+              title={"Overall Loudness"}
+              subTitle={`${loudness.overall.toFixed(1)} LUFS`}
+            />
+          )}
+          {loudness?.range && (
+            <DataCard
+              mdiIconPath={mdiSpeaker}
+              title={"Loudness Range"}
+              subTitle={`${loudness.range.toFixed(1)} dB`}
+            />
           )}
         </motion.div>
       )}

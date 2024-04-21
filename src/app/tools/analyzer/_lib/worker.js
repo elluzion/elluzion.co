@@ -17,6 +17,13 @@ addEventListener("message", (msg) => {
    */
   const postTypedMessage = (msg) => postMessage(msg);
 
+  postTypedMessage({
+    status: {
+      progress: 0,
+      checkpoint: "Calculating key data",
+    },
+  });
+
   // key
   const keyData = essentia.KeyExtractor(
     vectorSignal,
@@ -35,17 +42,23 @@ addEventListener("message", (msg) => {
     "cosine",
     "hann"
   );
-  postTypedMessage({ data: { keyData: keyData } });
+  postTypedMessage({
+    data: {
+      keyData: {
+        key: keyData.key,
+        scale: keyData.scale,
+      },
+    },
+  });
 
-  // loudness
-  const loudness = essentia.DynamicComplexity(
-    vectorSignal,
-    0.2,
-    16000 // downsampled
-  ).loudness;
-  postTypedMessage({ data: { loudness: loudness } });
+  postTypedMessage({
+    status: {
+      progress: 0.33,
+      checkpoint: "Calculating tempo",
+    },
+  });
 
-  // tempo - slowest, so it's at the end of the chain
+  // tempo
   const tempo = essentia.PercivalBpmEstimator(
     vectorSignal,
     1024,
@@ -58,6 +71,35 @@ addEventListener("message", (msg) => {
   ).bpm;
   postTypedMessage({ data: { tempo: tempo } });
 
+  postTypedMessage({
+    status: {
+      progress: 0.67,
+      checkpoint: "Calculating loudness data",
+    },
+  });
+
+  // loudness - slowest, so it's at the end of the chain
+  const loudness = essentia.LoudnessEBUR128(
+    vectorSignal,
+    vectorSignal,
+    0.1,
+    16000, // downsampled
+    false
+  );
+  postTypedMessage({
+    data: {
+      loudness: {
+        overall: loudness.integratedLoudness,
+        range: loudness.loudnessRange,
+      },
+    },
+  });
+
   // all done
-  postTypedMessage({ status: "finished" });
+  postTypedMessage({
+    status: {
+      progress: 1,
+      checkpoint: "Finished!",
+    },
+  });
 });
