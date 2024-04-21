@@ -1,17 +1,33 @@
+"use client";
+
 import { Input } from "@/components/input";
 import { useToast } from "@/components/use-toast";
+import { useOnChange } from "@/hooks/useOnChange";
 import { mdiRefresh, mdiUpload } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ALLOWED_FILE_TYPES } from "../analyzer-screen";
 
 export default function FileUploadInput(props: {
   isLoading: boolean;
+  loadingProgress: number;
+  loadingStatusMessage?: string;
   onFileSubmitted: (file: File) => void;
 }) {
   // element over the file input
   const uploadOverlayRef = useRef<HTMLLabelElement>(null);
   const { toast } = useToast();
+  const [hideProgress, setHideProgress] = useState(false);
+
+  useOnChange(props.loadingProgress, (prev, next) => {
+    if (next == 1) {
+      setTimeout(() => {
+        setHideProgress(true);
+      }, 1000);
+    } else {
+      setHideProgress(false);
+    }
+  });
 
   // type validation when file has been selected
   function handleSubmit(file: File) {
@@ -51,14 +67,28 @@ export default function FileUploadInput(props: {
 
   return (
     <div className="h-28">
+      {/* PROGRESS INDICATOR */}
+      <div className="rounded-lg w-full h-28 overflow-hidden pointer-events-none">
+        <div
+          className="bg-white h-28 transition-[width,opacity] duration-300 pointer-events-none"
+          style={{
+            width: props.loadingProgress * 100 + "%",
+            opacity: hideProgress ? 0 : 0.05,
+          }}
+        ></div>
+      </div>
       <label
         ref={uploadOverlayRef}
         htmlFor="fileUpload"
-        className="flex flex-col justify-center items-center gap-4 bg-white bg-opacity-0 p-6 ring-border rounded-lg w-full h-28 text-center transition-all ring-1"
+        className="flex flex-col justify-center items-center gap-4 bg-white bg-opacity-0 p-6 ring-border rounded-lg w-full h-28 text-center transition-all -translate-y-28 ring-1"
       >
         <div className="flex justify-center items-center gap-2 font-semibold">
           <Icon path={props.isLoading ? mdiRefresh : mdiUpload} size={1} />
-          <span>{props.isLoading ? "Analyzing" : "Upload file"}</span>
+          <span>
+            {props.isLoading
+              ? props.loadingStatusMessage || "Analyzing"
+              : "Upload file"}
+          </span>
         </div>
         <span className="w-full font-mono text-muted-foreground text-sm truncate">
           {props.isLoading
@@ -66,12 +96,12 @@ export default function FileUploadInput(props: {
             : ALLOWED_FILE_TYPES.join(", ")}
         </span>
       </label>
-      {/* ACTUAL INPUT - HIDDEN */}
+      {/* ACTUAL INPUT */}
       <Input
         id="fileUpload"
         type="file"
         accept=".mp3,.wav,.flac"
-        className="opacity-0 w-full h-28 -translate-y-28 cursor-pointer"
+        className="opacity-0 w-full h-28 -translate-y-56 cursor-pointer"
         onMouseEnter={handleInputHoverOn}
         onMouseLeave={handleInputHoverOff}
         onDragEnter={handleInputHoverOn}

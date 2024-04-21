@@ -1,4 +1,8 @@
-import { WorkerReturnData, WorkerReturnMessage } from "../types";
+import {
+  WorkerReturnData,
+  WorkerReturnMessage,
+  WorkerReturnStatus,
+} from "../types";
 
 export default class AnalysisWorkerAdapter {
   // main worker
@@ -6,6 +10,7 @@ export default class AnalysisWorkerAdapter {
 
   // callbacks
   private onDataCallbacks: ((data: WorkerReturnData) => void)[] = [];
+  private onStatusCallbacks: ((data: WorkerReturnStatus) => void)[] = [];
   private onErrorCallbacks: ((error: ErrorEvent) => void)[] = [];
   private onFinishedCallbacks: (() => void)[] = [];
 
@@ -31,7 +36,10 @@ export default class AnalysisWorkerAdapter {
         });
       } else if (data.status) {
         // work completed
-        if (data.status == "finished") {
+        this.onStatusCallbacks.forEach((callback) => {
+          if (data.status) callback(data.status);
+        });
+        if (data.status.progress == 1) {
           this.onFinishedCallbacks.forEach((callback) => callback());
         }
       }
@@ -74,6 +82,10 @@ export default class AnalysisWorkerAdapter {
    */
   onData(callback: (data: WorkerReturnData) => void) {
     this.onDataCallbacks.push(callback);
+  }
+
+  onStatus(callback: (data: WorkerReturnStatus) => void) {
+    this.onStatusCallbacks.push(callback);
   }
 
   /**
