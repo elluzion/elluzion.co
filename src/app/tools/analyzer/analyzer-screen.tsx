@@ -1,14 +1,13 @@
 "use client";
 
-import { InfoCard } from "@/components/info-card";
 import { useToast } from "@/components/use-toast";
 import { mdiPiano, mdiSpeaker, mdiSpeedometer } from "@mdi/js";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useState } from "react";
 //@ts-ignore
 import DataCard from "./_components/data-card";
 import FileUploadInput from "./_components/file-upload-input";
+import InfoDrawer from "./_components/info-drawer";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import AnalysisWorkerAdapter from "./_lib/worker-adapter";
 import { KeyData, WorkerReturnData } from "./types";
@@ -143,17 +142,7 @@ export default function AnalyzerScreen() {
         </motion.div>
       )}
       <span className="grow" />
-      <InfoCard>
-        This website uses{" "}
-        <Link
-          href="https://mtg.github.io/essentia.js/"
-          target="_blank"
-          className="underline underline-offset-4"
-        >
-          essentia.js
-        </Link>{" "}
-        and may produce wrong results from time to time.
-      </InfoCard>
+      <InfoDrawer />
     </div>
   );
 }
