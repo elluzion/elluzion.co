@@ -24,15 +24,16 @@ export default function AnalyzerScreen() {
   /**
    * LOGIC
    */
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+
   // parsed data of the audio file
+  const [fileName, setFileName] = useState<string | undefined>(undefined);
+  const [tempo, setTempo] = useState<WorkerReturnData["tempo"]>(undefined);
   const [key, setKey] = useState<KeyData["key"] | undefined>(undefined);
   const [scale, setScale] = useState<KeyData["scale"] | undefined>(undefined);
-  const [tempo, setTempo] = useState<WorkerReturnData["tempo"]>(undefined);
   const [loudness, setLoudness] =
     useState<WorkerReturnData["loudness"]>(undefined);
-  const [fileName, setFileName] = useState<string | undefined>(undefined);
 
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
   /**
    * UI
    */
