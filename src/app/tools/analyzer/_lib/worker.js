@@ -69,7 +69,7 @@ addEventListener("message", (msg) => {
     50,
     16000
   ).bpm;
-  postTypedMessage({ data: { tempo: tempo } });
+  postTypedMessage({ data: { tempo: Math.round(doubleIfLow(tempo)) } });
 
   postTypedMessage({
     status: {
@@ -89,8 +89,8 @@ addEventListener("message", (msg) => {
   postTypedMessage({
     data: {
       loudness: {
-        overall: loudness.integratedLoudness,
-        range: loudness.loudnessRange,
+        overall: loudness.integratedLoudness.toFixed(1),
+        range: loudness.loudnessRange.toFixed(1),
       },
     },
   });
@@ -103,3 +103,7 @@ addEventListener("message", (msg) => {
     },
   });
 });
+
+function doubleIfLow(bpm) {
+  return bpm < 89 ? bpm * 2 : bpm;
+}
