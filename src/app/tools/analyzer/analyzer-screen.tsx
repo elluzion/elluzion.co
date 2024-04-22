@@ -5,12 +5,20 @@ import { mdiPiano, mdiSpeaker, mdiSpeedometer } from "@mdi/js";
 import { motion } from "framer-motion";
 import { useState } from "react";
 //@ts-ignore
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import DataCard from "./_components/data-card";
 import FileUploadInput from "./_components/file-upload-input";
 import InfoDrawer from "./_components/info-drawer";
 import { getProcessedAudio } from "./_lib/audioUtils";
 import AnalysisWorkerAdapter from "./_lib/worker-adapter";
-import { KeyData, WorkerReturnData } from "./types";
+import { HistoryEntry, KeyData, WorkerReturnData } from "./types";
 
 export default function AnalyzerScreen() {
   /**
@@ -22,7 +30,9 @@ export default function AnalyzerScreen() {
   const [tempo, setTempo] = useState<WorkerReturnData["tempo"]>(undefined);
   const [loudness, setLoudness] =
     useState<WorkerReturnData["loudness"]>(undefined);
+  const [fileName, setFileName] = useState<string | undefined>(undefined);
 
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   /**
    * UI
    */
@@ -36,6 +46,8 @@ export default function AnalyzerScreen() {
   function handleSubmit(file: File) {
     // reset
     resetAllData();
+
+    setFileName(file.name);
 
     const audioContext = new AudioContext();
     const workerAdapter = new AnalysisWorkerAdapter();
@@ -85,10 +97,26 @@ export default function AnalyzerScreen() {
   }
 
   function resetAllData() {
+    if (dataAvailable()) {
+      // add existing analysis data to history
+      setHistory([
+        {
+          name: fileName || "",
+          key: key || "",
+          scale: scale || "",
+          tempo: tempo,
+          loudness: loudness,
+        },
+        ...history,
+      ]);
+    }
+
+    // reset
     setKey(undefined);
     setScale(undefined);
     setTempo(undefined);
     setLoudness(undefined);
+    setFileName(undefined);
   }
 
   const dataAvailable = () => {
@@ -97,7 +125,7 @@ export default function AnalyzerScreen() {
   };
 
   return (
-    <div className="flex flex-col gap-8 grow">
+    <div className="flex flex-col gap-6 grow">
       {/* INPUT UI */}
       <FileUploadInput
         onFileSubmitted={handleSubmit}
@@ -105,6 +133,14 @@ export default function AnalyzerScreen() {
         loadingStatusMessage={status}
         loadingProgress={progress}
       />
+
+      {/* FILE NAME */}
+      <span
+        className="font-mono text-muted-foreground transition-opacity"
+        style={{ opacity: fileName ? 1 : 0 }}
+      >
+        {fileName}
+      </span>
 
       {/* RESULT */}
       {dataAvailable() && (
@@ -121,7 +157,7 @@ export default function AnalyzerScreen() {
               <DataCard
                 mdiIconPath={mdiSpeedometer}
                 title={"Tempo"}
-                subTitle={`${Math.round(doubleIfLow(tempo))} BPM`}
+                subTitle={`${tempo} BPM`}
               />
             </div>
           )}
@@ -129,18 +165,55 @@ export default function AnalyzerScreen() {
             <DataCard
               mdiIconPath={mdiSpeaker}
               title={"Overall Loudness"}
-              subTitle={`${loudness.overall.toFixed(1)} LUFS`}
+              subTitle={`${loudness.overall} LUFS`}
             />
           )}
           {loudness?.range && (
             <DataCard
               mdiIconPath={mdiSpeaker}
               title={"Loudness Range"}
-              subTitle={`${loudness.range.toFixed(1)} dB`}
+              subTitle={`${loudness.range} dB`}
             />
           )}
         </motion.div>
       )}
+      <div
+        className="flex flex-col gap-2 transition-opacity duration-500 delay-300 ease-out"
+        style={{
+          opacity: history.length > 0 ? 1 : 0,
+          pointerEvents: history.length > 0 ? "auto" : "none",
+        }}
+      >
+        <span className="font-bold">Previous</span>
+        <Table>
+          <TableHeader>
+            <TableRow className="*:whitespace-nowrap">
+              <TableHead>File name</TableHead>
+              <TableHead>Key</TableHead>
+              <TableHead>Tempo</TableHead>
+              <TableHead className="text-right">Loudness</TableHead>
+              <TableHead className="text-right">Range</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {history.map((entry, index) => (
+              <TableRow key={index} className="*:whitespace-nowrap">
+                <TableCell className="font-medium">{entry.name}</TableCell>
+                <TableCell className="text-right">
+                  {entry.key} {entry.scale}
+                </TableCell>
+                <TableCell className="text-right">{entry.tempo} BPM</TableCell>
+                <TableCell className="text-right">
+                  {entry.loudness?.overall} LUFS
+                </TableCell>
+                <TableCell className="text-right">
+                  {entry.loudness?.range} dB
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <span className="grow" />
       <InfoDrawer />
     </div>
@@ -148,7 +221,3 @@ export default function AnalyzerScreen() {
 }
 
 export const ALLOWED_FILE_TYPES = ["audio/wav", "audio/flac", "audio/mpeg"];
-
-function doubleIfLow(bpm: number) {
-  return bpm < 89 ? bpm * 2 : bpm;
-}

@@ -21,3 +21,11 @@ export type KeyData = {
   key: string;
   scale: string;
 };
+
+export type HistoryEntry = {
+  name: string;
+  key: KeyData["key"];
+  scale: KeyData["scale"];
+  tempo: WorkerReturnData["tempo"];
+  loudness: WorkerReturnData["loudness"];
+};
