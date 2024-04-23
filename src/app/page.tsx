@@ -81,7 +81,7 @@ export default async function Music() {
         <CardContent className="has-[:first-child]:flex gap-2 hidden">
           {firstSong.release_date && (
             <Badge variant={"secondary"}>
-              {formatDate(firstSong.release_date)}
+              {formatDate(firstSong.release_date, true)}
             </Badge>
           )}
           {firstSong.type && (
