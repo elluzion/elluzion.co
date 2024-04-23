@@ -39,7 +39,9 @@ export const SongInfoCard = React.forwardRef<
         <div className="flex gap-2">
           {song.genre && <Badge>{song.genre}</Badge>}
           {song.release_date && (
-            <Badge variant={"secondary"}>{formatDate(song.release_date)}</Badge>
+            <Badge variant={"secondary"}>
+              {formatDate(song.release_date, true)}
+            </Badge>
           )}
           {song.type && <Badge variant={"outline"}>{song.type}</Badge>}
         </div>
