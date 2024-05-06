@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   // generate description
   // "<songname (is a <genre> track that) released on <date> (via <label>)."
   const description = `${song.title} ${
-    song.genre ? "is a " + song.genre + "track that " : ""
+    song.genre ? `is a ${song.genre} track that ` : ""
   }released on ${formatDate(song.release_date, false)}${
-    song.label ? " via " + song.label : ""
+    song.label ? ` via ${song.label}` : ""
   }.`;
 
   /**
