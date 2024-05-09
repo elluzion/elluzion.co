@@ -10,6 +10,7 @@ export default class SongServices {
   private gCustomSearchApi;
   private YouTubeApi;
 
+  //#region Constructor
   constructor() {
     this.spotifyApi = SpotifyApi.withClientCredentials(
       process.env.SPOTIFY_CLIENT_ID || "",
@@ -19,7 +20,9 @@ export default class SongServices {
     this.gCustomSearchApi = customsearch("v1").cse;
     this.YouTubeApi = YouTube;
   }
+  //#endregion
 
+  //#region Public functions
   /**
    *
    * @param searchQuery A search query for the song, such as "Artist 1 & Artist 2 - Song Title"
@@ -32,6 +35,9 @@ export default class SongServices {
   ): Promise<{ links: StreamLink[]; failed: string[] }> {
     const fetchedPlatforms: StreamLink[] = [];
     const failedPlatforms: string[] = [];
+
+    // cleanup search query
+    searchQuery = this.toUrlSafeString(searchQuery);
 
     for (const platform of platforms) {
       let link = null;
@@ -63,34 +69,9 @@ export default class SongServices {
       failed: failedPlatforms,
     };
   }
+  //#endregion
 
-  async importFromSoundcloud(url: string) {
-    if (!url.startsWith("https://") || !url.includes("soundcloud.com")) {
-      throw Error("The provided URL has to be a Soundcloud link");
-    }
-
-    try {
-      const track = await this.soundcloudApi.tracks.getV2(url);
-
-      const parsedTitle = this.parseQuery(track.title);
-      const description = track.description?.split("\n")[0] || undefined;
-      const releaseDate = new Date(track.release_date || track.display_date);
-
-      return {
-        artists: parsedTitle.artists,
-        title: parsedTitle.title,
-        description: description,
-        permalink: track.permalink,
-        release_date: releaseDate,
-        label: track.label_name,
-        art_url: track.artwork_url,
-        genre: track.genre,
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
+  //#region Private functions
   private async getSoundcloud(
     searchQuery: string
   ): Promise<StreamLink | undefined> {
@@ -181,8 +162,9 @@ export default class SongServices {
       const request = await fetch(
         `https://api.deezer.com/search/track?q=${searchQuery}`
       );
+
       const search = await request.json();
-      if (!search.data[0].link) return;
+      if (!search.data[0] || !search.data[0].link) return;
       return {
         url: search.data[0].link,
       };
@@ -190,22 +172,104 @@ export default class SongServices {
       console.log(e);
     }
   }
+  //#endregion
 
+  //#region Soundcloud import
+  async importFromSoundcloud(url: string) {
+    if (!url.startsWith("https://") || !url.includes("soundcloud.com")) {
+      throw Error("The provided URL has to be a Soundcloud link");
+    }
+
+    try {
+      const track = await this.soundcloudApi.tracks.getV2(url);
+
+      const parsedQuery = this.parseQuery(track.title);
+      const description = track.description?.split("\n")[0] || undefined;
+      const permalink = this.toUrlSafeString(parsedQuery.title);
+      const releaseDate = new Date(track.release_date || track.display_date);
+
+      return {
+        artists: parsedQuery.artists,
+        title: parsedQuery.title,
+        description: description,
+        permalink: permalink,
+        release_date: releaseDate,
+        label: track.label_name,
+        art_url: track.artwork_url,
+        genre: track.genre,
+      };
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  //#endregion
+
+  //#region Utilities
   /**
    *
-   * @param query A song title query such as "Artist 1 , Artist 2 & Artist 3 - Song Title"
+   * @param query A song title query such as "Artist 1 , Artist 2 & Artist 3 - Song Title (feat. Artist 4) - Artist 5 Remix"
    * @returns an object with the title separated into artists and song title
    */
   private parseQuery(query: string) {
-    const split = query.split("-");
-    const hasArtists = split.length == 1 ? false : true;
-    const title = split[split.length - 1].trim();
-    const artists = split[0].split(/(?:,|&)+/).map((x) => x.trim());
+    const splitQuery = query.split("-");
+    const artistsText = splitQuery[0];
+    const titleText = splitQuery[splitQuery.length - 1];
+
+    let artists: string[] = [];
+    let title = "";
+
+    /**
+     * TITLE
+     */
+    title = titleText
+      .replace("(ft.", "(feat.") // some people use ft. as a short form, we unify it to feat.
+      .replace("(featuring", "(feat.") // or they use featuring
+      .replaceAll("[", "(") // replace [] with ()
+      .replaceAll("]", ")") // ^^
+      .trim(); // trim title
+
+    /**
+     * MAIN ARTISTS
+     */
+    // if query has the format of "<artists> - <title>"
+    if (splitQuery.length > 1) {
+      // add artists from title start, separated by comma or &
+      artists = artistsText
+        .split(/(?:,|&)+/) // separated by comma or &
+        .map((x) => x.trim()); // trim artist names
+    }
+
+    /**
+     * FEATURE ARTISTS
+     */
+    try {
+      const featureText = title.split("(feat.")[1].split(")")[0];
+      // title: remove feature bracket
+      title = title.replace(`(feat.${featureText})`, "");
+      // feature artists, separated by comma
+      const featureArtists = featureText.split(",").map((x) => x.trim());
+      artists.push(...featureArtists);
+    } catch (e) {
+      /* no feature bracket found */
+    }
+
+    // remove redundant whitespace
+    title = title.replace(/\s+/g, " ").trim();
+
     return {
       title: title,
-      artists: hasArtists ? artists : undefined,
+      artists: artists,
     };
   }
+
+  private toUrlSafeString(input: string) {
+    return input
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9 ]/g, "") // remove all characters except letters, numbers and whitespace
+      .replace(/\s+/g, "-") // replace multiple whitespaces with one
+      .trim(); // trim
+  }
+  //#endregion
 }
 
 /*
