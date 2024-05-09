@@ -223,6 +223,7 @@ export default class SongServices {
      */
     title = titleText
       .replace("(ft.", "(feat.") // some people use ft. as a short form, we unify it to feat.
+      .replace("(w/", "(feat.") // or they use w/
       .replace("(featuring", "(feat.") // or they use featuring
       .replaceAll("[", "(") // replace [] with ()
       .replaceAll("]", ")") // ^^
