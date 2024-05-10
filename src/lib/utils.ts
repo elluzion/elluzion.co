@@ -23,7 +23,7 @@ export function formatDate(date: Date, shorten: boolean): string {
     "September",
     "October",
     "November",
-    "Dezember",
+    "December",
   ];
   let monthName = monthNames[date.getMonth()];
   let year = date.getFullYear().toString();
