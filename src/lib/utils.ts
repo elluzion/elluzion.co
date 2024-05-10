@@ -1,13 +1,13 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+//#region Tailwind
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+//#endregion
 
-export const pascalCase = (input: string) =>
-  input[0].toUpperCase() + input.slice(1);
-
+//#region Dates
 export function formatDate(date: Date, shorten: boolean): string {
   const day = date.getDate();
   const ordinalSuffix: string = getOrdinalSuffix(day);
@@ -54,3 +54,22 @@ function getOrdinalSuffix(day: number): string {
     }
   }
 }
+//#endregion
+
+//#region String modification
+export const pascalCase = (input: string) =>
+  input[0].toUpperCase() + input.slice(1);
+
+export function toUrlSafeString(input: string) {
+  input = input
+    .toLowerCase()
+    .normalize("NFD") // normalize string
+    .replace(/[\u0300-\u036f]/g, "") // remove accents
+    .replace(/[^a-zA-Z0-9 ]/g, ""); // remove all characters except letters, numbers and whitespace
+  return cleanWhitespace(input, "-");
+}
+
+export function cleanWhitespace(input: string, filler?: string) {
+  return input.replace(/\s+/g, filler || " ").trim();
+}
+//#endregion
