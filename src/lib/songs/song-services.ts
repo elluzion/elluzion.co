@@ -2,6 +2,7 @@ import { customsearch } from "@googleapis/customsearch";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import Soundcloud from "soundcloud.ts";
 import YouTube from "youtube-sr";
+import { cleanWhitespace, toUrlSafeString } from "../utils";
 import { StreamLink } from "./types";
 
 export default class SongServices {
@@ -37,7 +38,7 @@ export default class SongServices {
     const failedPlatforms: string[] = [];
 
     // cleanup search query
-    searchQuery = this.toUrlSafeString(searchQuery);
+    searchQuery = toUrlSafeString(searchQuery);
 
     for (const platform of platforms) {
       let link = null;
@@ -81,7 +82,7 @@ export default class SongServices {
       const parsedQuery = this.parseQuery(track.title);
       const description =
         track.description?.split("\n").slice(0, 3).join("\n") || undefined;
-      const permalink = this.toUrlSafeString(parsedQuery.title);
+      const permalink = toUrlSafeString(parsedQuery.title);
       const releaseDate = new Date(track.release_date || track.display_date);
 
       return {
@@ -229,7 +230,7 @@ export default class SongServices {
     const queryArtists = queryParts.length > 1 ? queryParts[0] : undefined;
     const queryTitle = queryArtists ? queryParts.slice(1).join(" ") : query;
 
-    const title = this.cleanWhitespace(queryTitle);
+    const title = cleanWhitespace(queryTitle);
     const artists: string[] = [];
 
     // MAIN ARTISTS
@@ -248,19 +249,11 @@ export default class SongServices {
     };
   }
 
-  private toUrlSafeString(input: string) {
-    input = input.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ""); // remove all characters except letters, numbers and whitespace
-    return this.cleanWhitespace(input, "-");
-  }
-
   private artistStringToList(artistString: string) {
     // artists separated by comma or &
     return artistString.split(/(?:,|&)+/).map((x) => x.trim());
   }
 
-  private cleanWhitespace(input: string, filler?: string) {
-    return input.replace(/\s+/g, filler || " ").trim();
-  }
   //#endregion
 }
 
