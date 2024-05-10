@@ -10,6 +10,7 @@ export default class SongServices {
   private gCustomSearchApi;
   private YouTubeApi;
 
+  //#region Constructor
   constructor() {
     this.spotifyApi = SpotifyApi.withClientCredentials(
       process.env.SPOTIFY_CLIENT_ID || "",
@@ -19,7 +20,9 @@ export default class SongServices {
     this.gCustomSearchApi = customsearch("v1").cse;
     this.YouTubeApi = YouTube;
   }
+  //#endregion
 
+  //#region Public functions
   /**
    *
    * @param searchQuery A search query for the song, such as "Artist 1 & Artist 2 - Song Title"
@@ -32,6 +35,9 @@ export default class SongServices {
   ): Promise<{ links: StreamLink[]; failed: string[] }> {
     const fetchedPlatforms: StreamLink[] = [];
     const failedPlatforms: string[] = [];
+
+    // cleanup search query
+    searchQuery = this.toUrlSafeString(searchQuery);
 
     for (const platform of platforms) {
       let link = null;
@@ -72,15 +78,17 @@ export default class SongServices {
     try {
       const track = await this.soundcloudApi.tracks.getV2(url);
 
-      const parsedTitle = this.parseQuery(track.title);
-      const description = track.description?.split("\n")[0] || undefined;
+      const parsedQuery = this.parseQuery(track.title);
+      const description =
+        track.description?.split("\n").slice(0, 3).join("\n") || undefined;
+      const permalink = this.toUrlSafeString(parsedQuery.title);
       const releaseDate = new Date(track.release_date || track.display_date);
 
       return {
-        artists: parsedTitle.artists,
-        title: parsedTitle.title,
+        artists: parsedQuery.artists,
+        title: parsedQuery.title,
         description: description,
-        permalink: track.permalink,
+        permalink: permalink,
         release_date: releaseDate,
         label: track.label_name,
         art_url: track.artwork_url,
@@ -90,7 +98,9 @@ export default class SongServices {
       console.log(e);
     }
   }
+  //#endregion
 
+  //#region Private functions
   private async getSoundcloud(
     searchQuery: string
   ): Promise<StreamLink | undefined> {
@@ -181,8 +191,9 @@ export default class SongServices {
       const request = await fetch(
         `https://api.deezer.com/search/track?q=${searchQuery}`
       );
+
       const search = await request.json();
-      if (!search.data[0].link) return;
+      if (!search.data[0] || !search.data[0].link) return;
       return {
         url: search.data[0].link,
       };
@@ -190,22 +201,67 @@ export default class SongServices {
       console.log(e);
     }
   }
+  //#endregion
 
+  //#region Utilities
   /**
    *
-   * @param query A song title query such as "Artist 1 , Artist 2 & Artist 3 - Song Title"
+   * @param query A song title query such as "Artist 1 , Artist 2 & Artist 3 - Song Title (feat. Artist 4) - Artist 5 Remix"
    * @returns an object with the title separated into artists and song title
    */
   private parseQuery(query: string) {
-    const split = query.split("-");
-    const hasArtists = split.length == 1 ? false : true;
-    const title = split[split.length - 1].trim();
-    const artists = split[0].split(/(?:,|&)+/).map((x) => x.trim());
+    // Cleanup query
+    query = query
+      .replace("(ft.", "(feat.") // some people use ft. as a short form, we unify it to feat.
+      .replace("(w/", "(feat.") // or they use w/
+      .replace("(featuring", "(feat.") // or they use featuring
+      .replaceAll("[", "(") // replace [] with ()
+      .replaceAll("]", ")"); // ^^
+
+    // filter feature bracket artists from query if available
+    const queryFeatureArtists = query.includes("(feat.")
+      ? query.split("(feat.")[1].split(")")[0]
+      : undefined;
+    // remove feature bracket
+    query = query.replace(`(feat.${queryFeatureArtists})`, "");
+
+    const queryParts = query.split("-");
+    const queryArtists = queryParts.length > 1 ? queryParts[0] : undefined;
+    const queryTitle = queryArtists ? queryParts.slice(1).join(" ") : query;
+
+    const title = this.cleanWhitespace(queryTitle);
+    const artists: string[] = [];
+
+    // MAIN ARTISTS
+    if (queryArtists) {
+      artists.push(...this.artistStringToList(queryArtists));
+    }
+
+    // FEATURE ARTISTS
+    if (queryFeatureArtists) {
+      artists.push(...this.artistStringToList(queryFeatureArtists));
+    }
+
     return {
       title: title,
-      artists: hasArtists ? artists : undefined,
+      artists: artists,
     };
   }
+
+  private toUrlSafeString(input: string) {
+    input = input.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ""); // remove all characters except letters, numbers and whitespace
+    return this.cleanWhitespace(input, "-");
+  }
+
+  private artistStringToList(artistString: string) {
+    // artists separated by comma or &
+    return artistString.split(/(?:,|&)+/).map((x) => x.trim());
+  }
+
+  private cleanWhitespace(input: string, filler?: string) {
+    return input.replace(/\s+/g, filler || " ").trim();
+  }
+  //#endregion
 }
 
 /*
