@@ -69,6 +69,35 @@ export default class SongServices {
       failed: failedPlatforms,
     };
   }
+
+  async importFromSoundcloud(url: string) {
+    if (!url.startsWith("https://") || !url.includes("soundcloud.com")) {
+      throw Error("The provided URL has to be a Soundcloud link");
+    }
+
+    try {
+      const track = await this.soundcloudApi.tracks.getV2(url);
+
+      const parsedQuery = this.parseQuery(track.title);
+      const description =
+        track.description?.split("\n").slice(0, 3).join("\n") || undefined;
+      const permalink = this.toUrlSafeString(parsedQuery.title);
+      const releaseDate = new Date(track.release_date || track.display_date);
+
+      return {
+        artists: parsedQuery.artists,
+        title: parsedQuery.title,
+        description: description,
+        permalink: permalink,
+        release_date: releaseDate,
+        label: track.label_name,
+        art_url: track.artwork_url,
+        genre: track.genre,
+      };
+    } catch (e) {
+      console.log(e);
+    }
+  }
   //#endregion
 
   //#region Private functions
@@ -174,36 +203,6 @@ export default class SongServices {
   }
   //#endregion
 
-  //#region Soundcloud import
-  async importFromSoundcloud(url: string) {
-    if (!url.startsWith("https://") || !url.includes("soundcloud.com")) {
-      throw Error("The provided URL has to be a Soundcloud link");
-    }
-
-    try {
-      const track = await this.soundcloudApi.tracks.getV2(url);
-
-      const parsedQuery = this.parseQuery(track.title);
-      const description = track.description?.split("\n")[0] || undefined;
-      const permalink = this.toUrlSafeString(parsedQuery.title);
-      const releaseDate = new Date(track.release_date || track.display_date);
-
-      return {
-        artists: parsedQuery.artists,
-        title: parsedQuery.title,
-        description: description,
-        permalink: permalink,
-        release_date: releaseDate,
-        label: track.label_name,
-        art_url: track.artwork_url,
-        genre: track.genre,
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  //#endregion
-
   //#region Utilities
   /**
    *
@@ -211,51 +210,37 @@ export default class SongServices {
    * @returns an object with the title separated into artists and song title
    */
   private parseQuery(query: string) {
-    const splitQuery = query.split("-");
-    const artistsText = splitQuery[0];
-    const titleText = splitQuery[splitQuery.length - 1];
-
-    let artists: string[] = [];
-    let title = "";
-
-    /**
-     * TITLE
-     */
-    title = titleText
+    // Cleanup query
+    query = query
       .replace("(ft.", "(feat.") // some people use ft. as a short form, we unify it to feat.
       .replace("(w/", "(feat.") // or they use w/
       .replace("(featuring", "(feat.") // or they use featuring
       .replaceAll("[", "(") // replace [] with ()
-      .replaceAll("]", ")") // ^^
-      .trim(); // trim title
+      .replaceAll("]", ")"); // ^^
 
-    /**
-     * MAIN ARTISTS
-     */
-    // if query has the format of "<artists> - <title>"
-    if (splitQuery.length > 1) {
-      // add artists from title start, separated by comma or &
-      artists = artistsText
-        .split(/(?:,|&)+/) // separated by comma or &
-        .map((x) => x.trim()); // trim artist names
+    // filter feature bracket artists from query if available
+    const queryFeatureArtists = query.includes("(feat.")
+      ? query.split("(feat.")[1].split(")")[0]
+      : undefined;
+    // remove feature bracket
+    query = query.replace(`(feat.${queryFeatureArtists})`, "");
+
+    const queryParts = query.split("-");
+    const queryArtists = queryParts.length > 1 ? queryParts[0] : undefined;
+    const queryTitle = queryArtists ? queryParts.slice(1).join(" ") : query;
+
+    const title = this.cleanWhitespace(queryTitle);
+    const artists: string[] = [];
+
+    // MAIN ARTISTS
+    if (queryArtists) {
+      artists.push(...this.artistStringToList(queryArtists));
     }
 
-    /**
-     * FEATURE ARTISTS
-     */
-    try {
-      const featureText = title.split("(feat.")[1].split(")")[0];
-      // title: remove feature bracket
-      title = title.replace(`(feat.${featureText})`, "");
-      // feature artists, separated by comma
-      const featureArtists = featureText.split(",").map((x) => x.trim());
-      artists.push(...featureArtists);
-    } catch (e) {
-      /* no feature bracket found */
+    // FEATURE ARTISTS
+    if (queryFeatureArtists) {
+      artists.push(...this.artistStringToList(queryFeatureArtists));
     }
-
-    // remove redundant whitespace
-    title = title.replace(/\s+/g, " ").trim();
 
     return {
       title: title,
@@ -264,11 +249,17 @@ export default class SongServices {
   }
 
   private toUrlSafeString(input: string) {
-    return input
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9 ]/g, "") // remove all characters except letters, numbers and whitespace
-      .replace(/\s+/g, "-") // replace multiple whitespaces with one
-      .trim(); // trim
+    input = input.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ""); // remove all characters except letters, numbers and whitespace
+    return this.cleanWhitespace(input, "-");
+  }
+
+  private artistStringToList(artistString: string) {
+    // artists separated by comma or &
+    return artistString.split(/(?:,|&)+/).map((x) => x.trim());
+  }
+
+  private cleanWhitespace(input: string, filler?: string) {
+    return input.replace(/\s+/g, filler || " ").trim();
   }
   //#endregion
 }
