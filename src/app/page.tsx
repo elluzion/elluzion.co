@@ -1,26 +1,13 @@
 import AddSongButton from "@/app/_components/add-song-button";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/card";
-import SongDatabase from "@/lib/songs/song-database";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/card";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
-import {
-  SiDiscord,
-  SiInstagram,
-  SiSoundcloud,
-  SiSpotify,
-  SiYoutube,
-} from "@icons-pack/react-simple-icons";
+import { SiDiscord, SiInstagram, SiSoundcloud, SiSpotify, SiYoutube } from "@icons-pack/react-simple-icons";
 import Image from "next/image";
 import Link from "next/link";
+import { getSongs } from "./actions";
 
 const socialItems = [
   {
@@ -47,13 +34,12 @@ const socialItems = [
 
 export default async function Music() {
   const supabase = createClient();
-  const db = new SongDatabase(supabase);
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  var songs = await db.getSongs();
+  var songs = await getSongs();
 
   if (songs) {
     // first song is a card, others are list items
@@ -65,9 +51,7 @@ export default async function Music() {
             <div className="flex flex-col gap-1 grow">
               <CardTitle>{firstSong.title}</CardTitle>
               <h3 className="font-sans">{firstSong.artists.join(", ")}</h3>
-              <CardDescription className="font-medium">
-                {firstSong.genre}
-              </CardDescription>
+              <CardDescription className="font-medium">{firstSong.genre}</CardDescription>
             </div>
             <Image
               src={firstSong.art_url || ""}
@@ -80,13 +64,9 @@ export default async function Music() {
         </div>
         <CardContent className="has-[:first-child]:flex gap-2 hidden">
           {firstSong.release_date && (
-            <Badge variant={"secondary"}>
-              {formatDate(firstSong.release_date, true)}
-            </Badge>
+            <Badge variant={"secondary"}>{formatDate(firstSong.release_date, true)}</Badge>
           )}
-          {firstSong.type && (
-            <Badge variant={"outline"}>{firstSong.type}</Badge>
-          )}
+          {firstSong.type && <Badge variant={"outline"}>{firstSong.type}</Badge>}
         </CardContent>
         <CardFooter>
           <Link className="w-full" href={firstSong.permalink}>
@@ -112,9 +92,7 @@ export default async function Music() {
           <div className="flex flex-col gap-1">
             <span className="font-semibold">{song.title}</span>
             <div className="flex items-center gap-3">
-              <span className="text-muted-foreground">
-                {song.artists.join(", ")}
-              </span>
+              <span className="text-muted-foreground">{song.artists.join(", ")}</span>
               <Badge variant={"secondary"} className="h-6">
                 {song.genre}
               </Badge>

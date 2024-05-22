@@ -1,8 +1,7 @@
 import SongDatabase from "@/lib/songs/song-database";
 import SongServices, { SupportedServices } from "@/lib/songs/song-services";
-import { createClient } from "@/lib/supabase/client";
 
-const db = new SongDatabase(createClient());
+const db = new SongDatabase(false);
 const services = new SongServices();
 
 it("Song Handlers instantiated successfully", () => {
@@ -41,9 +40,6 @@ it("Song doesn't exist on database", async () => {
 });
 
 it("Can find links for track on platforms", async () => {
-  let tracks = await services.get(
-    "Elluzion & Alvin Mo - Dreaming",
-    SupportedServices
-  );
+  let tracks = await services.get("Elluzion & Alvin Mo - Dreaming", SupportedServices);
   expect(tracks.links.length).toBe(SupportedServices.length);
 });

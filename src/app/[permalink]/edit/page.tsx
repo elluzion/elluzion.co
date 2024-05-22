@@ -1,16 +1,15 @@
 import { SongFormBase } from "@/app/add/_components/song-form-base";
-import SongDatabase from "@/lib/songs/song-database";
-import { createClient as createClientClient } from "@/lib/supabase/client";
-import { createClient as createServerClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getSong } from "../actions";
 
 type Params = {
   params: { permalink: string };
 };
 
 export default async function EditSong({ params }: Params) {
-  const supabase = createServerClient();
+  const supabase = createClient();
 
   const {
     data: { user },
@@ -23,11 +22,8 @@ export default async function EditSong({ params }: Params) {
 
 // page metadata (dynamic)
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const supabase = createClientClient();
-  const db = new SongDatabase(supabase);
-
   // gather info for current song
-  const song = await db.getSong(params.permalink);
+  const song = await getSong(params.permalink);
 
   // return
   return {

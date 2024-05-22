@@ -3,14 +3,12 @@
 //#region Imports
 import { Form } from "@/components/form";
 import { useToast } from "@/components/use-toast";
-import SongDatabase from "@/lib/songs/song-database";
 import { SupportedServicesType } from "@/lib/songs/song-services";
 import { DownloadLink, StreamLink } from "@/lib/songs/types";
-import { createClient } from "@/lib/supabase/client";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { getServices, importFromSoundcloud } from "../../actions";
+import { getServices, getSong, hasSong, importFromSoundcloud, pushSong } from "../../actions";
 import { useSongFormContext } from "../../context";
 import { formSchema } from "../../formSchema";
 import SongFormPage1 from "./song-form-page-1";
@@ -21,8 +19,6 @@ import SongFormPage3 from "./song-form-page-3";
 export function SongForm() {
   const { toast } = useToast();
 
-  const supabase = createClient();
-  const db = new SongDatabase(supabase);
   const context = useSongFormContext();
 
   const form = context.form;
@@ -132,27 +128,26 @@ export function SongForm() {
   // gets triggered when the form data has been validated
   function onSubmit(values: z.infer<typeof formSchema>) {
     // check if track with ID already exists, abort if it does when submitting a new entry
-    db.hasSong(values.permalink).then((exists) => {
+    hasSong(values.permalink).then((exists) => {
       if (exists && !context.editing.is) {
         toast({
           title: `Song with permalink ${values.permalink} already exists!`,
         });
         return;
       }
-      pushSong();
-    });
-    function pushSong() {
+      // set as loading
       setIsLoading(true);
-      // push the song up to the DB
-      db.pushSong(values, context.editing.is)
+      // push
+      pushSong(values, context.editing.is)
         .then(() => {
           window.location.href = "/" + values.permalink;
         })
         .catch((e) => {
+          // pushing song failed
           setIsLoading(false);
           toast({ title: "Process failed" });
         });
-    }
+    });
   }
 
   // not all form values are valid
@@ -173,7 +168,7 @@ export function SongForm() {
       return;
     }
 
-    db.getSong(context.editing.permalink)
+    getSong(context.editing.permalink)
       .then((song) => {
         if (!song) {
           redirect("/");

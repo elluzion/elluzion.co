@@ -1,12 +1,13 @@
 import { Database } from "@/types/supabase";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "../supabase/client";
+import { createClient as createServerClient } from "../supabase/server";
 import { DBSong, DownloadLink, StreamLink } from "./types";
 
 // database object
 export default class SongDatabase {
   private supabase;
-  constructor(client: SupabaseClient<Database>) {
-    this.supabase = client;
+  constructor(isServer: boolean) {
+    this.supabase = isServer ? createServerClient() : createClient();
   }
 
   /**
@@ -120,10 +121,7 @@ export default class SongDatabase {
    * @returns Whether deletion is successfull
    */
   async deleteSong(permalink: string) {
-    const { error } = await this.supabase
-      .from(RELEASES_TABLE)
-      .delete()
-      .eq("permalink", permalink);
+    const { error } = await this.supabase.from(RELEASES_TABLE).delete().eq("permalink", permalink);
     return error ? false : true;
   }
 
@@ -138,9 +136,7 @@ export default class SongDatabase {
           release_id: id,
         };
       });
-      const { error } = await this.supabase
-        .from(LINKS_TABLE)
-        .insert(streamlinks);
+      const { error } = await this.supabase.from(LINKS_TABLE).insert(streamlinks);
       if (error) throw error;
     }
   }
@@ -158,9 +154,7 @@ export default class SongDatabase {
           format: link.format,
         };
       });
-      const { error } = await this.supabase
-        .from(DOWNLOADS_TABLE)
-        .insert(downloadLinks);
+      const { error } = await this.supabase.from(DOWNLOADS_TABLE).insert(downloadLinks);
       if (error) throw error;
     }
   }
@@ -190,5 +184,4 @@ const DBSONG_QUERY = `
 
 // Types
 type LinksInsert = Database["public"]["Tables"]["release_links_v2"]["Insert"][];
-type DownloadsInsert =
-  Database["public"]["Tables"]["release_downloads_v2"]["Insert"][];
+type DownloadsInsert = Database["public"]["Tables"]["release_downloads_v2"]["Insert"][];

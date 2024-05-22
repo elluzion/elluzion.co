@@ -1,10 +1,8 @@
 import SongDatabase from "@/lib/songs/song-database";
-import { createClient } from "@/lib/supabase/server";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = createClient();
-  const db = new SongDatabase(supabase);
+  const db = new SongDatabase(true);
 
   const trackLinks: MetadataRoute.Sitemap =
     (await db.getSongs())?.map((song) => {
