@@ -16,9 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${mainFont.variable} ${monoFont.variable} font-sans overflow-x-hidden`}
-      >
+      <body className={`${mainFont.variable} ${monoFont.variable} font-sans overflow-x-hidden`}>
         <CursorBacklight />
         <PageToolbar />
         <Toaster />

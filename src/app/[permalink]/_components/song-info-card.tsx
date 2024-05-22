@@ -14,12 +14,8 @@ export const SongInfoCard = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & SongInfoCardProps
 >(({ className, song, ...props }, ref) => {
   // split downloads into two sections, wav and mp3
-  const downloadsMp3 = song.download_links.filter(
-    (item) => item.format == "mp3"
-  );
-  const downloadsWav = song.download_links.filter(
-    (item) => item.format == "wav"
-  );
+  const downloadsMp3 = song.download_links.filter((item) => item.format == "mp3");
+  const downloadsWav = song.download_links.filter((item) => item.format == "wav");
 
   // parse songData for card sub-title line
   const subTitleContent = [];
@@ -30,19 +26,11 @@ export const SongInfoCard = React.forwardRef<
   return (
     <Card className="md:mx-4 -mt-16 rounded-3xl">
       <CardContent className="flex flex-col gap-4 pt-6">
-        {song.description && (
-          <p className="font-mono leading-7">{song.description}</p>
-        )}
-        <span className="font-mono text-muted-foreground">
-          {subTitleContent.join(" • ")}
-        </span>
+        {song.description && <p className="font-mono leading-7">{song.description}</p>}
+        <span className="font-mono text-muted-foreground">{subTitleContent.join(" • ")}</span>
         <div className="flex gap-2">
           {song.genre && <Badge>{song.genre}</Badge>}
-          {song.release_date && (
-            <Badge variant={"secondary"}>
-              {formatDate(song.release_date, true)}
-            </Badge>
-          )}
+          {song.release_date && <Badge variant={"secondary"}>{formatDate(song.release_date, true)}</Badge>}
           {song.type && <Badge variant={"outline"}>{song.type}</Badge>}
         </div>
         <div className="gap-4 hidden has-[:first-child]:grid grid-flow-col">

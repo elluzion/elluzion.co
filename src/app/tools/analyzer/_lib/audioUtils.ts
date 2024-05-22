@@ -9,10 +9,7 @@
  * @param audioContext passed audiocontext from the window
  * @returns a preprocessed audio channel
  */
-export async function getProcessedAudio(
-  file: File,
-  audioContext: AudioContext
-) {
+export async function getProcessedAudio(file: File, audioContext: AudioContext) {
   // get arraybuffer from audio file
   const arrayBuffer = await file.arrayBuffer();
 
@@ -66,11 +63,7 @@ function monomix(buffer: AudioBuffer) {
  * @param sampleRateOut target sample rate
  * @returns downsampled Audio Channel
  */
-function downsampleArray(
-  audioIn: Float32Array,
-  sampleRateIn: number,
-  sampleRateOut: number
-) {
+function downsampleArray(audioIn: Float32Array, sampleRateIn: number, sampleRateOut: number) {
   if (sampleRateOut === sampleRateIn) {
     return audioIn;
   }
@@ -84,11 +77,7 @@ function downsampleArray(
     let nextOffsetAudioIn = Math.round((offsetResult + 1) * sampleRateRatio);
     let accum = 0,
       count = 0;
-    for (
-      let i = offsetAudioIn;
-      i < nextOffsetAudioIn && i < audioIn.length;
-      i++
-    ) {
+    for (let i = offsetAudioIn; i < nextOffsetAudioIn && i < audioIn.length; i++) {
       accum += audioIn[i];
       count++;
     }

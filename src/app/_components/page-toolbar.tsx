@@ -64,9 +64,7 @@ export default function PageToolbar() {
               } else {
                 return (
                   <BreadcrumbItem key={key}>
-                    <BreadcrumbPage className="font-medium">
-                      {formatUrlSection(item)}
-                    </BreadcrumbPage>
+                    <BreadcrumbPage className="font-medium">{formatUrlSection(item)}</BreadcrumbPage>
                   </BreadcrumbItem>
                 );
               }

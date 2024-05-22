@@ -38,70 +38,50 @@ export default function InfoDrawer() {
           <div className="prose-h4:flex prose-h4:items-center prose-h4:gap-2 mx-4 prose-h4:w-full max-h-[50vh] xl:max-h-full dark:prose-invert overflow-scroll prose">
             <h4>
               Key
-              <Link
-                href="https://essentia.upf.edu/reference/std_KeyExtractor.html"
-                target="_blank"
-              >
+              <Link href="https://essentia.upf.edu/reference/std_KeyExtractor.html" target="_blank">
                 <Icon path={mdiLink} size={0.75} />
               </Link>
             </h4>
             <p>Estimated key/scale for the given audio signal.</p>
             <h4>
               Tempo
-              <Link
-                href="https://essentia.upf.edu/reference/std_PercivalBpmEstimator.html"
-                target="_blank"
-              >
+              <Link href="https://essentia.upf.edu/reference/std_PercivalBpmEstimator.html" target="_blank">
                 <Icon path={mdiLink} size={0.75} />
               </Link>
             </h4>
             <p>The estimated tempo in beats per minute (BPM) .</p>
             <h4>
               Overall loudness
-              <Link
-                href="https://essentia.upf.edu/reference/std_LoudnessEBUR128.html"
-                target="_blank"
-              >
+              <Link href="https://essentia.upf.edu/reference/std_LoudnessEBUR128.html" target="_blank">
                 <Icon path={mdiLink} size={0.75} />
               </Link>
             </h4>
             <p>
-              synonym for "Integrated loudness": Loudness value averaged over an
-              arbitrary long time interval with gating of 400 ms blocks with two
-              thresholds:
+              synonym for "Integrated loudness": Loudness value averaged over an arbitrary long time interval
+              with gating of 400 ms blocks with two thresholds:
               <ul className="list-disc">
                 <li>
-                  Absolute 'silence' gating threshold at -70 LUFS for the
-                  computation of the absolute-gated loudness level.
-                </li>
-                <li>
-                  Relative gating threshold, 10 LU below the absolute-gated
+                  Absolute 'silence' gating threshold at -70 LUFS for the computation of the absolute-gated
                   loudness level.
                 </li>
+                <li>Relative gating threshold, 10 LU below the absolute-gated loudness level.</li>
               </ul>
             </p>
             <h4>
               Loudness range
-              <Link
-                href="https://essentia.upf.edu/reference/std_LoudnessEBUR128.html"
-                target="_blank"
-              >
+              <Link href="https://essentia.upf.edu/reference/std_LoudnessEBUR128.html" target="_blank">
                 <Icon path={mdiLink} size={0.75} />
               </Link>
             </h4>
             <p>
-              Computed from short-term loudness values, defined as the
-              difference between the estimates of the 10th and 95th percentiles
-              of the distribution of the loudness values with applied gating.
+              Computed from short-term loudness values, defined as the difference between the estimates of the
+              10th and 95th percentiles of the distribution of the loudness values with applied gating.
               <ul className="list-disc">
                 <li>
-                  Absolute 'silence' gating threshold at -70 LUFS for the
-                  computation of the absolute-gated loudness level.
-                </li>
-                <li>
-                  Relative gating threshold, -20 LU below the absolute-gated
+                  Absolute 'silence' gating threshold at -70 LUFS for the computation of the absolute-gated
                   loudness level.
                 </li>
+                <li>Relative gating threshold, -20 LU below the absolute-gated loudness level.</li>
               </ul>
             </p>
           </div>

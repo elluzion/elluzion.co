@@ -5,14 +5,7 @@ import { mdiPiano, mdiSpeaker, mdiSpeedometer } from "@mdi/js";
 import { motion } from "framer-motion";
 import { useState } from "react";
 //@ts-ignore
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import DataCard from "./_components/data-card";
 import FileUploadInput from "./_components/file-upload-input";
 import InfoDrawer from "./_components/info-drawer";
@@ -31,8 +24,7 @@ export default function AnalyzerScreen() {
   const [tempo, setTempo] = useState<WorkerReturnData["tempo"]>(undefined);
   const [key, setKey] = useState<KeyData["key"] | undefined>(undefined);
   const [scale, setScale] = useState<KeyData["scale"] | undefined>(undefined);
-  const [loudness, setLoudness] =
-    useState<WorkerReturnData["loudness"]>(undefined);
+  const [loudness, setLoudness] = useState<WorkerReturnData["loudness"]>(undefined);
 
   /**
    * UI
@@ -146,20 +138,10 @@ export default function AnalyzerScreen() {
       {/* RESULT */}
       {dataAvailable() && (
         <motion.div className="gap-2 grid grid-cols-2">
-          {key && scale && (
-            <DataCard
-              mdiIconPath={mdiPiano}
-              title={"Key"}
-              subTitle={`${key} ${scale}`}
-            />
-          )}
+          {key && scale && <DataCard mdiIconPath={mdiPiano} title={"Key"} subTitle={`${key} ${scale}`} />}
           {tempo && (
             <div>
-              <DataCard
-                mdiIconPath={mdiSpeedometer}
-                title={"Tempo"}
-                subTitle={`${tempo} BPM`}
-              />
+              <DataCard mdiIconPath={mdiSpeedometer} title={"Tempo"} subTitle={`${tempo} BPM`} />
             </div>
           )}
           {loudness?.overall && (
@@ -170,11 +152,7 @@ export default function AnalyzerScreen() {
             />
           )}
           {loudness?.range && (
-            <DataCard
-              mdiIconPath={mdiSpeaker}
-              title={"Loudness Range"}
-              subTitle={`${loudness.range} dB`}
-            />
+            <DataCard mdiIconPath={mdiSpeaker} title={"Loudness Range"} subTitle={`${loudness.range} dB`} />
           )}
         </motion.div>
       )}
@@ -204,12 +182,8 @@ export default function AnalyzerScreen() {
                   {entry.key} {entry.scale}
                 </TableCell>
                 <TableCell className="text-right">{entry.tempo} BPM</TableCell>
-                <TableCell className="text-right">
-                  {entry.loudness?.overall} LUFS
-                </TableCell>
-                <TableCell className="text-right">
-                  {entry.loudness?.range} dB
-                </TableCell>
+                <TableCell className="text-right">{entry.loudness?.overall} LUFS</TableCell>
+                <TableCell className="text-right">{entry.loudness?.range} dB</TableCell>
               </TableRow>
             ))}
           </TableBody>

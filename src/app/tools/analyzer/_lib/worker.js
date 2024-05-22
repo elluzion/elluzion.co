@@ -59,16 +59,7 @@ addEventListener("message", (msg) => {
   });
 
   // tempo
-  const tempo = essentia.PercivalBpmEstimator(
-    vectorSignal,
-    1024,
-    2048,
-    128,
-    128,
-    210,
-    50,
-    16000
-  ).bpm;
+  const tempo = essentia.PercivalBpmEstimator(vectorSignal, 1024, 2048, 128, 128, 210, 50, 16000).bpm;
   postTypedMessage({ data: { tempo: Math.round(doubleIfLow(tempo)) } });
 
   postTypedMessage({

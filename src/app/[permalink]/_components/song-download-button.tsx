@@ -12,9 +12,7 @@ import { pascalCase } from "@/lib/utils";
 
 import Link from "next/link";
 
-export default function SongDownloadButton(props: {
-  downloadItems: DownloadLink[];
-}) {
+export default function SongDownloadButton(props: { downloadItems: DownloadLink[] }) {
   // list empty
   if (props.downloadItems.length == 0) return;
 
@@ -39,11 +37,7 @@ export default function SongDownloadButton(props: {
         <DropdownMenuContent>
           {props.downloadItems.map((item, key) => {
             return (
-              <Link
-                href={parseDownloadLink(item.url)}
-                key={key}
-                target="_blank"
-              >
+              <Link href={parseDownloadLink(item.url)} key={key} target="_blank">
                 <DropdownMenuItem>{pascalCase(item.edit)}</DropdownMenuItem>
               </Link>
             );
@@ -61,10 +55,7 @@ const parseDownloadLink = (inputLink: string) => {
     const endOfId = inputLink.indexOf("/", startOfId);
 
     // Extract the file ID
-    const fileId = inputLink.substring(
-      startOfId,
-      endOfId != -1 ? endOfId : undefined
-    );
+    const fileId = inputLink.substring(startOfId, endOfId != -1 ? endOfId : undefined);
 
     const directLink = `https://drive.google.com/uc?export=download&id=${fileId}`;
     return directLink;

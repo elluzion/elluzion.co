@@ -80,8 +80,7 @@ export default class SongServices {
       const track = await this.soundcloudApi.tracks.getV2(url);
 
       const parsedQuery = this.parseQuery(track.title);
-      const description =
-        track.description?.split("\n").slice(0, 3).join("\n") || undefined;
+      const description = track.description?.split("\n").slice(0, 3).join("\n") || undefined;
       const permalink = toUrlSafeString(parsedQuery.title);
       const releaseDate = new Date(track.release_date || track.display_date);
 
@@ -102,9 +101,7 @@ export default class SongServices {
   //#endregion
 
   //#region Private functions
-  private async getSoundcloud(
-    searchQuery: string
-  ): Promise<StreamLink | undefined> {
+  private async getSoundcloud(searchQuery: string): Promise<StreamLink | undefined> {
     try {
       const search = await this.soundcloudApi.tracks.searchV2({
         q: searchQuery,
@@ -120,16 +117,9 @@ export default class SongServices {
     }
   }
 
-  private async getSpotify(
-    searchQuery: string
-  ): Promise<StreamLink | undefined> {
+  private async getSpotify(searchQuery: string): Promise<StreamLink | undefined> {
     try {
-      const search = await this.spotifyApi.search(
-        searchQuery,
-        ["track"],
-        undefined,
-        1
-      );
+      const search = await this.spotifyApi.search(searchQuery, ["track"], undefined, 1);
 
       if (!search.tracks.items[0]) return;
       return {
@@ -140,9 +130,7 @@ export default class SongServices {
     }
   }
 
-  private async getAppleMusic(
-    searchQuery: string
-  ): Promise<StreamLink | undefined> {
+  private async getAppleMusic(searchQuery: string): Promise<StreamLink | undefined> {
     try {
       const { data } = await this.gCustomSearchApi.list({
         q: searchQuery,
@@ -153,9 +141,7 @@ export default class SongServices {
       });
 
       if (!data.items) return;
-      const item = data.items.find((item) =>
-        item.title?.includes(this.parseQuery(searchQuery).title)
-      );
+      const item = data.items.find((item) => item.title?.includes(this.parseQuery(searchQuery).title));
       if (!item?.link) return;
       return {
         url: item.link,
@@ -165,9 +151,7 @@ export default class SongServices {
     }
   }
 
-  private async getYoutube(
-    searchQuery: string
-  ): Promise<StreamLink | undefined> {
+  private async getYoutube(searchQuery: string): Promise<StreamLink | undefined> {
     try {
       const searchItem = (
         await this.YouTubeApi.search(searchQuery, {
@@ -185,13 +169,9 @@ export default class SongServices {
     }
   }
 
-  private async getDeezer(
-    searchQuery: string
-  ): Promise<StreamLink | undefined> {
+  private async getDeezer(searchQuery: string): Promise<StreamLink | undefined> {
     try {
-      const request = await fetch(
-        `https://api.deezer.com/search/track?q=${searchQuery}`
-      );
+      const request = await fetch(`https://api.deezer.com/search/track?q=${searchQuery}`);
 
       const search = await request.json();
       if (!search.data[0] || !search.data[0].link) return;
@@ -220,9 +200,7 @@ export default class SongServices {
       .replaceAll("]", ")"); // ^^
 
     // filter feature bracket artists from query if available
-    const queryFeatureArtists = query.includes("(feat.")
-      ? query.split("(feat.")[1].split(")")[0]
-      : undefined;
+    const queryFeatureArtists = query.includes("(feat.") ? query.split("(feat.")[1].split(")")[0] : undefined;
     // remove feature bracket
     query = query.replace(`(feat.${queryFeatureArtists})`, "");
 
@@ -260,13 +238,7 @@ export default class SongServices {
 /*
  * Services that are supported to automatically fetch links for.
  */
-export const SupportedServices = [
-  "soundcloud",
-  "spotify",
-  "applemusic",
-  "youtube",
-  "deezer",
-] as const;
+export const SupportedServices = ["soundcloud", "spotify", "applemusic", "youtube", "deezer"] as const;
 
 /**
  * {@link SupportedServices} as type

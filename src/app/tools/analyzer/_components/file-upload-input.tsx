@@ -48,21 +48,11 @@ export default function FileUploadInput(props: {
   }
 
   function handleInputHoverOn() {
-    uploadOverlayRef.current?.classList.add(
-      "!ring-2",
-      "!ring-ring",
-      "!ring-offset-2",
-      "!bg-opacity-5"
-    );
+    uploadOverlayRef.current?.classList.add("!ring-2", "!ring-ring", "!ring-offset-2", "!bg-opacity-5");
   }
 
   function handleInputHoverOff() {
-    uploadOverlayRef.current?.classList.remove(
-      "!ring-2",
-      "!ring-ring",
-      "!ring-offset-2",
-      "!bg-opacity-5"
-    );
+    uploadOverlayRef.current?.classList.remove("!ring-2", "!ring-ring", "!ring-offset-2", "!bg-opacity-5");
   }
 
   return (
@@ -84,16 +74,10 @@ export default function FileUploadInput(props: {
       >
         <div className="flex justify-center items-center gap-2 font-semibold">
           <Icon path={props.isLoading ? mdiRefresh : mdiUpload} size={1} />
-          <span>
-            {props.isLoading
-              ? props.loadingStatusMessage || "Analyzing"
-              : "Upload file"}
-          </span>
+          <span>{props.isLoading ? props.loadingStatusMessage || "Analyzing" : "Upload file"}</span>
         </div>
         <span className="w-full font-mono text-muted-foreground text-sm truncate">
-          {props.isLoading
-            ? "This will take a few seconds"
-            : ALLOWED_FILE_TYPES.join(", ")}
+          {props.isLoading ? "This will take a few seconds" : ALLOWED_FILE_TYPES.join(", ")}
         </span>
       </label>
       {/* ACTUAL INPUT */}

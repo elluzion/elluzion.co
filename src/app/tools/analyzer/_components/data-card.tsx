@@ -3,11 +3,7 @@ import Icon from "@mdi/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-export default function DataCard(props: {
-  mdiIconPath: string;
-  title: string;
-  subTitle: string;
-}) {
+export default function DataCard(props: { mdiIconPath: string; title: string; subTitle: string }) {
   const [hasCopied, setHasCopied] = useState(false);
 
   // Might error out in debug due to insecure origin settings, should be fine in production

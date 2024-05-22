@@ -1,8 +1,4 @@
-import {
-  WorkerReturnData,
-  WorkerReturnMessage,
-  WorkerReturnStatus,
-} from "../types";
+import { WorkerReturnData, WorkerReturnMessage, WorkerReturnStatus } from "../types";
 
 export default class AnalysisWorkerAdapter {
   // main worker
