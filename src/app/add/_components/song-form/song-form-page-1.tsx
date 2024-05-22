@@ -1,29 +1,18 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/form";
 import { Input, TextArea } from "@/components/input";
-import { ArtistSection } from "./_components/artist-section";
-import SoundcloudImportSection from "./_components/soundcloud-import-section";
-import { useSongFormContext } from "./contexts";
+import { useSongFormContext } from "../../context";
+import SongFormArtistSection from "./page-1/song-form-artist-section";
+import SongFormImportSection from "./page-1/song-form-import-section";
 
-export default function FormPage1(props: {
-  artists: string[];
-  setArtists: (newList: string[]) => void;
+export default function SongFormPage1(props: {
   handleSoundcloudImport: (songUrl: string) => Promise<boolean>;
 }) {
   const context = useSongFormContext();
 
   return (
-    <div
-      className="flex-col gap-4"
-      style={{ display: context.index.current == 0 ? "flex" : "none" }}
-    >
+    <div className="flex-col gap-4" style={{ display: context.index.current == 0 ? "flex" : "none" }}>
       {/* IMPORT SECTION */}
-      <SoundcloudImportSection
+      <SongFormImportSection
         show={!context.editing.is}
         handleSoundcloudImport={props.handleSoundcloudImport}
       />
@@ -79,7 +68,7 @@ export default function FormPage1(props: {
       />
 
       {/* ARTIST MANAGEMENT */}
-      <ArtistSection artists={props.artists} setArtists={props.setArtists} />
+      <SongFormArtistSection />
     </div>
   );
 }

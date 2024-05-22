@@ -8,9 +8,6 @@ export async function importFromSoundcloud(url: string) {
   return await services.importFromSoundcloud(url);
 }
 
-export async function getServices(
-  searchQuery: string,
-  platforms: SupportedServicesType[]
-) {
+export async function getServices(searchQuery: string, platforms: SupportedServicesType[]) {
   return await services.get(searchQuery, platforms);
 }

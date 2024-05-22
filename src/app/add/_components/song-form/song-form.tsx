@@ -1,8 +1,8 @@
 "use client";
 
+//#region Imports
 import { Form } from "@/components/form";
 import { useToast } from "@/components/use-toast";
-import { useOnChange } from "@/hooks/useOnChange";
 import SongDatabase from "@/lib/songs/song-database";
 import { SupportedServicesType } from "@/lib/songs/song-services";
 import { DownloadLink, StreamLink } from "@/lib/songs/types";
@@ -10,20 +10,27 @@ import { createClient } from "@/lib/supabase/client";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
-import { getServices, importFromSoundcloud } from "./actions";
-import { useSongFormContext } from "./contexts";
-import FormPage1 from "./form-page-1";
-import FormPage2 from "./form-page-2";
-import FormPage3 from "./form-page-3";
-import { formSchema } from "./formSchema";
+import { getServices, importFromSoundcloud } from "../../actions";
+import { useSongFormContext } from "../../context";
+import { formSchema } from "../../formSchema";
+import SongFormPage1 from "./song-form-page-1";
+import SongFormPage2 from "./song-form-page-2";
+import SongFormPage3 from "./song-form-page-3";
+//#endregion
 
-export function AddSongForm() {
+export function SongForm() {
   const { toast } = useToast();
 
   const supabase = createClient();
   const db = new SongDatabase(supabase);
   const context = useSongFormContext();
+
   const form = context.form;
+  const artists = context.artists.get;
+  const setArtists = (artists: string[]) => context.artists.set(artists);
+  const streamLinks = context.streamLinks.get;
+  const setStreamLinks = (links: StreamLink[]) => context.streamLinks.set(links);
+  const setDownloadLinks = (links: DownloadLink[]) => context.downloadLinks.set(links);
 
   // show loading indicator
   const [isLoading, setIsLoading] = useState(true);
@@ -31,21 +38,15 @@ export function AddSongForm() {
   // ref of invisible form submit button, is triggered from @link AddSongControls on the last page of the form
   const refSubmitButtom = useRef<HTMLButtonElement>(null);
 
-  // STATES (needed as these values are interactive in the UI (reordering)), get synced with the form
-  const [artists, setArtists] = useState<string[]>([]);
-  const [streamLinks, setStreamLinks] = useState<StreamLink[]>([]);
-  const [downloadLinks, setDownloadLinks] = useState<DownloadLink[]>([]);
+  //#region Events
 
-  // update form on state change
-  useOnChange(artists, () => {
-    form.setValue("artists", artists);
-  });
-  useOnChange(streamLinks, () => {
-    form.setValue("stream_links", streamLinks);
-  });
-  useOnChange(downloadLinks, () => {
-    form.setValue("download_links", downloadLinks);
-  });
+  // triggering the form submit button when "Next" button has been clicked on page 3
+  useEffect(() => {
+    if (context.shouldSubmit.current) {
+      refSubmitButtom.current?.click();
+    }
+    context.shouldSubmit.set(false);
+  }, [context, context.shouldSubmit]);
 
   /**
    * Function to be executed once the song has been fetched from soundcloud,
@@ -162,15 +163,9 @@ export function AddSongForm() {
       description: Object.keys(values).join(", "),
     });
   }
+  //#endregion
 
-  // triggering the form submit button when "Next" button has been clicked on page 3
-  useEffect(() => {
-    if (context.shouldSubmit.current) {
-      refSubmitButtom.current?.click();
-    }
-    context.shouldSubmit.set(false);
-  }, [context, context.shouldSubmit]);
-
+  //#region Editing page
   // if this form acts as song edit page, import the data of said song
   useEffect(() => {
     if (!context.editing.is || !context.editing.permalink) {
@@ -178,7 +173,6 @@ export function AddSongForm() {
       return;
     }
 
-    // TODO: IMPORT STUFF
     db.getSong(context.editing.permalink)
       .then((song) => {
         if (!song) {
@@ -208,7 +202,9 @@ export function AddSongForm() {
     // DON'T ADD OTHERS, OTHERWISE THIS WILL FIRE EVERY TIME THE FORM CHANGES
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.editing.is, context.editing.permalink]);
+  //#endregion
 
+  //#region Contents
   return (
     <Form {...form}>
       <div
@@ -221,22 +217,13 @@ export function AddSongForm() {
         }}
       >
         <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
-          <FormPage1
-            artists={artists}
-            setArtists={setArtists}
-            handleSoundcloudImport={handleSoundcloudImport}
-          />
-          <FormPage2 />
-          <FormPage3
-            streamLinks={streamLinks}
-            setStreamLinks={setStreamLinks}
-            downloadLinks={downloadLinks}
-            setDownloadLinks={setDownloadLinks}
-            handleFetchPlatformLinks={handleFetchServiceLinks}
-          />
+          <SongFormPage1 handleSoundcloudImport={handleSoundcloudImport} />
+          <SongFormPage2 />
+          <SongFormPage3 handleFetchPlatformLinks={handleFetchServiceLinks} />
           <button hidden={true} ref={refSubmitButtom} type="submit" />
         </form>
       </div>
     </Form>
   );
+  //#endregion
 }

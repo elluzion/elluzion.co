@@ -1,21 +1,12 @@
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/form";
 import { Input } from "@/components/input";
-import { useSongFormContext } from "./contexts";
+import { useSongFormContext } from "../../context";
 
-export default function FormPage2() {
+export default function SongFormPage2() {
   const context = useSongFormContext();
 
   return (
-    <div
-      className="space-y-4"
-      style={{ display: context.index.current == 1 ? "block" : "none" }}
-    >
+    <div className="space-y-4" style={{ display: context.index.current == 1 ? "block" : "none" }}>
       <FormField
         control={context.form.control}
         name="art_url"
@@ -96,11 +87,7 @@ export default function FormPage2() {
                 <Input
                   type={"date"}
                   {...field}
-                  value={
-                    field.value instanceof Date
-                      ? field.value.toISOString().split("T")[0]
-                      : field.value
-                  }
+                  value={field.value instanceof Date ? field.value.toISOString().split("T")[0] : field.value}
                 />
               </FormControl>
               <FormMessage />

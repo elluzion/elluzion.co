@@ -1,4 +1,4 @@
-import { AddSongScreen } from "@/app/add/_components/add-song-screen";
+import { SongFormBase } from "@/app/add/_components/song-form-base";
 import SongDatabase from "@/lib/songs/song-database";
 import { createClient as createClientClient } from "@/lib/supabase/client";
 import { createClient as createServerClient } from "@/lib/supabase/server";
@@ -18,12 +18,7 @@ export default async function EditSong({ params }: Params) {
 
   if (!user) redirect("/login");
 
-  return (
-    <AddSongScreen
-      permalink={params.permalink}
-      editing={params.permalink ? true : false}
-    />
-  );
+  return <SongFormBase editing={params.permalink} />;
 }
 
 // page metadata (dynamic)

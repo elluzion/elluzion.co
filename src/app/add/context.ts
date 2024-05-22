@@ -1,19 +1,16 @@
+import { DownloadLink, StreamLink } from "@/lib/songs/types";
 import { Dispatch, SetStateAction, createContext, useContext } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from "./formSchema";
 
-export const SongFormContext = createContext<SongFormContextType | undefined>(
-  undefined
-);
+export const SongFormContext = createContext<SongFormContextType | undefined>(undefined);
 
 export const useSongFormContext = () => {
   const formContext = useContext(SongFormContext);
 
   if (!formContext) {
-    throw new Error(
-      "useFormContext has to be used within <FormContext.Provider>"
-    );
+    throw new Error("useFormContext has to be used within <FormContext.Provider>");
   }
 
   return formContext;
@@ -33,5 +30,17 @@ export type SongFormContextType = {
   shouldSubmit: {
     current: boolean;
     set: Dispatch<SetStateAction<boolean>>;
+  };
+  streamLinks: {
+    get: StreamLink[];
+    set: Dispatch<SetStateAction<StreamLink[]>>;
+  };
+  downloadLinks: {
+    get: DownloadLink[];
+    set: Dispatch<SetStateAction<DownloadLink[]>>;
+  };
+  artists: {
+    get: string[];
+    set: Dispatch<SetStateAction<string[]>>;
   };
 };

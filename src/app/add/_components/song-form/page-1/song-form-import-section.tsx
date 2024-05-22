@@ -5,20 +5,18 @@ import { mdiImport } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useRef, useState } from "react";
 
-export default function SoundcloudImportSection(props: {
+export default function SongFormImportSection(props: {
   show: boolean;
   handleSoundcloudImport: (songUrl: string) => Promise<boolean>;
 }) {
   // refs
-  const songImportInputRef = useRef<HTMLInputElement | null>(null);
+  const songImportUrl = useRef<HTMLInputElement>(null);
   const [show, setShow] = useState(props.show);
 
   function handleImportSong() {
-    const songUrl = songImportInputRef.current?.value || "";
-    if (
-      !songUrl.startsWith("https://") ||
-      !songUrl.includes("soundcloud.com")
-    ) {
+    if (!songImportUrl.current) return;
+    const songUrl = songImportUrl.current.value;
+    if (!songUrl.startsWith("https://") || !songUrl.includes("soundcloud.com")) {
       return;
     }
     // depending on the result of the import, hide this section
@@ -30,7 +28,7 @@ export default function SoundcloudImportSection(props: {
       <FormLabel>Import from Soundcloud</FormLabel>
       <div className="flex gap-2">
         <Input
-          ref={songImportInputRef}
+          ref={songImportUrl}
           className="bg-popover w-auto grow"
           placeholder="Enter Soundcloud URL"
           type="url"

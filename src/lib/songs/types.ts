@@ -33,3 +33,5 @@ export type DBSong = {
 export type StreamLink = DBSong["stream_links"][0];
 
 export type DownloadLink = DBSong["download_links"][0];
+
+export type AudioFormat = DBSong["download_links"][0]["format"];
