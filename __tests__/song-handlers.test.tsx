@@ -5,13 +5,13 @@ const db = new SongDatabase(false);
 const services = new SongServices();
 
 it("Song Handlers instantiated successfully", () => {
-  expect(db).not.toBe(null);
-  expect(services).not.toBe(null);
+  expect(db).not.toBeNull();
+  expect(services).not.toBeNull();
 });
 
 it("Try to return all songs", async () => {
   let songs = await db.getSongs();
-  expect(songs).not.toBeNull();
+  expect(songs).not.toBeUndefined();
 });
 
 it("Try to return existing song", async () => {
@@ -19,12 +19,12 @@ it("Try to return existing song", async () => {
   if (!songs) return;
 
   let song = await db.getSong(songs[0].permalink);
-  expect(song).not.toBeNull();
+  expect(song).not.toBeUndefined();
 });
 
 it("Try to return non-existing song", async () => {
   let song = await db.getSong("NONEXISTENTIDSONG_ABCDEFGHIJKLMNOPQRSTUVXYZ");
-  expect(song).toBeNull();
+  expect(song).toBeUndefined();
 });
 
 it("Song does exist on database", async () => {
@@ -40,6 +40,10 @@ it("Song doesn't exist on database", async () => {
 });
 
 it("Can find links for track on platforms", async () => {
-  let tracks = await services.get("Elluzion & Alvin Mo - Dreaming", SupportedServices);
+  let tracks = await services.get(
+    "Elluzion & Alvin Mo - Dreaming",
+    SupportedServices.map((x) => x)
+  );
+  console.log(tracks);
   expect(tracks.links.length).toBe(SupportedServices.length);
 });
