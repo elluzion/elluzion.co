@@ -80,16 +80,8 @@ export const Platforms: {
    * @returns platform as {@link PlatformItem} or undefined
    */
   resolve: (url: string) => {
-    let platform = GenericPlatformItem;
-
-    Platforms.LIST.map((plat) => {
-      if (url.includes(plat.linkIncludes)) {
-        platform = plat;
-        return plat;
-      }
-    });
-
-    return platform;
+    let platform = Platforms.LIST.find((plat) => url.includes(plat.linkIncludes));
+    return platform || GenericPlatformItem;
   },
 };
 
